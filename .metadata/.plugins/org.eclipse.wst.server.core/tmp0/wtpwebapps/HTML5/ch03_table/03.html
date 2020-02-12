@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>테이블 만들기 3[정렬]</title>
+
+<style type="text/css">
+	table  {
+		border: solid 1px #fcb558;
+		border-collapse: collapse; 
+		/* width: 400px; */ 
+	}
+	
+	th, td  {
+		border: solid 1px #fcb558;
+		border-collapse: collapse; 
+		padding: 10px 30px;
+	}
+	
+	td.str {text-align: center;} /* text-align 은 정렬의 기준은 가로를 기준으로 한다. 즉, 가로기준에서 왼쪽(left), 오른쪽(right), 가운데(center) 정렬이다. */ 
+	td.num {text-align: right;}
+	
+	tr#jumper {
+		height: 100px;
+		vertical-align: middle;  /* vertical-align 은 정렬의 기준은 세로를 기준으로 한다. 즉, 세로기준에서 위(top), 밑(bottom), 가운데(middle) 정렬이다. */
+		text-align: center;
+	}
+	
+</style>
+
+</head>
+<body>
+
+<table>
+    <caption>&lt;테이블1&gt;테이블에 대한 설명문구1</caption>
+	<thead>
+		<tr bgcolor="#c3faba">
+			<th>제품이름과 설명</th>
+			<th>개당 가격</th>
+			<th>박스당 개수</th>
+		</tr>		
+	</thead>
+	
+	<tbody>
+		<tr>
+			<td class="str">블라우스 - 붉은색 실크</td>
+			<td class="num">20,000원</td>
+			<td class="num">150</td>
+		</tr>
+		
+		<tr>
+			<td class="str">바지 - 검은색 원단</td>
+			<td class="num">4,000원</td>
+			<td class="num">300</td>
+		</tr>
+		
+		<tr id="jumper">
+			<td>점퍼</td>
+			<td style="text-align: right; vertical-align: top;">300원</td>
+			<td style="text-align: right; vertical-align: bottom;">500</td>
+		</tr>
+	</tbody>
+</table>
+
+</body>
+</html>
+
+

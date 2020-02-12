@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Eclass 김면중</title>
+
+<style type="text/css">
+
+	body{ 
+		margin: 0 auto;
+		padding: 0; 
+		font-family: Arial, "MS Trebuchet", sans-serif;
+	}
+
+	body #container {
+		 /* border: 1px solid gray; */ 
+		
+		margin: 0 auto;
+		padding: 2% 9% 0 10%;
+	}
+
+	header#login {
+		 /* border: 1px solid blue;  */
+		
+		width: 99%;
+		min-height: 100px;
+		background-color: #fff;
+	}
+
+	header#login div#logo{
+		 /* border: 1px solid pink; */  
+		
+		float: left;
+		height: 105px;
+		margin: 0;
+	}
+	
+	header#login img#imgLogo{
+		width:  100px;
+		height: 100px; 
+	}
+
+	header#login > form > table#loginTbl {
+		 /* border: 1px solid red;   */
+		
+		float: right;
+		height: 105px;
+	}
+	
+	header#login > nav > ul {
+		/* border: 1px solid yellow;  */
+		
+		clear: both;
+		list-style-type: none;
+		padding: 10px 50px;
+	}
+
+	header#login > nav > ul > li {
+		 /* border: 1px solid blue; */ 
+		
+		display: inline-block;
+		width: 100px;
+		font-size: 15px;
+		
+	}
+	
+	a {
+		text-decoration: none;
+		color: navy; 
+	}
+	
+	 section {
+	     /* border: solid 1px red; */  
+		
+		float: left;
+		width: 99%;
+		height: 400px;
+		padding: 30 50 0 5;
+		background-color: gray;
+	} 
+
+	footer {
+		 /* border: solid 1px green;  */
+		
+		clear: both;
+		width: 99%;
+		text-align: center;
+		background-color: #ccc;
+		padding: 30px 0;
+		margin-bottom: 30px;
+	}
+
+</style>
+</head>
+<body>
+	<div id="container">
+		<header id="login">
+			<div id="logo">
+			   <img src="file:///C:/myjsp/HTML5/images/khlogo.jpg"/>
+			   
+			</div>
+			
+			<form name="loginFrm" action="login.do" method="post">
+				<table id="loginTbl">
+					<tr>
+						<td>아이디</td>
+						<td><input type="text" name="userid" id="userid" placeholder="아이디" ></input></td>
+					</tr>
+					<tr>
+						<td>비밀번호</td>
+						<td><input type="password" name="passwd" id="passwd" placeholder="비밀번호"></input></td>
+					</tr>
+					<tr align="center">
+						<td colspan="2">
+							<input type="submit" value="로그인" />
+							<input type="reset" value="취소" />
+						</td>
+					</tr>
+				</table>
+			</form>
+			
+			<nav>
+				<ul>
+					<li><a href="#">메인</a></li>
+					<li><a href="#">공지사항</a></li>
+					<li><a href="#">자유게시판</a></li>
+					<li><a href="#">&nbsp; &nbsp; 갤러리</a></li>
+					<li><a href="#">회원관리</a></li>
+					<li><a href="#">채팅하기</a></li>
+				</ul>
+			</nav>
+			
+		</header>	
+		
+		<div id="contents">		
+		<section></section>	
+		</div>
+		
+		<footer>
+		  	Copyright ⓒ 1998-2019 KH Information Educational Institute All Right Reserved
+		</footer>
+
+	</div>	
+
+</body>
+</html>
+</head>
+<body>
+
+</body>
+</html>​

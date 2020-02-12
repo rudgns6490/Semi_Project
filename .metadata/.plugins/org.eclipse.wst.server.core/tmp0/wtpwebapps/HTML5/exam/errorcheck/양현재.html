@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	
+	<style type="text/css">
+	
+		img form { display: inline-block; }
+		form {
+			border: solid 0px green;
+			float: right;
+		}
+		
+		li { 
+			display: inline-block; 
+			margin-right: 50px;
+		}
+		
+		a { text-decoration: none; }
+	</style>
+	
+</head>
+
+
+<body>
+	
+	<header>
+		<img src="khlogo.jpg" width="100px;" height="100px;"/>
+	
+		<form name="loginSubmit"  action="loginSubmit.do" >
+			<table>
+				<tr>
+					<td><label for="userid">아이디</label></td>
+					<td><input type="text" name="userid" id="userid" style="text-align: right;" /></td>
+				</tr>
+				<tr>
+					<td><label for="passwd">패스워드</label></td>
+					<td><input type="password" name="passwd" id="passwd" style="text-align: right;" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><button type="button">로그인</button> <button type="button">취소</button></td>
+				</tr>
+			
+			</table>
+		</form>	
+	
+	</header>
+	
+	<nav>
+		<ul>
+			<li><a href="#">메인</a></li>
+			<li><a href="#">공지사항</a></li>
+			<li><a href="#">자유게시판</a></li>
+			<li><a href="#">갤러리</a></li>
+			<li><a href="#">회원관리</a></li>
+			<li><a href="#">채팅하기</a></li>
+		</ul>
+	</nav>
+	
+	<section style=" width: 100%; height: 400px; background-color: gray;">
+	</section>
+	
+	<footer style="text-align:center; background-color: #ccc; width: 100%; height: 50px; display: inline-block; " >
+		<span style="position:relative; top: 13px;">Copyright &copy;1998-2019 KH Information Educational Institute All Right Reserved</span>
+	</footer>
+	
+
+</body>
+
+</html>​

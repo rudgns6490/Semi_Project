@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<style type="text/css">
+
+div#container {
+	width : 90%;
+	margin: 0 auto;
+}
+
+div#header {
+	margin: 0 auto;
+}
+
+
+div#header header form {
+	width: 30%;
+	display: inline-block;
+	
+}
+
+
+div#header header img {
+	display: inline-block;
+	width: 200px;
+	height: 100px;
+}
+
+div#content {
+	width: 100%;
+	display: inline-block;
+	margin: 0 auto;
+}
+
+div#content aside{
+	width: 20%;
+	height: 400px;
+	float: left;
+	background-color: #ccc;
+	font-size: 20pt;
+	font-weight: bold;
+	text-align: left;
+	margin-left: 0;
+	padding: 0 10px;
+}
+
+div#content section{
+	width: 78%;
+	height: 400px;
+	float: right;
+	background-color: #aaa;
+	color: #fff;
+	border: solid 1px gray;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0 20px;
+}
+
+footer {
+	width: 100%;
+	background-color: #e1dede;
+	height: 50px;
+	text-align: center;
+}
+
+a{
+	text-decoration: none; 
+	color: #fff;
+}
+
+</style>
+
+</head>
+<body>
+	
+	<div id="container">
+	
+		<div id="header">
+			<header>
+				<form name="loginFrm" action="login.do" method="post">
+				<table id="loginTbl">
+					<tr>
+						<td>아이디</td>
+						<td><input type="text" name="userid" id="userid" size="17" placeholder="아이디" autocomplete="off"></input></td>
+					</tr>
+					<tr>
+						<td>비밀번호</td>
+						<td><input type="password" name="passwd" id="passwd" size="17" placeholder="비밀번호"></input></td>
+					</tr>
+					<tr align="center">
+						<td colspan="2" style="padding-right: 10px;">
+							<input type="submit" value="로그인" />
+							<input type="reset" value="취소" />
+						</td>
+					</tr>
+				</table>
+			</form>
+			
+			<img src="image/khlogo.jpg"/>
+			
+			</header>
+		</div>
+	
+		<div id="content">
+			<aside>
+				<ul>
+					<li><a href="http://localhost:9090/HTML5/test/01.html">메인</a></li>
+					<li><a href="http://localhost:9090/HTML5/test/01.html">공지사항</a></li>
+					<li><a href="http://localhost:9090/HTML5/test/01.html">자유게시판</a></li>
+					<li><a href="http://localhost:9090/HTML5/test/01.html">갤러리</a></li>
+					<li><a href="http://localhost:9090/HTML5/test/01.html">회원관리</a></li>
+					<li><a href="http://localhost:9090/HTML5/test/01.html">채팅하기</a></li>
+				</ul>
+			</aside>
+			
+			<section>
+			</section>
+		</div>
+		
+		<footer>
+			 Copyright ⓒ 1998-2019 KH Information Educational Institute All Right Reserved
+		</footer>
+	</div>
+</body>
+</html>​

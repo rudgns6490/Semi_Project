@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>css의 우선순위에 대해서 알아본다</title>
+
+<link rel="stylesheet" href="mycss.css">
+
+<style type="text/css">
+
+    /* == 우선순위 ==
+            아이디 > 클래스 > 태그명 
+            
+      !important(css 강제적용) > 해당태그에 직접준것  > html 파일에서 준  style 태그 > 외부에 있는 .css 파일 (예: href="mycss.css")       
+    */
+	div {
+		color: blue;
+		font-size: 20pt;
+		margin: 20px;
+	}
+
+    .mydiv {
+    	color: red;
+    	background-color: blue !important;
+    }
+    
+    #div1 {
+    	color: green;
+    }
+</style>
+
+</head>
+<body>
+
+	<div class="mydiv mystyle" id="div1" style="background-color: #ccc;">나는 DIV1</div>
+    <div class="mydiv mystyle" style="background-color: #fff;">나는 DIV2</div>
+    
+</body>
+</html>
+
+
+

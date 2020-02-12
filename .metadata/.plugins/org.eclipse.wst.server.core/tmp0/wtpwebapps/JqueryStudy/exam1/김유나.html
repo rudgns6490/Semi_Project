@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Insert title here</title>
+
+<style type="text/css">
+
+	
+
+	body {
+
+	      font-family: Arial, "MS Trebuchet", sans-serif;
+
+	      font-size: 16pt; 
+
+	}
+
+	
+
+	* {margin: 0;}
+
+
+
+	div#container { 
+
+		width: 90%;
+
+	    margin: 0 auto;
+
+	    padding: 50px 0;
+
+		text-align: center;					
+
+		/* border: 1px solid red; */
+
+	}
+
+	
+
+	fieldset {
+
+	          text-align: left;}
+
+	
+
+	legend {font-size: 24pt;}
+
+	
+
+	fieldset>ul {
+
+		list-style: none;
+
+		padding: 0;
+
+	}
+
+	
+
+	fieldset>ul>li {
+
+		line-height: 40px;
+
+	}
+
+	
+
+	fieldset>ul>li>label:first-child {
+
+		display: inline-block;
+
+		width: 10%;
+
+		/* border: solid 1px green; */
+
+	}
+
+	
+
+	fieldset>ul>li>input {
+
+		width: 20%;
+
+		height: 20px;
+
+		/* border: solid 1px blue; */
+
+	}
+
+	
+
+	div.genderclass {
+
+		display: inline-block;
+
+		width: 50%;
+
+		/* border: solid 1px gray; */
+
+	}
+
+	
+
+
+
+	
+
+	span.error {
+
+		color: red;
+
+		font-weight: bold;
+
+	}
+
+
+
+</style>
+
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+<script type="text/javascript">
+
+$(function(){
+
+	
+
+	//	$("span.error").hide();  또는 
+
+		$("span.error").css('display','none');
+
+	
+
+	//	$("input:text[id=userid]")
+
+		$("input#userid").blur(function(){ 
+
+		
+
+					//	================================	아이디
+
+			
+
+		var regExp = /^[A-Z][A-Za-z0-9]{4,9}$/;
+
+		
+
+		// 생성된 정규표현식 객체속에 데이터를 넣어서 검사하기 
+
+		var bool = regExp.test($(this).val());  // 리턴타입은 boolean 
+
+		
+
+		if(!bool) {
+
+			$("span.userid_error").css('display','');
+
+		
+
+			$(":input").attr("disabled", true);
+
+	
+
+			$(this).attr("disabled", false);
+
+			alert("5글자이상, 첫글자는 대문자이고 영문자, 숫자만 가능");
+
+			return;
+
+			
+
+			$(this).val(""); 		// 올바르게 입력하지 않은 아이디를 지우고 포커스를 다시 맞춘다
+
+			$(this).focus();
+
+		}
+
+		
+
+		else {  // 틀린 아이디 에러 메세지를 띄우고 다시 올바르게 아이디를 입력했을 때 
+
+			$("span.userid_error").css('display','none');
+
+		
+
+			$(":input").attr("disabled", false);
+
+			$("input#passwd").focus();
+
+			
+
+			}
+
+		}); // end of $("input#userid").blur(function() ---------------------------
+
+	
+
+			// ===================================== 암호	
+
+		$("input#passwd").blur(function(){
+
+		
+
+			var regExp = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
+
+		
+
+		var bool = regExp.test($(this).val());
+
+		
+
+		if(!bool) {
+
+			$("span.password_error").css('display','');
+
+		
+
+			$(":input").attr("disabled", true);
+
+		
+
+			$(this).attr("disabled", false);
+
+			alert("패스워드를 입력하세요.");
+
+			return;
+
+			$(this).focus();
+
+		}
+
+		
+
+		else {  // 틀린 암호 에러 메세지를 띄우고 다시 올바르게 암호를 입력했을 때 
+
+			$("span.password_error").css('display','none');
+
+		
+
+			$(":input").attr("disabled", false);
+
+			$("input#passwdCheck").focus();
+
+			}
+
+		}); // end of $("input#passwd").blur(function()
+
+				
+
+				
+
+				// ================================ 암호확인 
+
+			$("input#passwdCheck").blur(function(){
+
+			
+
+				if( $(this).val() != $("input#passwd").val() ){
+
+					$("span.passwdCheck_error").html("패스워드가 일치하지 않습니다");
+
+					$("span.passwdCheck_error").css('display','');
+
+
+
+					
+
+					$(":input").attr("disabled", true);
+
+					$("input#passwd").attr("disabled", false);
+
+					$(this).attr("disabled", false);
+
+					
+
+					$("input#passwd").focus();
+
+				
+
+				}
+
+				else {
+
+					$("span.passwdCheck_error").empty();
+
+					$(":input").attr("disabled",false);
+
+					$("span.passwdCheck_error").html("패스워드가 일치합니다.");
+
+					$("input#name").focus();
+
+				}
+
+				
+
+					
+
+			}); // end of $("input#passwdCheck") --------------------
+
+			
+
+			
+
+			// ===================================== 성명은 필수입력 값 
+
+			$("input#name").blur(function(){
+
+				
+
+				if($(this).val().trim() == "") {
+
+					$("span.name_error").html("성명은 필수입력란입니다.");
+
+					$("span.name_error").css('display','');
+
+					
+
+					$(":input").attr("disabled", true);
+
+				
+
+					$(this).attr("disabled", false);
+
+					$(this).val(""); 		
+
+					$(this).focus();
+
+				}
+
+				
+
+				else {  
+
+					$("span.name_error").empty();
+
+				
+
+					$(":input").attr("disabled", false);
+
+					$("button#btnOK").focus();
+
+					
+
+					}
+
+			});
+
+			
+
+			
+
+			
+
+			// ====================================  체크박스 
+
+			
+
+			$("button#btnOK").click(function(){
+
+				
+
+				var radioBool = $("input:radio[name=gender]").is(":checked");
+
+				$("input#email").focus();
+
+				
+
+				// 체크박스에서 적어도 하나라도 체크가 되어져야 참
+
+				
+
+				if(!radioBool){
+
+					alert("성별을 선택하세요");
+
+					return; // 종료 
+
+				}
+
+
+
+
+
+				var frm = document.registerFrm; 
+
+				frm.submit(); 
+
+				
+
+			}); // end of $("button#btnOK").click() -----------
+
+			
+
+			// ======================================= 이메일 
+
+			$("input#email").blur(function(){
+
+				
+
+				var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i; 
+
+				
+
+				// 생성된 정규표현식 객체속에 데이터를 넣어서 검사하기 
+
+				var bool = regExp.test($(this).val());  // 리턴타입은 boolean 
+
+				
+
+				if(!bool) {
+
+					$("span.email_error").css('display','');
+
+				
+
+					$(":input").attr("disabled", true);
+
+				//	$(":input") 은 모든 input 태그를 말한다. 
+
+				
+
+					$(this).attr("disabled", false);
+
+					$(this).val(""); 		// 올바르게 입력하지 않은 아이디를 지우고 포커스를 다시 맞춘다
+
+					$(this).focus();
+
+				}
+
+				
+
+				else {  
+
+					$("span.email_error").css('display','none');
+
+				
+
+					$(":input").attr("disabled", false);
+
+					
+
+					}
+
+				
+
+
+
+				
+
+			});
+
+	
+
+	}); // end of $(function()------------------------
+
+
+
+</script>
+
+
+
+</head>
+
+<body>
+
+<div id="container">
+
+	<form name="registerFrm" action="result.html" method="post">
+
+		<fieldset>
+
+			<legend>회원가입</legend>
+
+			<ul>
+
+				<li>
+
+					<label for="userid">아이디</label>
+
+					<input type="text" name="userid" id="userid" value="" maxlength="20" required autofocus autocomplete="off" />
+
+				</li>
+
+				<li>
+
+					<label for="passwd">패스워드</label>
+
+					<input type="password" name="passwd" id="passwd" value="" maxlength="20" required />
+
+				</li>
+
+				<li>
+
+					<label for="passwdCheck">패스워드확인</label>
+
+					<input type="password" id="passwdCheck" value="" required />
+
+				    <span class="error passwdCheck_error"></span>
+
+				</li>
+
+				<li>
+
+					<label for="name">이름</label>
+
+					<input type="text" name="name" id="name" value="" maxlength="20" required />
+
+				    <span class="error name_error">성명은 필수입력값입니다.</span>
+
+				</li>
+
+				
+
+				<li>
+
+					<label>성별</label>
+
+					<div class="genderclass">
+
+						<label for="gender1">남</label><input type="radio" name="gender" id="gender1" value="남자" />&nbsp;
+
+				        <label for="gender2">여</label><input type="radio" name="gender" id="gender2" value="여자" />&nbsp;
+
+				    </div> 
+
+				</li>
+
+				<li>
+
+					<label for="email">e메일</label>
+
+					<input type="email" name="email" id="email" value="" maxlength="40" required />
+
+				    <span class="error email_error">이메일 형식이 올바르지않습니다.</span>
+
+				</li>
+
+				<li>
+
+					<button type="button" id="btnOK">회원가입</button>
+
+					<button type="reset">취소</button>
+
+				</li>
+
+			</ul>
+
+		</fieldset>
+
+	</form>
+
+</div>
+
+</body>
+
+</html>

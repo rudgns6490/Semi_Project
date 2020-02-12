@@ -1,0 +1,161 @@
+package magazine.model;
+
+import java.sql.*;
+import java.util.*;
+
+import javax.naming.*;
+import javax.sql.DataSource;
+
+public class IngredientDAO implements InterIngredientDAO {
+
+	private DataSource ds ;
+	
+	private Connection conn;
+	private PreparedStatement pstmt;
+	private ResultSet rs ;
+
+	public IngredientDAO() {
+		
+		try {
+			Context initContext = new InitialContext();
+			Context envContext  = (Context)initContext.lookup("java:/comp/env");
+			ds = (DataSource)envContext.lookup("jdbc/semidog");
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void close() {
+		try {
+			if(rs != null) { rs.close(); rs=null; }
+			if(pstmt != null) { pstmt.close(); pstmt=null; } 
+			if(conn != null) { conn.close(); conn=null; }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+
+	@Override
+	public List<IngredientVO> selectPaging(HashMap<String, String> paraMap) throws SQLException {
+
+			
+			List<IngredientVO> list = null;
+			
+			try {
+				conn = ds.getConnection();
+				
+				String sql = " select RNO, ingredient_seq, name, photoname, explanation "+
+						 	 " from "+
+							 " ( "+
+							 "    select rownum AS RNO, ingredient_seq, name, photoname, explanation "+
+							 "    from "+
+							 "    ( "+
+							 "        select ingredient_seq, name, photoname, explanation "+
+							 "        from TBL_DOG_INGREDIENT "+
+							 "        where status = 1 ";
+					
+				String searchWord = paraMap.get("searchWord"); 
+				
+				if(searchWord != null && !searchWord.trim().isEmpty())	{ 
+			       		
+			       		sql += " and name like '%'|| ? ||'%' ";	 
+				}		 
+							 
+						sql += "        order by ingredient_seq asc "+
+							   "    ) V "+
+							   ") T "+
+							   "where T.RNO between ? and ?";
+					
+				pstmt = conn.prepareStatement(sql);
+				
+				int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));   
+				int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage"));
+				
+				if(searchWord != null && !searchWord.trim().isEmpty())	{		
+					
+					pstmt.setString(1, searchWord);
+					
+					pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage-1)); 
+					pstmt.setInt(3, (currentShowPageNo * sizePerPage)); 
+				}
+				else {
+					pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage-1)); 
+					pstmt.setInt(2, (currentShowPageNo * sizePerPage)); 
+				}
+				
+				rs = pstmt.executeQuery();
+				
+				int cnt = 0;
+				while(rs.next()) {
+					cnt++;
+					
+					if(cnt==1) {
+						list = new ArrayList<IngredientVO>();
+					}
+					
+					IngredientVO member = new IngredientVO();
+					member.setIngredient_seq(rs.getInt("ingredient_seq"));
+					member.setName(rs.getString("name"));
+					member.setPhotoname(rs.getString("photoname"));
+					member.setExplanation(rs.getString("explanation"));
+					
+					list.add(member);
+					
+				}// end of while----------------------------
+
+			} finally {
+				close();
+			}
+			
+			return list;
+		}
+
+	
+	@Override
+	public int getTotalPage(HashMap<String, String> paraMap) throws SQLException {
+
+		int totalPage = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select ceil(count(*)/?) AS totalPage " + 
+					     " from TBL_DOG_INGREDIENT " + 
+					     " where status = 1 ";
+			
+			String searchWord = paraMap.get("searchWord");			
+			
+			if(searchWord != null && !searchWord.trim().isEmpty())	{ 
+				
+	       		
+	       		sql += " and name like '%'|| ? ||'%' ";	
+			}
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(searchWord != null && !searchWord.trim().isEmpty())	{
+				pstmt.setString(1, paraMap.get("sizePerPage")); 
+				
+				pstmt.setString(2, searchWord);
+			}
+			else {
+				pstmt.setString(1, paraMap.get("sizePerPage"));  		
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			rs.next(); 
+			
+			totalPage = rs.getInt("totalPage");  
+
+		} finally {
+			close();
+		}
+		
+		return totalPage;
+	}
+	
+	
+}

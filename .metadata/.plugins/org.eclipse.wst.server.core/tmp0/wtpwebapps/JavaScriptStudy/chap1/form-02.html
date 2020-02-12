@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>자바스크립트에서 선택자 잡기</title>
+
+<style type="text/css">
+
+	body {
+		/* border: solid 1px blue; */
+		margin: 0;
+		padding: 30px 0 0 0;
+		font-family: Arial, "MS Trebuchet", sans-serif;
+	}
+
+	#container {
+		/* border: solid 1px gray; */
+		width: 80%;
+		margin: 0 auto;
+	}
+	
+	ul {
+		/* border: solid 1px yellow; */
+		list-style-type: none;
+		padding: 0;
+	}
+	
+	ul > li > label {
+		/* border: solid 1px blue;   */
+		display: inline-block; 
+		width: 100px;
+		color: navy;
+		font-weight: bold;
+		height: 20px;
+		margin: 2px 0 0 0;
+	} 
+	
+	label.gender , label.hobby {
+		display: inline;
+	}
+	
+	ul > li {
+		margin: 0 0 10px 0;
+	}
+	
+	input.myinput {
+		height: 20px;
+	}
+	
+	select {
+		width: 150px;
+	}
+	
+	select.myselect {
+		height: 25px;	
+	}
+	
+	button.btn {
+		width: 100px;
+		height: 40px;
+		background-color: #000;
+		color: #fff;
+		border: none;
+		font-size: 16pt;
+		margin: 20px 0 0 40px;
+	}
+	
+	legend {
+		font-size: 20pt;
+	}
+
+</style>
+
+<script type="text/javascript">
+    
+	// 웹브라우저에 HTML문서(document)가 로드되고 나면
+	// 자동적으로 실행할 내용이 있으면 그 내용은 아래와 같이 기술해주면 된다.
+	window.onload = function() {
+		// alert("안녕하세요?");
+		
+		var now = new Date(); 
+		// 자바스크립트에서 현재날짜시각을 알려주는 것이다.
+		
+		var currentYear = now.getFullYear(); // 현재년도
+		var currentMonth = now.getMonth()+1; // 현재월(1 2 3 4 5 6 7 8 9 10 11 12)
+		var currentDay = now.getDate();      // 현재일
+		
+		if(currentMonth < 10)
+			currentMonth = "0"+month;
+		
+		if(currentDay < 10)
+			currentDay = "0"+day;
+		
+		var today = currentYear+"-"+currentMonth+"-"+currentDay;
+		
+		alert("오늘날짜 : " + today);
+				
+		var val = "";
+		var year = 1950;
+		for(var i=0; i<currentYear-1950+1; i++) {
+			val += "<option>"+(1950+i)+"</option>";
+		}
+		
+		document.getElementById("birthYear").innerHTML = val;
+		
+		// == 자바스크립트에서 배열을 나타낼때는 아래와 같이 한다. == 
+		var sportsArr = ["야구","축구","농구","배구","수영","에어로빅","배트민턴"];
+		var sports = "";
+		for(var i=0; i<sportsArr.length; i++) {
+		//	console.log(sportsArr[i]);
+			sports += "<option>"+sportsArr[i]+"</option>";
+		}
+		
+		document.getElementById("sports").innerHTML = sports;
+		
+		// == 자바스크립트에서 배열을 나타낼때는 아래와 같이 해도 된다. == 
+		var beverageArr = new Array();
+		beverageArr.push("커피");
+		beverageArr.push("사이다");
+		beverageArr.push("콜라");
+		beverageArr.push("환타");
+		
+		var beverage = "";
+		for(var i=0; i<beverageArr.length; i++) {
+			beverage += "<option>"+beverageArr[i]+"</option>";
+		}
+		
+		document.getElementById("beverage").innerHTML = beverage;
+		
+	}// end of window.onload = function()--------------
+    
+    
+    function goSubmit() {
+    
+	//== 자바스크립에서 id 속성을 가지고 선택자를 잡는 방법 ==
+	// document.getElementById("id값"); 이다.
+		var val = document.getElementById("userid").value.trim();
+	    console.log("typeof val : "+ typeof val); 
+	    // typeof val : string 
+		
+	    console.log("아이디 : " + val);
+
+	    console.log("~~~~~~~~~~~~~~~~~~~~~~~~");
+	    
+	// == 자바스크립에서 name 속성을 가지고 선택자를 잡는 방법 ==
+	// document.getElementsByName("name값"); 이다. 
+	// 이것을 실행하면 리턴타입은 배열타입이다.
+	   val = document.getElementsByName("hobby");
+	   console.log("typeof val : "+ typeof val); 
+	   // typeof val : object
+	   for(var i=0; i<val.length; i++) {
+		   	console.log(val[i].value);
+		   	// game  
+		   	// movie  
+		   	// writing  
+		   	// music
+	   }
+	   
+	   console.log(" ");
+	   
+	   for(var i=0; i<val.length; i++) {
+		   if(val[i].checked) { // 체크박스에서 체크가 된 것은 true
+			                    // 체크박스에서 체크가 해제된 것은 false 
+		   	  console.log(val[i].value);
+		   }
+	   }
+	
+	   console.log("~~~~~~~~~~~~~~~~~~~~~~~~");
+	   
+	// == 자바스크립에서 class 속성을 가지고 선택자를 잡는 방법 ==
+	// document.getElementsByClassName("클래스이름"); 이다. 
+	// 이것을 실행하면 리턴타입은 배열타입이다.
+	   val = document.getElementsByClassName("myselect");
+	   console.log("typeof val : "+ typeof val); 
+	   // typeof val : object
+	   
+	   for(var i=0; i<val.length; i++) {
+		   console.log(val[i].value);
+	   }
+	   
+	   console.log("~~~~~~~~~~~~~~~~~~~~~~~~");
+	   
+	// == 자바스크립에서 태그를 가지고 선택자를 잡는 방법 ==
+	// document.getElementsByTagName("태그명"); 이다. 
+	// 이것을 실행하면 리턴타입은 배열타입이다.
+	   val = document.getElementsByTagName("label");
+	   for(var i=0; i<val.length; i++) {
+		   console.log(val[i].innerText);
+	   }
+	   
+	   // 취미를 선택하는 체크박스에 체크를 최소한 2개이상이 아니라면 
+ 	   // alert 를 띄워서 "취미는 최소한 2개이상 선택하세요!!" 가 나오도록 하세요.
+ 	   var hobbyArr = document.getElementsByName("hobby");
+	   var cnt = 0;
+	   for(var i=0; i<hobbyArr.length; i++) {
+		   if( hobbyArr[i].checked )
+			   cnt++;
+	   }// end of for------------------
+	   
+	   if(cnt < 2) {
+		   alert("취미는 최소한 2개이상 선택하세요!!");
+	   }
+ 	   
+	
+    }// end of function goSubmit()--------------
+
+    
+    function goCurrentAge() {
+    	
+    	var birthYear = document.getElementById("birthYear").value; 
+    //	alert(birthYear);
+    //	alert(typeof birthYear);
+    	// string
+    	
+    	var now = new Date(); 
+		// 자바스크립트에서 현재날짜시각을 알려주는 것이다.
+		var currentYear = now.getFullYear(); // 현재년도
+    	
+		var currentAge = parseInt(currentYear) - birthYear + 1; // 현재나이 
+		
+	//	alert(currentAge);
+		
+		document.getElementById("currentAge").innerHTML = currentAge;
+		
+    }// end of function goCurrentAge()-------------
+    
+</script>
+
+</head>
+<body>
+
+	<div id="container">
+		<form name="registerFrm" action="register.do" method="post" enctype="multipart/form-data"> 
+	<!-- 
+		 form 태그에서 사용하는  method 는 2가지가 있는데 get 과 post 가 있다.
+		 get 은 전송하고자 하는 데이터를 웹브라우저 주소창에 실어서 보내는 방식이고,
+		 post 는 전송하고자 하는 데이터를 본문속에 감추어서 보내는 방식이다.
+		 그래서 get 은 보안성이 떨어지는 반면에 속도는 post 보다 빠르다.
+		 post는 보안성은 좋지만 속도는 get 보다는 느린편이다.
+		 그러므로 외부에 공개해서는 안되는 작업인 회원가입, 물품구매, 회원수정 등 DML(insert, update, delete)작업은 
+		 일반적으로 post 방식으로 하고, 
+		 외부에 공개하더라도 전혀 무관한 데이터 검색(예: 물품조회, 게시판글 검색)인 select 작업은
+		 일반적으로 get 방식으로 한다.
+		 method 를 기재하지 않으면 get 방식이다. 
+	--> 
+		
+	<!-- 
+		== !!! 중요 !!! ==
+		파일첨부가 있을 경우에는
+		form name="registerFrm" action="register.do" method="post" 와 같이해주면 
+		파일은 절대로 전송이 안되어진다.
+		form name="registerFrm" action="register.do" method="post" enctype="multipart/form-data" 로 
+		해야만 파일이 전송 되어진다. 
+		또한 파일을 첨부하려면 반드시 method="post" 이어야만 한다.!!!
+	-->
+			<fieldset>
+				<legend>회원가입정보</legend>
+				<ul>
+					<li>
+						<label for="userid">아이디</label>
+						<input type="text" name="userid" class="myinput" id="userid" size="20" maxlength="20" autofocus required autocomplete="off" />     
+					</li>
+					
+					<li>
+						<label for="passwd1">암호</label>
+						<input type="password" name="passwd" class="myinput" id="passwd1" size="20" maxlength="20" required />
+					</li>
+					
+					<li>
+						<label for="passwd2">암호확인</label>
+						<input type="password" id="passwd2" class="myinput" size="20" maxlength="20" required />
+					</li>
+					
+					<li>
+						<label for="name">성명</label>
+						<input type="text" name="name" class="myinput" id="name" size="20" maxlength="20" required autocomplete="on" />
+					</li>
+					
+					<li>
+						<label for="email">이메일</label>
+						<input type="email" name="email" class="myinput" id="email" placeholder="예: hongkd@gmail.com" required="required" />
+					</li>
+					
+					<li>
+						<label for="male" class="gender">남자</label>
+						<input type="radio" name="gender" id="male" value="1" checked />
+						<label for="femail" class="gender">여자</label>
+						<input type="radio" name="gender" id="femail" value="2" />
+					</li>
+					
+					<li>
+						<label>취미</label>
+						  <label for="hobby1" class="hobby">게임</label><input type="checkbox" name="hobby" id="hobby1" value="game" />&nbsp;&nbsp;
+						  <label for="hobby2" class="hobby">영화감상</label><input type="checkbox" name="hobby" id="hobby2" value="movie" />&nbsp;&nbsp;
+						  <label for="hobby3" class="hobby">글쓰기</label><input type="checkbox" name="hobby" id="hobby3" value="writing" />&nbsp;&nbsp;
+						  <label for="hobby4" class="hobby">음악감상</label><input type="checkbox" name="hobby" id="hobby4" value="music" />
+					</li>
+					
+					<li>
+						<label for="birthYear">출생년도</label>
+						<select name="birthYear" id="birthYear" onchange="goCurrentAge();">
+						</select>
+					</li>
+					
+					<li>
+						<label>현재나이</label>
+						<div id="currentAge" style="display: inline; font-size: 12pt; color: red;"></div>세 
+					</li>
+					
+					<li>
+						<label for="sports">스포츠</label>
+						<select name="sports" id="sports">
+						</select>
+					</li>
+					
+					<li>
+						<label for="beverage">음료</label>
+						<select name="beverage" id="beverage">
+						</select>
+					</li>
+					
+					<li>
+						<label for="school">최종학력</label>
+						<select name="school" id="school" class="myselect">
+							<option value="highSchool">고졸</option>
+							<option value="college">초대졸</option>
+							<option value="university">대졸</option>
+							<option value="graduate">대학원졸</option>
+						</select>
+					</li>
+					
+					<li>
+						<label for="food">선호음식</label>
+						<select name="food" id="food" size="3" multiple>
+							<option value="1">피자</option>
+							<option value="2">치킨</option>
+							<option value="3">파스타</option>
+							<option value="4">참치회</option>
+							<option value="5">보쌈</option>
+							<option value="6">샐러드</option>
+						</select>
+					</li>
+					
+					<li>
+						<label for="program">선호프로그램</label>
+						<select name="program" id="program" class="myselect">
+							<optgroup label="데이터베이스">
+								<option value="Oracle">Oracle</option>
+								<option value="MSSQL">MSSQL</option>
+								<option value="Sybase">Sybase</option>
+							</optgroup>
+						
+						    <optgroup label="개발언어">
+						    	<option value="Java">Java</option>
+						    	<option value="JSP">JSP</option>
+						    	<option value="Spring">Spring</option>
+						    	<option value="C/C++">C/C++</option>
+							</optgroup>
+						</select>
+					</li>
+					
+					<li>
+						<label for="browsername">웹브라우저</label>
+						<input list="webBrowser" name="browsername" id="browsername" />
+						<datalist id="webBrowser">
+							<option value="Chrome" />
+							<option value="Internet Explore" />
+							<option value="Firefox" />
+							<option value="Opera" />
+							<option value="Safari" />
+						</datalist>
+					</li>
+					
+					<li>
+						<label for="addFile">파일첨부</label>
+						<input type="file" name="addFile" id="addFile" />
+					</li>
+					
+					<li>
+						<label for="registerComment">가입인사말</label>
+						<textarea rows="5" cols="30" name="registerComment" id="registerComment" placeholder="하고싶은 말 쓰세요" ></textarea>
+					</li>
+					
+					<li>
+						<button type="button" class="btn" onclick="goSubmit();">확인</button> 
+						<button type="reset" class="btn">취소</button>
+					</li>
+				</ul>
+			</fieldset>
+		
+		</form>
+	</div>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>프로필 상세보기/닫기</title>
+
+<style type="text/css">
+
+div#container {
+	   width: 80%;
+	   margin: 0 auto;
+	   /* border: 1px solid red; */
+}
+
+span.buttons {
+		display: inline-block;
+		border: 2px solid orange;
+		margin: 20px;
+		padding: 5px;
+		background-color: yellow;
+		color: #ff0000;
+		font-size: 15pt;
+		cursor: pointer;
+		width: 100px;
+		text-align: center;
+		
+		opacity: 0.2;
+	}
+	
+span.name {
+	font-size: 12pt;
+	font-weight: bold;
+	color: blue;
+}	
+
+div#comment {
+	position: relative;
+	left: 44%;
+}
+
+</style>
+
+<script type="text/javascript" src="/JqueryStudy/js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		var personArr = [ {userid:"kimth", name:"김태희", age:25, school:"서울대학교", image:"kimth.jpg"} 
+	                     ,{userid:"iyou", name:"아이유", age:28, school:"인천대학교", image:"iyou.jpg"}
+	                     ,{userid:"parkby", name:"박보영", age:30, school:"수원대학교", image:"parkby.jpg"} 
+	                    ];
+		
+		var moreCommentArr = new Array();
+		moreCommentArr.push({userid:"kimth", address:"서울시 강동구"});
+		moreCommentArr.push({userid:"iyou", address:"경기도 수원시"});
+		moreCommentArr.push({userid:"parkby", address:"인천광역시 연수구"});
+		
+		for(var i=0; i<personArr.length; i++) {
+			$("div#firstdiv").append("<span name='btn"+i+"' id='"+i+"' class='buttons picture"+(i+1)+"'>"+personArr[i].name+"</span>"); 
+		}
+		
+		$(".buttons").hover(function(){
+								$(".buttons").css('opacity','0.2');
+       	 						$(this).css('opacity','1.0');
+			 				 /*  
+			 				   console.log("class명 => " + $(this).attr('class') );
+			 				   // === 선택자의 class명 알아오기 ===
+			 					  
+			 				   console.log("id명 => " + $(this).attr('id') );
+			 				   // === 선택자의 id명 알아오기 ===
+			 						  
+			 				   console.log("name명 => " + $(this).attr('name') );
+			 				   // === 선택자의 name명 알아오기 === 	  
+			 				 */	
+			 				    $("div#face").html(setImage( personArr[parseInt($(this).attr('id'))].image )).css('opacity','0.2');
+			 				    $("div#comment").empty();
+			 				    $("div#profileMoreBtn").empty();
+			 				    $("div#profileMoreContent").empty();
+		                    }
+		                    , 
+		                    function(){
+		                    	 $(".buttons").css('opacity','0.2');
+		                    	 $(this).css('opacity','1.0');
+		                    }
+		                 );
+		
+		// === !!! 선택자를 잡을때 선택자가 <body> 태그에 명시되어 있지 않고
+		//         스크립트 소스에 명시된 jQuery 선택자를 잡을때는 아래와 같이 할 수도 있다. !!! ===
+		/*
+		       css 는 <body> 태그에 있지 않고 스크립트 소스에 명기된 태그나 id나 class는 인식을 해준다.
+		       jQuery 선택자인 경우에는 인식을 못할 수 있으므로 다음과 같이 해야 한다. 
+		       $(document).on("이벤트종류", "선택자", function(){ }); 으로 하면 된다.
+		*/
+		var moreProphile = ""; 
+		// 프로필 더보기를 했을 경우 상세프로필(주소) 정보를 담아두는 변수  
+		
+		$(document).on("click",".buttons",function(){
+			$("div#face").css('opacity','1.0');
+			
+			var index = parseInt($(this).attr('id'));
+			var person = personArr[index];
+			$("div#comment").html(setComment(person.name, person.age));
+			
+			$("div#profileMoreBtn").html("<span style='color: red; font-style: italic; cursor: pointer;'>프로필 더보기</span>").css('margin-top','30px');
+			
+			moreProphile = moreCommentArr[index].address; 
+		});
+		
+		$("div#profileMoreBtn").click(function(){
+			 $(this).empty();
+			 // 선택자.empty(); 는 해당 선택자 속에 들어있는 태그내용들을 싹 비운다라는 말이다. 
+			 
+			 $("div#profileMoreContent").html("<p>3.주소: "+moreProphile+"</p>").append("<span class='profileDetailClose' style='font-weight: bold; color: blue; cursor: pointer;'>프로필 상세 닫기</span><br/>");
+		 });
+		
+		$(document).on("click",".profileDetailClose",function(){
+			$("div#profileMoreContent").empty();
+		//	$(this).remove();
+			$("div#profileMoreBtn").html("<span style='color: red; font-style: italic; cursor: pointer;'>프로필 더보기</span>").css('margin-top','30px'); 
+		});
+	    
+	}); // end of $(document).ready(function(){});--------------
+	
+	
+	// == 사진을 불러와서 img 태그로 만들어서 넘겨주는 함수 만들기 ==
+	function setImage(imgFilename){
+		var result = "<img src='images/"+imgFilename+"' />";
+		return result;
+	}// end of function setImage(imgFilename)----------
+	
+	
+	// == 프로필(약력)에 대한 문자열을 받아와서 span 태그로 만들어서 넘겨주는 함수 만들기 == //
+	function setComment(name, age){
+		var result = "1.성명: <span class='name'>"+name+"</span><br/>2.나이: "+age+"세";
+		return result;
+	}// end of function setComment(name, age)----------
+	
+	
+	// == 상세프로필(주소)에 대한 문자열을 받아와서 span 태그로 만들어서 넘겨주는 함수 만들기 == //
+	function setProfileMoreContent(address) {
+		var result = "<span style='font-weight: bold; color: blue;'>프로필 상세</span><br/>";
+		    result += "주소 : "+address+"<br/><br/>";
+		    
+		return result;    
+	}// end of function setProfileMoreContent(address)---------
+	
+</script>
+</head>
+<body>
+	<div id="container" align="center">
+		<div id="firstdiv"></div>
+		<div id="seconddiv">
+			<div id="face" style="margin-bottom: 3%;"></div>
+			<div id="comment" align="left"></div>
+			<div id="profileMoreBtn"></div>
+			<div id="profileMoreContent"></div>
+		</div>
+	</div>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,18 @@
+ ※ chap1
+  form-01.html 
+     => form에서 데이터 입력시 유효성 검사하기 - 1
+     => 자바스크립트에서는 변수의 타입(undefined, number, string, boolean, object)
+     => 웹에서는 기본적으로 모든 데이터는 string 타입이다.
+     => typeof 변수
+     => input 태그에 들어온 데이터값 알아보기
+     => console.log();
+     
+  form-02.html
+     => 자바스크립트에서 선택자 잡기 
+     
+     
+     
+     
+     
+     
+           

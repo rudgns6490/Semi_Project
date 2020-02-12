@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>연예인 사진 보이기/감추기(hover)</title>
+<!-- hover 는 mouseover 와 mouseout 이 결합된 것 -->
+<style type="text/css">
+
+div#container {
+	   width: 80%;
+	   margin: 0 auto;
+	   /* border: 1px solid red; */
+}
+
+span.buttons {
+		display: inline-block;
+		border: 2px solid orange;
+		margin: 20px;
+		padding: 5px;
+		background-color: yellow;
+		color: #ff0000;
+		font-size: 15pt;
+		cursor: pointer;
+		width: 100px;
+		text-align: center;
+	}
+	
+span.name {
+	font-size: 12pt;
+	font-weight: bold;
+	color: blue;
+}	
+
+div#comment {
+	position: relative;
+	left: 44%;
+}
+
+</style>
+
+<script type="text/javascript" src="/JqueryStudy/js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$(".buttons").hover(function(){
+			var $target = $(event.target);
+			
+			if( $target.is(".picture1") ) {
+				$("div#face").html(setImage("kimth.jpg"));
+				$("div#comment").html(setComment('김태희', 25));
+				$("div#seconddiv").show();
+			}
+			
+			else if( $target.is(".picture2") ) {
+				$("div#face").html(setImage("iyou.jpg"));
+				$("div#comment").html(setComment('아이유', 27));
+				$("div#seconddiv").show();
+			}
+			
+			else if( $target.is(".picture3") ) {
+				$("div#face").html(setImage("parkby.jpg"));
+				$("div#comment").html(setComment('박보영', 30));
+				$("div#seconddiv").show();
+			}  
+		  }, 
+		  function(){
+			  $("div#seconddiv").hide();
+		  }
+	   ); 
+		
+	}); // end of $(document).ready(function(){});--------------
+	
+	
+	// == 사진을 불러와서 img 태그로 만들어서 넘겨주는 함수 만들기 ==
+	function setImage(imgFilename){
+		var result = "<img src='images/"+imgFilename+"' />";
+		return result;
+	}// end of function setImage(imgFilename)----------
+	
+	// == 프로필(약력)에 대한 문자열을 받아와서 span 태그로 만들어서 넘겨주는 함수 만들기 == //
+	function setComment(name, age){
+		var result = "1.성명: <span class='name'>"+name+"</span><br/>2.나이: "+age+"세";
+		return result;
+	}// end of function setComment(name, age)----------
+	
+</script>
+</head>
+<body>
+	<div id="container" align="center">
+		<div id="firstdiv">
+			<span class="buttons picture1">김태희</span>
+			<span class="buttons picture2">아이유</span>
+			<span class="buttons picture3">박보영</span>
+		</div>
+		
+		<div id="seconddiv">
+			<div id="face" style="margin-bottom: 3%;"></div>
+			<div id="comment" align="left"></div>
+		</div>
+	</div>
+</body>
+</html>
+
+
+
+
+
+

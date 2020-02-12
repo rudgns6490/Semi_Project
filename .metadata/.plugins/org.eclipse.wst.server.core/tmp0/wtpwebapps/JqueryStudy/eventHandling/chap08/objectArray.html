@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>객체배열 사용하기</title>
+
+<style type="text/css">
+
+div#container {
+	   width: 80%;
+	   margin: 0 auto;
+	   /* border: 1px solid red; */
+}
+
+span.buttons {
+		display: inline-block;
+		border: 2px solid orange;
+		margin: 20px;
+		padding: 5px;
+		background-color: yellow;
+		color: #ff0000;
+		font-size: 15pt;
+		cursor: pointer;
+		width: 100px;
+		text-align: center;
+	}
+	
+ img {
+ 	margin: 15px;
+ }	
+ 	
+ div.data {
+ 	/* border: solid 1px red; */
+ 	
+ 	display: inline-block;
+ 	width: 200px;
+ } 	
+ 	
+</style>
+
+<script type="text/javascript" src="/JqueryStudy/js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+   /* == 객체 배열을 만들어서 사용하기 == 
+           자바스크립트에서 객체는 { } 으로 나타낸다. 
+           자바스크립트에서 배열은 [ ] 으로 나타낸다.     
+   */
+   
+    var personArr = [ {userid:"kimth", name:"김태희", age:25, school:"서울대학교", image:"kimth.jpg"} 
+				     ,{userid:"iyou", name:"아이유", age:28, school:"인천대학교", image:"iyou.jpg"}
+				     ,{userid:"parkby", name:"박보영", age:30, school:"수원대학교", image:"parkby.jpg"} 
+				    ];
+	
+	var names = "";       
+	var pictures = "";
+	var profiles = "";
+    
+	$(document).ready(function(){
+		
+		for(var i=0; i<personArr.length; i++) {
+			names += "<span class='buttons'>"+personArr[i].name+"</span>";
+			pictures += "<div class='data' align='left'><img src='images/"+personArr[i].image+"' /></div>";
+			profiles += "<div class='data' align='left'>1.성명: "+personArr[i].name+"<br/>2.나이: "+personArr[i].age+"<br/>3.출신학교: "+personArr[i].school+"<br/></div>";  
+		}// end of for------------------------ 
+		
+		$("div#name").html(names);
+		$("div#picture").html(pictures);
+		$("div#profile").html(profiles);
+	});
+    
+</script>
+
+</head>
+<body>
+	<div id="container" align="center">
+		<div id="name"></div>
+		<div id="picture"></div>
+		<div id="profile"></div>
+	</div>
+</body>
+</html>
+
+
+
+

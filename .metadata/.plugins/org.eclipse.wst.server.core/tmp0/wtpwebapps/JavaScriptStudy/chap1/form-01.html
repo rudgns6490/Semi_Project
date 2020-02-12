@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>form에서 데이터 입력시 유효성 검사하기 - 1</title>
+
+<style type="text/css">
+	div#container {
+		/* border: solid 1px gray; */
+		
+		width: 80%;
+		margin: 0 auto;
+	}
+	
+	h2#underline {
+		text-decoration: underline;
+		text-align: center;
+	}
+	
+	div#frm ul {
+		/* border: solid 1px red; */
+		
+		list-style-type: none;
+	}
+	
+	div#frm ul>li {
+		/* border: solid 1px green; */
+		
+		padding: 10px 0;
+	}
+	
+	div#frm ul>li>label {
+		/* border: solid 1px blue; */
+		
+		display: inline-block;
+		width: 100px;
+		padding-left: 0;
+	}
+	
+	button.btn {
+		width: 70px;
+		height: 30px;
+		font-size: 12pt;
+		font-weight: bold;
+		margin: 20px 0 0 40px;
+	}
+	
+</style>
+
+<script type="text/javascript">
+
+	function checkType() {
+		// alert("확인 버튼을 클릭하셨군요~~");
+		
+		var a = 10;
+		// 자바스크립트에서는 변수의 타입은 자바처럼 정해져 있는 것이 아니라
+		// 변수에 들어오는 값에 따라서 타입이 정해진다.
+		
+		/*
+		   1. undefined : 변수가 정의되지 않거나 값이 없을때
+		   2. number    : 데이터타입이 숫자(정수 또는 실수)일때 
+		   3. string    : 데이터타입이 문자열일때
+		   4. boolean   : 데이터타입이 true, false 일때
+		   5. object    : 데이터타입이 객체 또는 배열 일때
+		                  html 에서 태그는 객체이다.
+		                  
+		           변수의 타입을 알아보는 것은 typeof 변수명  을 하면
+		           해당변수의 데이터타입을 알려준다.
+		           
+		    !!!! ~~~ 중요 ~~~ !!!!
+		        암기!! 웹에서는 기본적으로 모든 데이터는 string 타입이다.
+		        웹에서 입력한 값이 숫자이더라도 number 가 아니라 string 타입이다. 
+		*/
+		
+		alert("a=10 을 했을때 변수 a 의 타입은 => " + typeof a);
+		// a=10 을 했을때 변수 a 의 타입은 => number
+		
+		a = 21.345;
+		alert("a=21.345 을 했을때 변수 a 의 타입은 => " + typeof a);
+		// a=21.345 을 했을때 변수 a 의 타입은 => number
+		
+		a = "안녕하세요";
+		alert("a=안녕하세요 을 했을때 변수 a 의 타입은 => " + typeof a);
+		// a=안녕하세요? 을 했을때 변수 a 의 타입은 => string 
+				
+		a = true; // a = false;
+		alert("a=true 을 했을때 변수 a 의 타입은 => " + typeof a);
+		// a=true 을 했을때 변수 a 의 타입은 => boolean
+		
+		a = document.registerFrm.userid;
+		alert("a=document.registerFrm.userid 을 했을때 변수 a 의 타입은 => " + typeof a);
+		// a=document.registerFrm.userid 을 했을때 변수 a 의 타입은 => object 
+		
+		a = document.registerFrm.user;
+		alert("a=document.registerFrm.user 을 했을때 변수 a 의 타입은 => " + typeof a);
+		// a=document.registerFrm.user 을 했을때 변수 a 의 타입은 => undefined  
+		
+		var age = document.registerFrm.age.value;
+		alert("age의  데이터type => " + typeof age + " , age 의 값 => " + age);
+		// age 의  데이터 type => string, age 의 값 => 5
+		
+	}// end of function checkType()-------------
+	
+
+	function goSubmit() {
+		
+		var frm = document.registerFrm;
+		
+	// 1. 아이디 입력란에 데이터값이 들어왔는지 검사하기 	
+		var useridVal = frm.userid.value.trim();
+	
+	/*
+		if(useridVal == "") 
+			alert("userid 값을 입력하세요!!");
+		else 
+			alert("userid =>" + useridVal);
+		
+		if(useridVal == "") 
+			console.log("userid 값을 입력하세요!!");
+		else 
+			console.log("userid =>" + useridVal);
+	*/
+		if(useridVal == "") {
+			alert("아이디를 입력하세요!!");
+			frm.userid.value = "";
+			frm.userid.focus();
+			return;  // 종료
+		}
+		
+	// 2. 암호 입력란에 데이터값이 들어왔는지 검사하기
+		var passwd1Val = frm.passwd.value.trim();
+		if(passwd1Val == "") {
+			alert("암호를 입력하세요!!");
+			frm.passwd.value = "";
+			frm.passwd.focus();
+			return;  // 종료
+		}
+		
+	// 3. 암호 입력란과 암호확인 입력란의 데이터값이 같은지 다른지 검사하기 
+	   var passwd2Val = document.getElementById("passwd2").value.trim();
+	//   console.log("passwd2Val : "+passwd2Val);
+	
+	   if(passwd1Val != passwd2Val) {
+		    alert("암호와 암호확인값이 서로 다릅니다!!");
+			
+		    frm.passwd.value = "";
+		    document.getElementById("passwd2").value = "";
+		    
+			frm.passwd.focus();
+			return;  // 종료
+	   }
+	
+	// 4. 성명 입력란에 데이터값이 들어왔는지 검사하기
+		var nameVal = frm.name.value.trim();
+		if(nameVal == "") {
+			alert("성명을 입력하세요!!");
+			frm.name.value = "";
+			frm.name.focus();
+			return;  // 종료
+		}
+	
+	// 5. e메일 입력란에 데이터값이 들어왔는지 검사하기
+		var emailVal = frm.email.value.trim();
+		if(emailVal == "") {
+			alert("이메일을 입력하세요!!");
+			frm.email.value = "";
+			frm.email.focus();
+			return;  // 종료
+		}
+	
+	// 6. 전화번호 입력란에 데이터값이 들어왔는지 검사하기
+	    var telVal = frm.tel.value.trim();
+		if(telVal == "") {
+			alert("전화번호를 입력하세요!!");
+			frm.tel.value = "";
+			frm.tel.focus();
+			return;  // 종료
+		}
+	   
+	// 7. 모든 입력란이 올바르게 입력이 되었더라면 폼에 있던 데이터를 전송하기 	
+		frm.action="register.do";
+		frm.method="post";
+		frm.submit();
+		
+	}// end of function goSubmit()-----------------
+	
+</script>
+
+</head>
+<body>
+
+	<div id="container">
+		<h2 id="underline">회원가입</h2>
+		
+		<div id="frm">
+			<form name="registerFrm">
+				<ul>
+					<li>
+						<label for="userid">아이디</label>
+						<input type="text" name="userid" id="userid" size="20" maxlength="20" required autofocus autocomplete="off" />       
+					</li>
+					
+					<li>
+						<label for="passwd1">암호</label>
+						<input type="password" name="passwd" id="passwd1" size="20" maxlength="20" required />
+					</li>
+					
+					<li>
+						<label for="passwd2">암호확인</label>
+						<input type="password" id="passwd2" size="20" maxlength="20" required /> 
+					</li>
+					
+					<li>
+						<label for="name">성명</label>
+						<input type="text" name="name" id="name" size="20" maxlength="20" required />
+					</li>
+					
+					<li>
+						<label for="email">e메일</label>
+						<input type="email" name="email" id="email" size="40" maxlength="40" placeholder="예 abc@gmail.com" /> 
+					</li>
+					
+					<li>
+						<label for="tel">전화번호</label>
+						<input type="tel" name="tel" id="tel" size="20" maxlength="11" placeholder="-는 제외하고 입력" />
+					</li>
+					
+					<li>
+						<label for="age">나이</label>
+						<input type="number" name="age" id="age" min="1" max="150" value="1" step="1" />
+					</li>
+					
+					<li>
+				    	<button type="button" onclick="checkType();">자바스크립에서 변수타입 확인하기</button>
+				        <button type="button" class="btn" onclick="goSubmit();">확인</button>
+						<button type="reset" class="btn">취소</button>
+					</li>
+				</ul>	
+			</form>
+		</div>
+	
+	</div>
+
+</body>
+</html>
+
+
+

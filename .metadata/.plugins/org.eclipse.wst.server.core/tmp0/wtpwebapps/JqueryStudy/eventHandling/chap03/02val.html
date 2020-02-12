@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>4지 선다 문제만들기 - 반복문처럼 쓰이는 each();</title>
+
+<style type="text/css">
+   .answerCheck {
+   	  margin: 10px;
+   }
+   
+   label {
+   	  margin: 10px;
+   }
+   
+</style>
+
+<script type="text/javascript" src="/JqueryStudy/js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	/*	
+		var checkboxArr = $(":checkbox");
+		for(var i=0; i<checkboxArr.length; i++) {
+			console.log(checkboxArr[i].value);
+		}
+		// 1  2  3  4 
+		console.log("~~~~~~~~~~~~~~~~~~~~");
+		
+		checkboxArr = $("input:checkbox[name=answer]");
+		for(var i=0; i<checkboxArr.length; i++) {
+			console.log(checkboxArr[i].value);
+		}
+		// 1  2
+		console.log("~~~~~~~~~~~~~~~~~~~~");
+		
+		checkboxArr = $("input:checkbox[name=bbb]");
+		for(var i=0; i<checkboxArr.length; i++) {
+			console.log(checkboxArr[i].value);
+		}
+		// 3  4
+	*/
+	    $(".answerCheck").hide(); 
+	    
+		// == 체크박스 여러개중 라디오 처럼 1개만 선택하도록 만든것 == // 
+	    $("input:checkbox[name=answer]").bind("click", function(){
+	    /*	
+	    	var bool = $(this).prop("checked");
+	    	        // $(this).prop("checked"); 은 체크박스에 체크가 되어진 경우라면 true 
+	    	        // $(this).prop("checked"); 은 체크박스에 체크가 해제되어진 경우라면 false 
+	    	if(bool) {
+	    		alert( $(this).val() );
+	    	}
+	    */	 
+	    	$("input:checkbox[name=answer]").prop("checked", false);
+	        $(this).prop("checked", true);
+	    });
+	    
+		
+	    $("#btnOK").bind("click", function(){
+	    	
+	    	var flag = false;
+	    	
+	    	$("input:checkbox[name=answer]").each(function(){
+	    		if( $(this).prop("checked") && $(this).val() == "3") {
+	    			// 정답이라면
+	    			
+	    			$(".okAnswer").show();
+	    			flag = true;
+	    			return false; 
+	    			// 마치 for문에서 break; 와 같은 뜻이 return false; 이다.
+	    			// 마치 for문에서 continue; 와 같은 뜻이 return true; 이다. 
+	    		}
+	    	});
+	    	
+	    	if(!flag)
+	    		$(".failAnswer").show();
+	    	
+	    });
+	    
+	    
+	    $("#btnRestart").bind("click", function(){
+			$(".answerCheck").hide();
+		});
+		
+	});// end of $(document).ready()--------------
+</script>
+
+</head>
+<body>
+	<form>
+		[문제] 다음중  8+5*3 은 얼마입니까?<br/>
+		<ol>
+			<li><label for="answer1">20</label><input type="checkbox" name="answer" id="answer1" value="1"/></li>
+			<li><label for="answer2">30</label><input type="checkbox" name="answer" id="answer2" value="2"/></li>
+			<li><label for="answer3">23</label><input type="checkbox" name="answer" id="answer3" value="3"/></li>
+			<li><label for="answer4">45</label><input type="checkbox" name="answer" id="answer4" value="4"/></li>
+		</ol>
+		<br/><br/>
+		<button type="button" id="btnOK">정답확인</button>
+		<button type="reset"  id="btnRestart">다시시작</button> 
+	</form>	
+	
+	<div class="answerCheck okAnswer"><img src="images/ok.png" /></div>
+	<div class="answerCheck failAnswer"><img src="images/no.png" /></div>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,96 @@
+package myshop.model;
+
+import java.sql.SQLException;
+import java.util.*;
+
+public interface InterProductDAO {
+
+	// jsp_category 테이블에서 카테고리코드(code)와 카테고리명(cname)을 조회해오기 
+	List<HashMap<String, String>> getCategoryList() throws SQLException;
+	
+	// Ajax를 이용한 더보기 방식으로 페이징 처리를 위해서 pspec 별 제품의 갯수를 조회해오기
+	int totalPspecCount(String pspec) throws SQLException;
+	
+	// Ajax를 이용한  더보기 방식(페이징처리)으로 상품정보를 잘라서(startRno ~ endRno) 조회해오기 
+	List<ProductVO> getProductsByPspec(HashMap<String, String> paraMap) throws SQLException;
+	
+	// Ajax를 이용한 더보기 방식으로 페이징 처리를 위해서 카테고리별 제품의 갯수를 조회해오기
+	int totalCodeCount(String code) throws SQLException;
+	
+	// Ajax를 이용한 카테고리별  더보기 방식(페이징처리)으로 상품정보를 잘라서(startRno ~ endRno) 조회해오기 
+	List<ProductVO> getProductsByCategory(HashMap<String, String> paraMap) throws SQLException; 
+	
+	// jsp_spec 테이블에서 sname(스펙이름 HIT,NEW,BEST)을 조회해오기 
+	List<String> getSpecName() throws SQLException;
+	
+	// 제품번호 채번 해오기
+	int getPnumOfProduct() throws SQLException;  
+	
+	// jsp_product 테이블에 insert 하기
+	int productInsert(ProductVO pvo) throws SQLException;   
+	
+	// jsp_product_imagefile 테이블에 추가이미지 파일명 insert 해주기 
+	int product_imagefile_Insert(int pnum, String attachFileName) throws SQLException;
+	
+	// 제품번호를 가지고서 해당 제품의 정보를 조회해오기
+	ProductVO getProductOneByPnum(String pnum) throws SQLException;
+	
+	// 제품번호를 가지고서 해당 제품의 추가된 이미지 정보를 조회해오기
+	List<String> getImagesByPnum(String pnum) throws SQLException;
+	
+	// jsp_like 테이블에 insert 하기 
+	int insertLike(String pnum, String userid) throws SQLException;
+	
+	// jsp_dislike 테이블에 insert 하기 
+	int insertDisLike(String pnum, String userid) throws SQLException;
+	
+	// 특정제품에 대한 좋아요 갯수와 싫어요 갯수를 조회해오기 
+	HashMap<String, Integer> getLikeDislikeCount(String pnum) throws SQLException;
+	
+	// Ajax 를 이용한 특정 제품의 상품후기를 입력(insert)하기
+	int addComment(CommentVO cmtvo) throws SQLException;
+	
+	// *** Ajax 를 이용한 특정 제품의 상품후기를 조회해주는 추상메소드 *** //
+	List<CommentVO> commentList(String pnum) throws SQLException;
+	
+	// 장바구니 담기 
+	// 장바구니 테이블에 해당 제품이 존재하지 않는 경우는 jsp_cart 테이블에 insert 를 해야하고,
+	// 장바구니 테이블에 해당 제품이 존재하는 경우에 또 그 제품을 추가해서 장바구니 담기를 한다라면  jsp_cart 테이블에 update 를 해야 한다. 
+	int addCart(String userid, String pnum, String oqty) throws SQLException;
+	
+	// 장바구니에 들어있는 특정사용자의 제품의 총갯수 조회하기 
+	int getTotalCountCart(String userid) throws SQLException;
+		
+	//  -- 로그인 되어진 사용자의 페이징 처리한 장바구니 데이터조회 결과물 가져오기
+	List<CartVO> getProductCart(String userid, int currentShowPageNo, int sizePerPage) throws SQLException;
+	
+	//  -- 로그인 되어진 사용자의 장바구니에 담긴 주문총액합계 및 총포인트합계 가져오기 
+	HashMap<String, Integer> getSumCartPricePoint(String userid) throws SQLException;
+	
+	// 장바구니 테이블에서 특정제품을 장바구니에서 비우기 
+	int delCart(String cartno) throws SQLException;
+	
+	// 장바구니 테이블에서 특정제품의 수량 변경하기 
+	int updateCart(String cartno, String oqty)throws SQLException;
+	
+	
+	// ===== Transaction 처리하기 ===== // 
+    // 1. 주문개요 테이블에 입력되어야할 주문전표를 채번(select)하기 
+    // 2. 주문개요 테이블에 채번해온 주문전표, 로그인한 사용자, 현재시각을 insert 하기(수동커밋처리)
+    // 3. 주문상세 테이블에 채번해온 주문전표, 제품번호, 주문량, 주문금액을 insert 하기(수동커밋처리)
+    // 4. 제품테이블에서 제품번호에 해당하는 잔고량을 주문량 만큼 감하기(수동커밋처리) 
+    // 5. 장바구니테이블에서 cartnojoin 값에 해당하는 행들을 삭제(delete OR update)하기(수동커밋처리) 
+    // 6. 회원테이블에서 로그인한 사용자의 coin 액을 sumtotalPrice 만큼 감하고, point 를 sumtotalPoint 만큼 더하기(update)(수동커밋처리) 
+    // 7. **** 모든처리가 성공되었을시 commit 하기(commit) **** 
+    // 8. **** SQL 장애 발생시 rollback 하기(rollback) **** 
+	int orderAdd(HashMap<String, Object> paraMap);
+	
+	// ==== 사용자가 주문완료한 제품들의 정보를 조회해주는 메소드 생성하기 ===== //
+	List<ProductVO> getJumunProductList(String pnumes) throws SQLException;
+	
+}
+
+
+
+
+

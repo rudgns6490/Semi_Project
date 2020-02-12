@@ -1,0 +1,141 @@
+package member.model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
+public class QNADAO implements InterQNADAO{
+	
+	private DataSource ds;
+	// DataSource ds 는 아파치톰캣이 제공하는 DBCP(DB Connection Pool)이다. 
+	
+	private Connection conn;
+	private PreparedStatement pstmt;
+	private ResultSet rs;
+	
+	
+	public QNADAO() {
+		try {
+		    Context initContext = new InitialContext();
+			Context envContext  = (Context)initContext.lookup("java:/comp/env");
+			ds = (DataSource)envContext.lookup("jdbc/semi");
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	
+	// 사용한 자원을 반납하는 close() 메소드 생성하기
+	public void close() {
+		try {
+			if(rs != null) { rs.close(); rs=null; }
+			if(pstmt != null) { pstmt.close(); pstmt=null; } 
+			if(conn != null) { conn.close(); conn=null; }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	//QNA 전체목록 보기
+	@Override
+	public List<QNAVO> getQNAList() throws SQLException {
+		
+		List<QNAVO> QNAList = null;
+		
+		try {
+			 conn = ds.getConnection();
+			 
+			 String sql = " select a.qna_num, b.member_num, a.title, a.content, to_char(a.write_date,'yyyy-mm-dd') as write_date, write_pw, b.username\n"+
+					 	  " from ej_qna a, ej_member b\n"+
+					 	  " where 1=1\n"+
+					 	  " and a.fk_member_num = b.member_num";
+			 		    
+			pstmt = conn.prepareStatement(sql);
+					
+			rs = pstmt.executeQuery();
+			
+			int cnt = 0;
+			while(rs.next()) {
+				cnt++;
+				
+				if(cnt==1) {
+					QNAList = new ArrayList<QNAVO>();
+				}
+				
+				QNAVO qvo = new QNAVO();
+				qvo.setQna_num(rs.getInt("qna_num"));
+				qvo.setMember_num(rs.getInt("member_num"));
+				qvo.setTitle(rs.getString("title"));
+				qvo.setContent(rs.getString("content"));
+				qvo.setWrite_pw(rs.getString("write_pw"));
+				qvo.setWrite_date(rs.getString("write_date"));
+				qvo.setUsername(rs.getString("username"));
+				
+				
+				QNAList.add(qvo);
+			}// end of while(rs.next())----------------------------------
+			
+		} finally {
+			close();
+		}	
+		
+		return QNAList;
+	}
+	
+	
+	@Override
+	public QNAVO getQNAContent(String qnanum) throws SQLException {
+		QNAVO pvo = null;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select a.qna_num, b.member_num, b.username, a.title, a.content, to_char(a.write_date,'yyyy-mm-dd') as write_date, a.write_pw \n"+
+						 " from ej_qna a , ej_member b\n"+
+						 " where 1=1\n"+
+						 " and a.fk_member_num = b.member_num\n"+
+						 " and a.qna_num=?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, qnanum);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				 int qna_num = rs.getInt("qna_num");    
+				 int member_num = rs.getInt("member_num");               
+				 String username = rs.getString("username");  
+				 String title = rs.getString("title");          
+				 String content = rs.getString("content");            
+				 String write_date = rs.getString("write_date");
+				 String write_pw = rs.getString("write_pw");
+					 
+				 pvo = new QNAVO( qna_num, member_num, title, content, write_pw, write_date, username);
+			}
+			
+		
+			
+		} finally {
+			close();
+		}
+	
+		
+		return pvo;
+	}
+
+
+	
+	
+	
+	
+	
+	
+
+}// end of public class QNADAO -------------------------------

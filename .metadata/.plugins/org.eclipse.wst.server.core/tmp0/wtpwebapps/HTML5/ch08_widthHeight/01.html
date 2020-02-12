@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>width/min-width/max-width</title>
+<style type="text/css">
+	div#screen1 {
+		width: 40%;
+		border: 2px solid red;
+	}
+	
+	div#screen2 {
+		min-width: 40%;
+		border: 2px solid red;
+	}
+	
+	div#screen3 {
+		max-width: 40%;
+		overflow: auto;
+		border: 2px solid red;
+	}
+	
+	div.screen {
+		display: inline-block;
+	}
+</style>
+</head>
+<body>
+	<h2>1.width</h2>
+	<div id="screen1" class="screen">
+		<img src="images/상어큰사진.jpg">
+	</div>
+	<div class="screen">
+		<img src="images/tiger.jpg">
+	</div> 
+	<br/><br/>
+	
+	<h2>2.min-width</h2>
+	<div id="screen2" class="screen">
+		<img src="images/상어큰사진.jpg">
+	</div>
+	<div class="screen">
+		<img src="images/tiger.jpg">
+	</div>
+	<br/><br/>
+	
+	<h2>3.max-width</h2>
+	<div id="screen3" class="screen">
+		<img src="images/상어큰사진.jpg">
+	</div>
+	<div class="screen">
+		<img src="images/tiger.jpg">
+	</div>
+</body>
+</html>

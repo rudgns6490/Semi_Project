@@ -1,0 +1,135 @@
+@charset "UTF-8";
+
+/* 여백 및 기본적인 폰트를 설정 */
+body {
+	/* border: solid 2px gray; */
+	
+	/* margin: 20px 40px 80px 160px; */ /* 상 우 하 좌 */
+	margin: 0;
+	
+	/* padding: 20px 40px 80px 160px; */  /* 상 우 하 좌 */
+	padding: 0;
+	
+	font-family: Arial, "MS Trebuchet", sans-serif; 
+}
+
+div#first {
+	border: solid 1px red;
+	/* width: 200px; */
+	height: 300px;
+ /* margin: 20px 50px 20px 50px; */
+	margin: 20px 50px;
+}
+
+div#second {
+	border: solid 1px blue;
+	width: 50%;
+ /* padding: 20px 50px 20px 50px; */
+	padding: 20px 50px;
+}
+
+
+/* 페이지의 내용을 가운데에 놓음 */
+div#wrap {
+	/* border: solid 1px red; */
+	
+	width: 960px;
+	margin: 0 auto;
+}
+
+/* 헤더의 넓이를 지정해서 보더아래값만 주기 */
+header#page_header {
+	width: 100%;
+ /* border-top: solid 2px blue; */ 
+ /* border-right: solid 2px blue; */
+	border-bottom: solid 2px blue;
+ /* border-left: solid 2px blue; */
+ 
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+
+ /* 내비게이션의 리스트의 점 제거 */
+ header#page_header nav ul , footer#page_footer nav ul {
+ 	list-style-type: none;
+ } 
+ 
+ /* 내비게이션 가로 바 형태로 만듦 */
+ header#page_header nav ul li , footer#page_footer nav ul li {
+ 	/* border: solid 1px gray; */
+ 	
+ 	/* 화면에 보여주는 형식. 아래로 보여줄것인가?(block) 옆으로 보여줄것인가?(inline) 를 결정하는 것 */ 
+ 	display: inline;    /* 리스트를 가로 형태로 만듦 */
+ 	margin: 0 20px 0 0; /* 상 우 하 좌 */
+ 	padding: 0;         /* 상 우 하 좌 */
+ }
+
+ /* a 태그에 밑줄 제거하기 */
+ a {
+ 	text-decoration: none;
+ }
+
+ a:link {  /* 방문하기전의 링크 */
+	color: blue;
+ } 
+ 
+ a:hover { /* 링크에 마우스 포인터를 올려 놓았을때 */
+	background-color: yellow;
+	color: red;
+	font-weight: bold;
+ }
+ 
+ 
+ section#posts {
+ 	/* border: solid 1px blue; */
+ 	
+ 	float: left;   /* 가로방향으로 표시 */
+ 	width: 72%;
+ 	border-right: solid 1px gray;
+ 	padding-right: 1%;
+ }
+ 
+ section#posts aside {
+ 	/* border: solid 1px yellow; */
+ 	
+ 	float: right;
+ 	width: 35%;
+ 	margin-left: 20px;
+ 	
+ 	font-size: 20px;
+ 	font-weight: bold;
+ 	color: #b30059; 
+ 	line-height: 40px; /* 줄간격 */
+ }
+ 
+ 
+ section#sidebar {
+ 	/* border: solid 1px red; */
+ 	
+ 	float: left;
+ 	width: 24%;
+ 	margin-left: 1%;
+ }
+ 
+ 
+ footer#page_footer {
+ 	/* border: solid 1px green; */
+ 	
+ 	clear: both;  /* float 을 해제해서 페이지 하단에 안착시킨다. */
+ 	width: 100%;
+ 	text-align: center;
+ }
+ 
+ p {
+ 	/* border: solid 1px red; */
+ 	margin: 0 0 20px 0;  /* 상 우 하 좌 */
+ }
+
+
+
+
+
+
+
+

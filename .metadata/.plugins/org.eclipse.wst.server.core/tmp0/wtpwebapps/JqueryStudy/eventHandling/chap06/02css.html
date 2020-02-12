@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>버튼을 클릭하면 색상이 나오는 것</title>
+
+<style type="text/css">
+
+	div#container {
+		/* border: solid 1px gray; */
+		
+		width: 90%;
+		margin: 0 auto;
+		padding: 2%;
+	}
+
+	button.btns {
+		margin-right: 20px;
+		width: 100px;
+		height: 50px;
+		font-size: 20pt;
+	}
+
+	div.answer {
+		display: inline-block;
+	}
+
+	div#hangulDiv {
+		font-size: 60pt;
+	}
+
+</style>
+
+<script type="text/javascript" src="/JqueryStudy/js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		var btnNameArr = ["red","orange","yellow","green","blue","navy","purple"]; 
+		
+		var html = "<span style='font-size: 20pt; background-color: navy; color: white; margin-right: 60px;'>버튼을 눌러보세요</span>";
+		for(var i=0; i<btnNameArr.length; i++) {
+			html += "<button type='button' class='btns'>" +btnNameArr[i]+ "</button>";
+		}
+		
+		$("#btnsDiv").html(html);
+		
+		$("button").click(function(){
+			
+			$("#colorDiv").css({'width':'200px'
+				               ,'height':'200px'
+				               ,'backgroundColor':$(this).text() }); 
+			
+			$("#hangulDiv").css('color',$(this).text());
+			
+			switch ($(this).text()) {
+				
+				case "red":
+					$("#hangulDiv").text("빨강");
+					break;
+					
+				case "orange":
+					$("#hangulDiv").text("주황");
+					break;
+					
+				case "yellow":
+					$("#hangulDiv").text("노랑");
+					break;
+					
+				case "green":
+					$("#hangulDiv").text("초록");
+					break;
+					
+				case "blue":
+					$("#hangulDiv").text("파랑");
+					break;
+					
+				case "navy":
+					$("#hangulDiv").text("남색");
+					break;					
+	
+				case "purple":
+					$("#hangulDiv").text("보라");
+					break;
+			}
+		});
+	});
+</script>
+
+</head>
+<body>
+
+	<div id="container">
+		<div id="btnsDiv"></div>
+	    <div id="colorDiv" class="answer"></div>
+	    <div id="hangulDiv" class="answer"></div>
+	</div>
+
+</body>
+</html>
+
+
+
+
+
+

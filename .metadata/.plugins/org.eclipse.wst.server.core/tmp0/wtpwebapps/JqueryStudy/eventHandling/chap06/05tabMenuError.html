@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>tab 메뉴를 작성해본다.</title>
+
+<style type="text/css">
+	body {
+		font-family: Arial;
+	}
+
+	.tab {
+		overflow: hidden;
+		border: 1px solid #ccc;
+		background-color: #f1f1f1;
+	}
+
+	.tab button {
+		float: left;
+		border: none;
+		outline: none;
+		cursor: pointer;
+		padding: 14px 16px;
+		font-size: 17px;
+	}
+
+	.tab button:hover {
+		background-color: #ddd;
+	}
+
+	.tab button.active {
+		background-color: #ccc;
+	}
+
+	.tabcontent {
+		display: none;
+		padding: 6px 12px;
+		border: 1px solid #ccc;
+		border-top: none;
+	}
+</style>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+	
+		$(".tablinks:eq(1)").addClass("active");
+		$("#London").css('display', 'none');
+		
+		$(".tablinks").click(function(event) {
+			selectedIndex = $(this).index();
+	
+			$(".tabcontent").each(function(index, item) {
+				if (index == selectedIndex)
+					$(item).css('display', 'none');
+	
+				else
+					$(item).css('display', 'block');
+			});
+	
+			$(".tablinks").each(function(index, item) {
+				if (index != selectedIndex)
+					$(item).addClass("active");
+				else
+					$(item).removeClass('active');
+	
+			});
+	
+		});
+	
+	});
+</script>
+
+</head>
+<body>
+	<p>탭 메뉴를 선택해 보세요</p>
+	
+	<div class="tab">
+		<button class="tablinks">런던</button>
+		<button class="tablinks">파리</button>
+		<button class="tablinks">앙카라</button>
+	</div>
+	
+	<div id="London" class="tabcontent">
+		<h3>런던</h3>
+		<p>런던 (영어: London)은 잉글랜드와 영국의 수도이다.</p>
+	</div>
+	
+	<div id="Paris" class="tabcontent">
+		<h3>파리</h3>
+		<p>파리(Paris)는 프랑스의 수도이다.</p>
+	</div>
+	
+	<div id="ankara" class="tabcontent">
+		<h3>앙카라</h3>
+		<p>터키의 수도이다.</p>
+	</div>
+</body>
+</html>
+

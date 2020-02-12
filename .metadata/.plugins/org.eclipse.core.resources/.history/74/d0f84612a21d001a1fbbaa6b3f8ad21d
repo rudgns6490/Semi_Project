@@ -1,0 +1,190 @@
+package myshop.controller;
+
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.json.JSONObject;
+
+import common.controller.AbstractController;
+import member.controller.GoogleMail;
+import member.model.*;
+import myshop.model.*;
+
+public class OrderAddAction extends AbstractController {
+
+	private String getOdrcode() throws SQLException {
+	   // === 주문코드 생성하기 === //
+	   // 주문코드 형식 : s+날짜+sequence  s20180430-1
+	
+	   // 날짜 생성
+	   Date now = new Date();
+	   SimpleDateFormat smdatefm = new SimpleDateFormat("yyyyMMdd"); 
+	   String today = smdatefm.format(now);
+	   
+	   ProductDAO pdao = new ProductDAO();
+	   
+	   int seq = pdao.getSeq_jsp_order();
+	   // pdao.getSeq_jsp_order(); 는 시퀀스 seq_jsp_order 값을 채번해오는 것.
+		
+	   return "s"+today+"-"+seq;
+		
+	}// end of String getOdrcode()----------------- 
+	
+	
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String pnumjoin = request.getParameter("pnumjoin");
+		String oqtyjoin = request.getParameter("oqtyjoin");
+		String cartnojoin = request.getParameter("cartnojoin");
+		String totalPricejoin = request.getParameter("totalPricejoin");
+		String sumtotalPrice = request.getParameter("sumtotalPrice");
+		String sumtotalPoint = request.getParameter("sumtotalPoint");
+			
+		System.out.println("~~~~~~~~~~~~ 확인용 pnumjoin : " + pnumjoin);
+		System.out.println("~~~~~~~~~~~~ 확인용 oqtyjoin : " + oqtyjoin);
+		System.out.println("~~~~~~~~~~~~ 확인용 cartnojoin : " + cartnojoin);
+		System.out.println("~~~~~~~~~~~~ 확인용 totalPricejoin : " + totalPricejoin);
+		System.out.println("~~~~~~~~~~~~ 확인용 sumtotalPrice : " + sumtotalPrice);
+		System.out.println("~~~~~~~~~~~~ 확인용 sumtotalPoint : " + sumtotalPoint);
+		
+		JSONObject jsobj = new JSONObject();
+		String result = "";
+		
+		if(pnumjoin != null && 
+		   oqtyjoin != null && 
+		   cartnojoin != null && 
+		   totalPricejoin != null && 
+		   sumtotalPrice != null && 
+		   sumtotalPoint != null) {
+			
+			try	{
+				            // ===== Transaction 처리하기 ===== // 
+				    // 1. 주문개요 테이블에 입력되어야할 주문전표를 채번(select)하기 
+			        // 2. 주문개요 테이블에 채번해온 주문전표, 로그인한 사용자, 현재시각을 insert 하기(수동커밋처리)
+				    // 3. 주문상세 테이블에 채번해온 주문전표, 제품번호, 주문량, 주문금액을 insert 하기(수동커밋처리)
+			        // 4. 제품테이블에서 제품번호에 해당하는 잔고량을 주문량 만큼 감하기(수동커밋처리) 
+			        // 5. 장바구니테이블에서 cartnojoin 값에 해당하는 행들을 삭제(delete OR update)하기(수동커밋처리) 
+			        // 6. 회원테이블에서 로그인한 사용자의 coin 액을 sumtotalPrice 만큼 감하고, point 를 sumtotalPoint 만큼 더하기(update)(수동커밋처리) 
+				    // 7. **** 모든처리가 성공되었을시 commit 하기(commit) **** 
+				    // 8. **** SQL 장애 발생시 rollback 하기(rollback) **** 
+				
+				    // === Transaction 처리가 성공시 세션에 저장되어져 있는 loginuser 정보를 새로이 갱신하기 ===
+				    // === 주문이 완료되었을시 주문이 완료되었다라는 email 보내주기  === // 
+
+			    String[] pnumArr = pnumjoin.split(",");
+			    String[] oqtyArr = oqtyjoin.split(",");
+			    String[] totalPriceArr = totalPricejoin.split(",");
+			    			    
+			    for(int i=0; i<pnumArr.length; i++) {
+				    System.out.println("~~~~ 확인용 pnum: " + pnumArr[i] + ", oqty: " + oqtyArr[i] + ", totalPrice: " + totalPriceArr[i]); 
+			    }// end of for--------------------------------------------------
+
+			     
+			    InterProductDAO pdao = new ProductDAO();
+			    
+			    HashMap<String, Object> paraMap = new HashMap<String, Object>();
+			    paraMap.put("pnumArr", pnumArr);
+			    paraMap.put("oqtyArr", oqtyArr);
+			    paraMap.put("totalPriceArr", totalPriceArr);
+			    paraMap.put("cartnojoin", cartnojoin);
+			    paraMap.put("sumtotalPrice", sumtotalPrice);
+			    paraMap.put("sumtotalPoint", sumtotalPoint);
+			    
+			    HttpSession session = request.getSession();
+			    MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+			    paraMap.put("userid", loginuser.getUserid());
+			    
+			 // *** Transaction 처리를 해주는 메소드 호출하기 *** //
+			    String odrcode = getOdrcode();
+				// 주문코드(명세서번호) 채번하기
+				// 주문코드 형식 : s+날짜+sequence
+			    paraMap.put("odrcode", odrcode);
+			    
+			    int n = pdao.orderAdd(paraMap);
+
+			 // **** 주문이 완료되었을시 세션에 저장되어져 있는 loginuser 정보를 갱신하고
+			 //      이어서 주문이 완료되었다라는 email 보내주기  **** //
+			    if(n==1) {
+			    	jsobj.put("n", 1);
+
+			    	InterMemberDAO mdao = new MemberDAO();
+			    	loginuser = mdao.selectOneMember(String.valueOf(loginuser.getIdx())); 
+					session.setAttribute("loginuser", loginuser);
+					
+			////////// email 보내기 시작 ///////////
+					GoogleMail mail = new GoogleMail();
+					
+					int length = pnumArr.length;
+					StringBuilder sb = new StringBuilder();
+					for(int i=0; i<length; i++) {
+						sb.append("\'"+pnumArr[i]+"\',");
+						/*
+						   jsp_product 테이블에서 select 시
+						   where 절에 in() 속에 제품번호가 들어간다.
+						      만약 제품번호에 홑따옴표(')가 필요한 경우에는 위와같이 해주면 된다.
+						 */
+					}// end of for-----------------
+					
+					String pnumes = sb.toString().trim();
+					// '3','4','7',
+					
+					pnumes = pnumes.substring(0, pnumes.length()-1);
+					// 맨뒤에 콤마(,)를 제거하기 위함.
+					// '3','4','7'
+					
+				//	System.out.println("~~~~확인용 주문한 제품번호 : " + pnumes);
+					// ~~~~확인용 주문한 제품번호 : '3','4','7'
+					
+					List<ProductVO> jumunProductList = pdao.getJumunProductList(pnumes); 
+					// 주문한 제품번호들에 대한 제품정보를 얻어오는 것.
+					
+					sb.setLength(0);
+					// StringBuilder sb 의 초기화하기 
+					
+					sb.append("주문코드번호 : <span style='color: blue; font-weight: bold;'>"+odrcode+"</span><br/><br/>");
+					sb.append("<주문상품><br/>");
+					
+					for(int i=0; i<jumunProductList.size(); i++) {
+						sb.append(jumunProductList.get(i).getPname()+"&nbsp;"+oqtyArr[i]+"개&nbsp;&nbsp;");
+						sb.append("<img src='http://192.168.50.53:9090/MyMVC/images/"+jumunProductList.get(i).getPimage1()+"'/>");  
+						sb.append("<br/>");
+					}// end of for----------------------
+					
+					sb.append("<br/>이용해 주셔서 감사합니다.");
+					
+					String emailContents = sb.toString();
+					
+					mail.sendmail_OrderFinish(loginuser.getEmail(), loginuser.getName(), emailContents);
+			        ////////// email 보내기 종료 ///////////
+					
+			    }	
+			    else
+			    	jsobj.put("n", 0);
+				
+			} catch(Exception e) {
+				jsobj.put("n", 0);
+			} 
+		
+		}
+
+		else {
+			jsobj.put("n", 0);
+		}		
+		
+		result = jsobj.toString();
+	    request.setAttribute("result", result);
+	    
+		super.setRedirect(false);
+		super.setViewPage("/WEB-INF/jsonResult.jsp");
+		
+	}
+
+}

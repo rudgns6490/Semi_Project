@@ -1,0 +1,69 @@
+== 액션(action)이란? ==
+    -- XML 기술을 이용해서 기존의 JSP 문법을 확장해준 매커니즘으로 JSP 규격서에 정의되어 있는 기술이다.
+             이것은 XML 태그 형태를 띄기 때문에 액션태그(action tag)라고도 부르며, 간단히 액션(action)이라고 한다.
+             왜냐하면 이런 태그가 어떤 동작(action)을 수행하는 역할을 하기 때문이다.
+             
+           ※ 액션(action)의 2가지 종류
+      1) 표준액션(Standard action)
+         ==> <jsp: 와 같이 시작하는 것으로써 JSP 페이지에서 막바로 사용이 가능하다.
+         
+      2) 커스텀액션(Custom action)
+         ==> 별도의 라이브러리를 설치해야만 사용이 가능한 것이다.
+                        라이브러리는 인터넷에서 다운로드 받을수도 있고(JSTL),
+                        사용자가 직접 만들어서 사용할수도 있다. 
+                        다운받는 URL 주소 => https://tomcat.apache.org/taglibs/standard/
+                          
+            ※ 표준액션(Standard action)과 커스텀액션(Custom action)의 외형적 차이
+
+     1. 표준액션(Standard action)은
+                모든 태그의 이름 앞에 jsp 라는 접두어가 붙음.
+          예)  <jsp:include page="abc.jsp" />
+
+     2. 커스텀액션(Custom action)은
+                모든 태그의 이름 앞에 jsp 이외의 다른 이름의 접두어가 붙음.
+          예)  <c:set var="cnt" value="0" />        
+
+
+             ※ 액션(action)이 HTML 태그와 다른점.
+      -- 액션태그(action tag)의 모습은 HTML 태그와 많이 닮았지만, 
+         HTML 태그처럼 클라이언트의 웹브라우저로 직접 전달되는 것이 아니라, 
+                웹컨테이너(톰캣서버)쪽에서 실행되고, 그 결과만 클라이언트의 웹브라우저에서 출력된다는 것이다.
+     
+              ※ 표준액션(Standard action)을 이용해서 할수 있는 일
+       ==> <jsp:include> 와 <jsp:forward> 같은 표준액션을 이용하면 
+                    자바에서 했던 include()메소드, forward()메소드와 똑 같은 기능을 구현할수 있다.
+   
+       ==> <jsp:useBean>, <jsp:setProperty>등의 표준액션을 이용하면 
+                    자바코드를 작성하지 않고도 
+                    자바빈(JavaBean, 자바빈 규격서에 따라 만든 자바클래스)을 만들어 사용할 수 있다.
+           !!암기!!          
+                      
+      ※   <jsp:useBean> 표준액션의 scope 
+     ==> 자바빈즈를 객체화 시킨 후 이 객체를 어느 범위까지 사용할지를 결정하는 것이다.
+	 1. scope="page" 
+	   - scope 속성 기본값이므로 특별히 지정하지 않으면 이 값이 적용된다.
+	         이 객체는 요청된 JSP 페이지 내에서만 사용되고, 실행 종료와 함께 객체는 자동으로 소멸된다. 
+	         그러므로 다른  JSP 페이지에서는 사용될 수 없다. 
+	         또한 요청된 JSP 페이지를 부를때 마다 이 객체는 매번 새로이 생성된다.     
+	
+	 2. scope="request" 
+	   - 이 객체는 요청된 JSP 페이지내에서 사용된 후 , 이 JSP 페이지와 연결된 다른 JSP 페이지까지 사용되어진다.
+	         연결된 다른 JSP 페이지에서 실행 종료와 함께 객체는 자동으로 소멸된다.  
+	     request 영역에서 이 객체가 있으면 생성된 객체를 사용하고 없으면 객체를 새로이 만들어 request 영역에 올려둔다.      
+	 
+	 3. scope="session" 
+	   - 이 객체는 세션이 종료(소멸)할때 까지 객체는 소멸하지 않고 사용된다.
+	         세션이 종료(소멸)되는 순간 이 객체는 자동으로 소멸된다.
+	     session 영역에서 이 객체가 있으면 생성된 객체를 사용하고 없으면 객체를 새로이 만들어 session 영역에 올려둔다. 
+	  
+	 4. scope="application" 
+	   - 이 객체는 웹 어플리케이션이 종료될때까지 소멸되지 않고 사용되어진다.
+	         이 객체는 웹 어플리케이션이 종료될때 자동으로 소멸되어지는 것이므로
+	         웹 어플리케이션의 공동으로 사용되어지는 객체이어야 한다.
+	     application 영역에서 이 객체가 있으면 생성된 객체를 사용하고 없으면 객체를 새로이 만들어 application 영역에 올려둔다.          
+	      
+	 <jsp:useBean id="객체명" class="패키지명.클래스명" scope="page" />
+	 <jsp:useBean id="객체명" class="패키지명.클래스명" scope="request" />
+	 <jsp:useBean id="객체명" class="패키지명.클래스명" scope="session" />
+	 <jsp:useBean id="객체명" class="패키지명.클래스명" scope="application" />  
+	 

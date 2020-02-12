@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>테이블 만들기 5[열병합, 행병합, :first-child, :last-child, ~, + ]</title>
+
+<style type="text/css">
+	table  {
+		border: solid 1px #fcb558;
+		border-collapse: collapse; 
+		/* width: 400px; */ 
+	}
+	
+	th, td  {
+		border: solid 1px #fcb558;
+		border-collapse: collapse; 
+		padding: 10px 30px;
+	}
+	
+	td.str {text-align: center;} /* text-align 은 정렬의 기준은 가로를 기준으로 한다. 즉, 가로기준에서 왼쪽(left), 오른쪽(right), 가운데(center) 정렬이다. */ 
+	td.num {text-align: right;}
+	
+	th#titleFirst ~ th {
+		background-color: yellow;
+		height: 50px;
+	}
+/* 
+	선택자1(th#titleFirst) ~ 선택자2(th)은 
+	선택자1(th#titleFirst) 다음에 오는 모든 형제태그(형제노드)중에 선택자2(th) 모두를 말한다. 
+*/  
+	
+	th#titleFirst ~ th:hover {
+		color: red;
+	}
+	
+	tr#sum {
+		background-color: #ccc;
+	}
+	
+	tr#sum td:first-child {
+		text-align: center;
+	}
+	/* 선택자:first-child 은 선택되어진 선택자중 첫번째를 말한다.
+	   tr#sum td:first-child 은 
+	      아이디가 sum 인 tr 태그에서 그 아래나오는 td 태그중 첫번째 td 태그를 말한다.
+	*/
+	
+	tr#sum td:last-child {
+		text-align: right;
+		color: red;
+	}
+	/* 선택자:last-child 은 선택되어진 선택자중 마지막번째를 말한다.
+	   tr#sum td:last-child 은 
+	      아이디가 sum 인 tr 태그에서 그 아래나오는 td 태그중 마지막번째 td 태그를 말한다.
+	*/
+	
+	tr#sum td:first-child + td {
+		background-color: pink;
+	}
+	/*
+	     선택자1 + 선택자2 는 선택자1 다음에 오는 모든 형제태그(형제노드)중에 해당하는 첫번째를 말한다.
+	     선택자1(tr#sum td:first-child)  선택자2(td)
+	     아이디가 sum 인 tr 태그의 자손 td태그중 첫번째 td태그 다음에 오는 형제태그중에 첫번째 태그를 말한다.   
+	*/
+	
+</style>
+
+</head>
+<body>
+
+<table>
+		<tr>
+		    <th rowspan="3" id="titleFirst">가을맞이 바겐세일</th> <!-- rowspan 은 행병합인데 rowspan="3"은 3개행을 하나로 병합한다.  -->
+			<th>제품이름과 설명</th>
+			<th>개당 가격</th>
+			<th>박스당 개수</th>
+		</tr>		
+	
+		<tr>
+			<td class="str">블라우스 - 붉은색 실크</td>
+			<td class="num">20,000원</td>
+			<td class="num">150</td>
+		</tr>
+		
+		<tr>
+			<td class="str">바지 - 검은색 원단</td>
+			<td class="num">4,000원</td>
+			<td class="num">300</td>
+		</tr>
+		
+		<tr id="sum">
+			<td colspan="2">총액</td>  <!-- colspan 은 열병합인데 colspan="2"은 2개열을 하나로 병합한다. -->
+			<td>24,000원</td>
+			<td>450</td>
+		</tr>
+
+</table>
+
+</body>
+</html>
+
+

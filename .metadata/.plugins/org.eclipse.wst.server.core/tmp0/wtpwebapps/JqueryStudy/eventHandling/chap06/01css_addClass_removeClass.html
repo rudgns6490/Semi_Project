@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>연예인 사진 보이기/감추기(css, addClass, removeClass)</title>
+
+<style type="text/css">
+
+div#container {
+	   width: 80%;
+	   margin: 0 auto;
+	   /* border: 1px solid red; */
+}
+
+img {margin: 20px;}
+
+.smallSize {
+	width: 80px;
+	height: 100px;
+	border: solid 2px red;
+}
+
+</style>
+
+<script type="text/javascript" src="/JqueryStudy/js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$("img").mouseover(function(){
+			$(this).css('cursor','pointer');
+		});
+		
+		$("#iyou").mouseover(function(){
+			$(this).css({'width':'80px'
+				        ,'height':'100px'
+				        ,'border':'solid 2px red'});
+		});
+		
+		$("#parkby").mouseover(function(){
+			$(this).addClass("smallSize");
+		});
+		
+		$("#parkby").mouseout(function(){
+			$(this).removeClass("smallSize");
+		});
+		
+	}); // end of $(document).ready(function(){});--------------
+</script>
+</head>
+<body>
+	<div id="container" align="center">
+		<div id="firstdiv">
+			<img src="images/kimth.jpg" alt="김태희" />
+			<img id="iyou" src="images/iyou.jpg" alt="아이유" />
+			<img id="parkby" src="images/parkby.jpg" alt="박보영" />
+		</div>
+	</div>
+</body>
+</html>
+
+
+
+
+
+

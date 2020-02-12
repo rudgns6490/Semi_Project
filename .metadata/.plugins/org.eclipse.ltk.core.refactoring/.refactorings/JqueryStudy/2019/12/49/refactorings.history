@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;jquery-ui-1.11.4.custom&apos; to &apos;WebContent&apos;&#x0D;&#x0A;- Original project: &apos;JqueryStudy&apos;&#x0D;&#x0A;- Destination element: &apos;WebContent&apos;&#x0D;&#x0A;- Original element: &apos;jquery-ui-1.11.4.custom&apos;" description="Copy folder" element1="WebContent/jquery-ui-1.11.4.custom" files="0" flags="589830" folders="1" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1575425443475" target="/MyMVC/WebContent" units="0" version="1.0"/>
+</session>

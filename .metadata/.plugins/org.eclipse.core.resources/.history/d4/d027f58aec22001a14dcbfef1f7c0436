@@ -1,0 +1,327 @@
+package member.model;
+
+import java.io.UnsupportedEncodingException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
+
+import util.security.AES256;
+import util.security.Sha256;
+
+
+
+public class MemberDAO implements InterMemberDAO {
+	
+	private DataSource ds;
+	private Connection conn;	
+	private PreparedStatement pstmt;
+	private ResultSet rs;
+	////////////////////////////////////////////////////////////////
+	//생성자
+	public MemberDAO() {
+	
+		String key = EncryptMyKey.KEY;
+		try {
+		    Context initContext = new InitialContext();
+			Context envContext  = (Context)initContext.lookup("java:/comp/env");
+			ds = (DataSource)envContext.lookup("jdbc/semi");
+			new AES256(key);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}	
+	}
+	////////////////////////////////////////////////////////////////
+	// 자원반납 method
+	public void close() {
+		try {
+			 	if(rs != null) { rs.close(); rs=null; }
+				if(pstmt != null) { pstmt.close(); pstmt=null; } 
+				if(conn != null) { conn.close(); conn=null; }
+		} catch (SQLException e) {
+				e.printStackTrace();
+		}
+	}
+	////////////////////////////////////////////////////////////////
+	// 로그인
+	@Override
+	public MemberVO loginMember(HashMap<String, String> paramap) throws SQLException {
+		
+		MemberVO loginuser = null;
+		
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select member_num, userid , username, email, mobile, tel, postnum, "
+						+" address1, address2, birthday, gender, grade, clientip, "
+						+" memberGroup, status, to_char(registerday,'yyyy-mm-dd') AS registerday, "
+						+" trunc( months_between(sysdate, lastPwdChangeDate) ) AS lastPwdChangeDate, "
+						+" trunc( months_between(sysdate, lastLoginDate) ) AS lastlogindategap  "
+						+" from ej_member "
+						+" where status = 1 and "
+						+" userid = ? and "
+						+" password = ? " ;
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paramap.get("userid"));
+			pstmt.setString(2, Sha256.encrypt(paramap.get("password")));
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				loginuser = new MemberVO();
+				loginuser.setMember_num(rs.getInt("member_num"));
+				loginuser.setUserid(rs.getString("userid"));
+				loginuser.setUsername(rs.getString("username"));
+				loginuser.setEmail((rs.getString("email")));
+				loginuser.setMobile((rs.getString("mobile")));
+				loginuser.setTel(rs.getString("tel"));
+				loginuser.setPostnum(rs.getString("postnum"));
+				loginuser.setAddress1(rs.getString("address1"));
+				loginuser.setAddress2(rs.getString("address2"));
+				loginuser.setBirthday(rs.getString("birthday"));
+				loginuser.setGender(rs.getString("gender"));
+				loginuser.setGrade(rs.getString("grade"));
+				loginuser.setClientip(rs.getString("clientip"));
+				loginuser.setRegisterday(rs.getString("registerday"));
+			
+				if(rs.getInt("lastPwdChangeDate") >= 6 ) {
+					loginuser.setRequirePwdChange(true);
+				}
+				
+				if(rs.getInt("lastlogindategap") >= 12) {
+					loginuser.setIdleStatus(true);
+				}
+				else {
+					sql = " update ej_member set lastLoginDate = sysdate "
+						+ " where userid = ? ";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, paramap.get("userid"));
+					pstmt.executeUpdate();
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		} 
+		/*
+		 * System.out.println(paramap.get("userid"));
+		 * System.out.println(paramap.get("password")); System.out.println(loginuser);
+		 */
+		return loginuser;
+	}
+	////////////////////////////////////////////////////////////////
+	// 휴면상태 전환
+	@Override
+	public void expireIdle(int member_num) throws SQLException {
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " update ej_member set lastLoginDate = sysdate "
+					   + " where member_num = ? "; 
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, member_num);
+			
+			pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}	
+		
+	}
+	////////////////////////////////////////////////////////////////
+	// 회원가입
+	@Override
+	public int registerMember(MemberVO membervo) throws SQLException {
+
+		int result = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " insert into ej_member(member_num, userid, password, username, birthday, tel, "
+					   + " mobile, gender, email, address1, address2, postnum, status, registerday, "
+					   + " lastLoginDate, lastPwdChangeDate, clientip, grade, memberGroup) "
+					   + " values(seq_ej_member.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default, sysdate, "
+					   + " sysdate, sysdate, ?, default, default ) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1 , membervo.getUserid());
+			pstmt.setString(2 , Sha256.encrypt(membervo.getPassword()));
+			pstmt.setString(3 , membervo.getUsername());
+			pstmt.setString(4 , membervo.getBirthday());
+			pstmt.setString(5 , membervo.getTel());
+			pstmt.setString(6 , membervo.getMobile());
+			
+			String gender = membervo.getGender(); 
+			if("남".equals(gender)) { 
+				gender = "1";
+			}else { 
+				gender = "2"; 
+			}
+		
+			pstmt.setString(7 , gender);
+			pstmt.setString(8 , membervo.getEmail());
+			pstmt.setString(9 , membervo.getAddress1());
+			pstmt.setString(10 , membervo.getAddress2());
+			pstmt.setString(11 , membervo.getPostnum());
+			pstmt.setString(12 , membervo.getClientip());		
+		
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		System.out.println("result값 : "+result);
+		return result ;
+
+	}	
+	////////////////////////////////////////////////////////////////
+	// ID중복 검사 
+	@Override
+	public boolean idDuplicateCheck(String userid) throws SQLException {
+		
+		boolean result = false;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select * "
+					   + " from ej_member "
+					   + " where userid = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+			rs = pstmt.executeQuery();
+			
+			result = rs.next();
+		}finally {
+			close();
+		}
+		
+		return result;
+	}
+	////////////////////////////////////////////////////////////////
+	// 이메일 중복 검사
+	@Override
+	public boolean emailDuplicateCheck(String email) throws SQLException {
+		
+		boolean result = false;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select * "
+					   + " from ej_member "
+					   + " where email = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, email);
+			
+			rs = pstmt.executeQuery();
+			
+			result = rs.next();
+		}finally {
+			close();
+		}
+		
+		return result;
+	}
+			
+	////////////////////////////////////////////////////////////////
+	// 휴대폰으로 아이디 찾기
+	@Override
+	public String findUserid_mobile(HashMap<String, String> paramap) throws SQLException {
+		
+		String userid = null;
+		
+		try {
+			 conn = ds.getConnection();
+			 
+			 String sql = " select userid " 
+			 		    + " from ej_member "
+			 		    + " where status = 1 and "
+			 		    + " name = ? and "
+			 		    + " trim(mobile) = ? ";
+			 
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paramap.get("username"));
+			pstmt.setString(2, paramap.get("mobile"));
+			
+			String mobile = paramap.get("mobile");
+			int len = mobile.length();
+			
+			if(len == 10) {
+				mobile = mobile.substring(10);
+			}
+			else if(len == 11) {
+				mobile += mobile.substring(11);
+			}
+			pstmt.setString(2, mobile);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				userid = rs.getString("userid");
+			}
+			
+		} finally {
+			close();
+		} 
+		return userid;
+	}
+	////////////////////////////////////////////////////////////////
+	// 이메일로 아이디 찾기
+	@Override
+	public String findUserid_email(HashMap<String, String> paramap) throws SQLException {
+		
+		String userid = null;
+		
+		try {
+			 conn = ds.getConnection();
+			 
+			 String sql = " select userid " 
+			 		    + " from ej_member "
+			 		    + " where status = 1 and "
+			 		    + " name = ? and "
+			 		    + " trim(email) = ? ";
+			 
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paramap.get("username"));
+			
+			String email = paramap.get("email");
+
+
+			pstmt.setString(2, email);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				userid = rs.getString("userid");
+			}
+			
+		} finally {
+			close();
+		} 
+		return userid;
+	}
+	////////////////////////////////////////////////////////////////
+
+
+	
+////////////////////////////////////////////////////////////////////
+} 	//  					E N D _ C L A S S					  //

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>kh 홈페이지</title>
+</head>
+
+	<style type="text/css">
+		
+	
+		div#top_h{
+		/*border: solid 2px red;*/
+		height: 100px;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		background-color: white;
+		}
+			
+		div#h_img{
+			width: 20%;
+			float: left;
+			/*border: solid 10px blue;*/
+			
+		}
+		
+		div#login{
+			width: 320px;
+			float: right;
+			/*border: solid 10px blue;*/
+			
+		}
+				
+		div>form>ul>li{
+			list-style-type	: none;
+		}
+		
+		label{
+		/*border: solid 1px blue;*/
+		text-align: left;
+			
+		}
+		 .myinput {
+		  
+		/*border: solid 1px blue;*/
+		float: right;
+		
+		}
+		
+		header#page_header {
+				width: 100%;
+			 	/*border: solid 2px blue;*/
+			    padding: 0;
+			    margin: 0;
+			    background-color: white;
+			    
+			}
+			
+		 header#page_header nav ul li 
+		 , footer#page_footer nav ul li {
+
+		display: inline-block;   
+		margin: 0 50px 0 0;
+		padding: 0;
+		
+		}
+				
+		body {
+		height:100%;
+		/*border: solid 2px gray;*/
+		margin: 0;
+		padding: 0;
+		font-family: Arial, "MS Trebuchet", sans-serif; 
+		background-color: white;
+		
+		}
+			
+		footer#page_footer {
+		/*border: solid 1px green;*/
+	 	clear: both;
+	 	height: 50px
+	 	width: 100%;
+	 	text-align: center;
+	 	background-color: #ccc;
+	 	}
+		
+		section#posts{
+			height:400px;
+			margin: 0;
+			padding: 0;
+			background-color: gray;
+			/*border: solid 10px green;*/
+		
+		} 
+	
+	</style>
+
+<body>
+	<div id="top_h">
+		
+		<div id="h_img">
+			<img src="/HTML5/exam/khlogo.jpg" width="100px" height="100px" align="left" />
+		</div>
+		
+		<div id=login>
+			<form name="registerFrm" action="register.do" method="post" enctype="multipart/form-data"> 
+				
+					<ul>
+						<li>
+							<label for="userid">아이디</label>
+							<input type="text" name="userid" class="myinput" id="userid" size="20" maxlength="20" autofocus required autocomplete="off" />     
+						</li>
+						
+						<li>
+							<label for="passwd">패스워드</label>
+							<input type="password" name="passwd" class="myinput" id="passwd1" size="20" maxlength="20" required />
+						</li>
+						
+						<li>
+							<input type="submit" class="btn" value="로그인" /> 
+							<input type="reset" class="btn" value="취소" />
+						</li>
+					</ul>
+				
+			</form>
+		</div>
+		
+	</div>
+
+
+	<header id="page_header">
+		
+		<nav>
+				<ul>
+					<li><a href="#" style="text-decoration: none;">메인</a></li>
+					<li><a href="#" style="text-decoration: none;">공지사항</a></li>
+					<li><a href="#" style="text-decoration: none;">자유게시판</a></li>
+					<li><a href="#" style="text-decoration: none;">갤러리</a></li>
+					<li><a href="#" style="text-decoration: none;">회원관리</a></li>
+					<li><a href="#" style="text-decoration: none;">채팅하기</a></li>
+				</ul>
+			</nav>
+	</header>
+	
+	<section id="posts">
+		
+	</section>
+
+	
+<footer id="page_footer">
+		Copyright &copy; 1998-2019 KH Information Educational Institute All Right Reserved
+</footer>
+	
+
+
+</body>
+</html>​

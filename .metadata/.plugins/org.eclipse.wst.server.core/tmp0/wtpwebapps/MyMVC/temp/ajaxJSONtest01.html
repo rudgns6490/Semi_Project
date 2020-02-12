@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>/MyMVC/jsontest01 에서 나온 결과값을 가져다가 보여주기</title>
+
+<script type="text/javascript" src="/MyMVC/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#btn").click(function(){
+			$.ajax({
+				url:"/MyMVC/jsontest01",
+				dataType:"json",
+				success:function(json){
+					$("#result").html("1.성명:"+json.name+"<br/>2.나이:"+json.age+"<br/>3.주소:"+json.address);
+				},
+				error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				}
+			});
+		});
+	});
+</script>
+
+</head>
+<body>
+	<button id="btn">확인</button>
+	<div id="result">
+	</div>
+</body>
+</html>
+
+

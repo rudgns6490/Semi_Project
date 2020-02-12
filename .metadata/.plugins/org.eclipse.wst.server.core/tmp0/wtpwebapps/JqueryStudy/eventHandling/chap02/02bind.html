@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>어느 버튼을 클릭했는지 확인하기2 (bind)</title>
+<!-- 
+웹페이지에 버튼이 여러개 있고 각각의 버튼은 서로 다른일을 한다.
+버튼에 대한 이벤트를 올바르게 처리하려면 어떤 버튼을 클릭했는지 알아야 한다. 
+-->
+
+<style type="text/css">
+	
+	div#firstdiv {
+		/* border: solid 1px gray;  */
+		
+		width: 80%;
+		margin: 0 auto;
+		text-align: center;
+	}
+	
+	div#result {
+		border: solid 1px gray;
+	
+		width: 30%;
+		margin: 20px 0 0 0;
+		font-size: 16pt;
+		padding: 0;
+		
+		position: absolute;
+		left: 400px;
+		top: 100px;
+	}
+	
+
+	span.buttons {
+		display: inline-block;
+		border: solid 2px orange;
+		width: 100px;
+		margin: 20px;
+		padding: 5px;
+		background-color: yellow;
+		color: #ff0000;
+		font-size: 15pt;
+		cursor: pointer;
+	}	
+	
+	span.bold {
+		font-weight: bold;
+	}
+	
+	span.italic {
+		font-style: italic;
+	}
+	
+</style>
+
+<script type="text/javascript" src="/JqueryStudy/js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+
+	$(function(){
+		
+		var manes = "이민형,김면중,김민태,임용준,김현준";
+		var womanes = "지서영,박유진,김현지,박수빈,심예은";
+		
+		$(".man").bind("click", function(){
+			var manArr = manes.split(",");
+			var html = "<ol>";
+			for(var i=0; i<manArr.length; i++) {
+				html += "<li>"+manArr[i]+"</li>";
+			}
+			html += "</ol>";
+			
+			$("#result").html(html);
+		});
+		
+		
+		$(".woman").bind("click", function(){
+			var womanArr = womanes.split(",");
+			var html = "<ul style='list-style: circle;'>";
+			for(var i=0; i<womanArr.length; i++) {
+				html += "<li>"+womanArr[i]+"</li>";
+			}
+			html += "</ul>";
+			
+			$("#result").html(html);
+		});
+		
+		
+		$('.clear').bind('click', function(){
+			$("#result").html("");
+		});
+		
+	});
+
+</script>
+
+</head>
+<body>
+	<div id="firstdiv">
+		<span class="buttons man">남자친구</span>
+		<span class="buttons woman">여자친구</span>
+		<span class="buttons clear">지우기</span>
+	</div>	
+	<div id="result"></div>
+</body>
+</html>
+
+
+
+
+
+
+

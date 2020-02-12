@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Insert title here</title>
+
+<style type="text/css">
+
+fieldset>ul {
+
+	list-style: none;
+
+	padding: 0;
+
+}
+
+
+
+fieldset>ul>li>label{
+
+	display: inline-block;
+
+	width: 100px;
+
+	text-align: right;
+
+}
+
+div.genderClass{
+
+	display: inline-block;
+
+}
+
+li#btns{
+
+	margin: 10px 0 0 100px;
+
+}
+
+/* <span class="error passwdCheck_error"></span>
+
+<span class="ok passwdCheck_ok"></span> */
+
+span.passwdCheck_error{
+
+	color: red;
+
+	font-weight: bold;
+
+}
+
+span.passwdCheck_ok{
+
+	color: green;
+
+	font-weight: bold;
+
+}
+
+
+
+</style>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+<script type="text/javascript">
+
+$(function(){
+
+	$("span.error").hide();
+
+	
+
+	//아이디검사
+
+	$("input#userid").blur(function(){
+
+		var regExp = /^[A-Z][A-Za-z0-9]{4,}$/;
+
+		var bool = regExp.test($(this).val());
+
+		if(!bool){
+
+			$("span.userid_error").show();
+
+			$(this).val("");
+
+			$(this).focus();
+
+		}
+
+		else{
+
+			$("span.userid_error").hide();
+
+			$("input#passwd").focus();
+
+		}
+
+	});//end of $("input#userid").blur()
+
+	
+
+	//패스워드 검사
+
+	$("input#passwd").blur(function(){
+
+		if($(this).val() != ""){
+
+			/* $("span.password_error").hide(); */
+
+			$("input#passwdCheck").focus();
+
+		}
+
+	});//end of $("input#passwd").blur()
+
+	
+
+	//패스워드확인 검사
+
+	$("input#passwdCheck").blur(function(){
+
+		if($("input#passwd").val() == ""){
+
+			alert("패스워드를 입력하세요");
+
+			/* $("span.password_error").show(); */
+
+			$("input#passwd").focus();
+
+			$(this).val("");
+
+		}
+
+		else if($(this).val() != $("input#passwd").val()){
+
+			$("span.passwdCheck_ok").hide();
+
+			$("span.passwdCheck_error").html("패스워드가 일치하지 않습니다.");
+
+			$(this).val("");
+
+			$("span.passwdCheck_error").show();
+
+		}
+
+		else{
+
+			$("span.passwdCheck_error").empty();
+
+			$("span.passwdCheck_error").hide();
+
+			$("span.passwdCheck_ok").html("패스워드가 일치합니다.");
+
+			$("span.passwdCheck_ok").show();
+
+			$("input#name").focus();
+
+		}
+
+	});//end of $("input#passwdCheck").blur()
+
+	
+
+	$("button#btnOK").click(function(){
+
+		if($("input#userid").val().trim() == ""){
+
+			alert("아이디를 입력하세요");
+
+			$("input#userid").focus();
+
+			return;
+
+		}
+
+		
+
+		if($("input#passwd").val().trim() == ""){
+
+			alert("패스워드를 입력하세요");
+
+			$("input#passwd").focus();
+
+			return;
+
+		}
+
+		
+
+		if($("input#passwdCheck").val().trim() == ""){
+
+			alert("패스워드확인을 입력하세요");
+
+			$("input#passwdCheck").focus();
+
+			return;
+
+		}
+
+		
+
+		if($("input#name").val().trim() == ""){
+
+			alert("이름을 입력하세요");
+
+			$("input#name").focus();
+
+			return;
+
+		}
+
+		
+
+		var radioBool = $("input:radio[name=gender]").is(":checked");
+
+		if(!radioBool){
+
+			alert("성별을 선택하세요");
+
+			return;
+
+		}
+
+		
+
+		if($("input#email").val().trim() == ""){
+
+			alert("이메일을 입력하세요");
+
+			$("input#email").focus();
+
+			return;
+
+		}
+
+		
+
+		var frm = document.registerFrm;
+
+		frm.submit();
+
+	});
+
+})
+
+</script>
+
+</head>
+
+<body>
+
+<div id="container">
+
+	<form name="registerFrm" action="result.html">
+
+		<fieldset>
+
+			<legend>회원가입</legend>
+
+			<ul>
+
+				<li>
+
+					<label for="userid">아이디</label>
+
+					<input type="text" name="userid" id="userid" value="" maxlength="20" required autofocus autocomplete="off" />
+
+					<span class="error userid_error">5글자이상, 첫글자는 대문자이고 영문자, 숫자만 가능</span>     
+
+				</li>
+
+				<li>
+
+					<label for="passwd">패스워드</label>
+
+					<input type="password" name="passwd" id="passwd" value="" maxlength="20" required />
+
+					<span class="error password_error">패스워드를 입력하세요</span>
+
+				</li>
+
+				<li>
+
+					<label for="passwdCheck">패스워드확인</label>
+
+					<input type="password" id="passwdCheck" value="" required />
+
+				    <span class="error passwdCheck_error"></span>
+
+				    <span class="ok passwdCheck_ok"></span>
+
+				</li>
+
+				<li>
+
+					<label for="name">이름</label>
+
+					<input type="text" name="name" id="name" value="" maxlength="20" required />
+
+				    <span class="error name_error"></span>
+
+				</li>
+
+
+
+				<li>
+
+					<label>성별</label>
+
+					<div class="genderClass">
+
+						<label for="gender1">남</label><input type="radio" name="gender" id="gender1" value="남" />
+
+				        <label for="gender2">여</label><input type="radio" name="gender" id="gender2" value="여" />
+
+				    </div> 
+
+				</li>
+
+				<li>
+
+					<label for="email">이메일</label>
+
+					<input type="text"  name="email" id="email" required/>
+
+				</li>
+
+				
+
+				<li id="btns">
+
+					<button type="button" id="btnOK">회원가입</button>
+
+					<button type="reset">취소</button>
+
+				</li>
+
+			</ul>
+
+		</fieldset>
+
+	</form>
+
+</body>
+
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>20191107 exam</title>
+
+<style type="text/css">
+
+	
+
+	div#container {
+
+		text-align: center;
+
+		width: 40%;
+
+		margin: 0 auto;
+
+	}
+
+	
+
+	ul {
+
+		list-style-type: none;
+
+		float: left;
+
+	}
+
+	
+
+	label {
+
+		display: inline-block;
+
+		width: 100px;
+
+		text-align: right;
+
+		font-weight: bold;
+
+	}
+
+	
+
+	button {
+
+		display: inline-block;
+
+		margin: 5px 20px 10px 0;
+
+	}
+
+	
+
+	.passwdtrue {
+
+		font-weight: bold;
+
+		color: green;
+
+	}
+
+	
+
+	.passwdfalse {
+
+		font-weight: bold;
+
+		color: red;
+
+	}
+
+</style>
+
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+
+
+	$(document).ready(function(){
+
+		
+
+		$(".error").hide();
+
+				
+
+			var regExp = /^[A-Z][A-Za-z0-9]{4,}$/;
+
+			
+
+			$("input#id").blur(function(){
+
+				var bool = regExp.test( $(this).val() );
+
+				
+
+				if(!bool){
+
+					$(".error_id").show();
+
+					$(this).val("").focus();
+
+				}
+
+				else{
+
+					$(".error_id").hide();
+
+					$("input#passwd1").focus();
+
+				}
+
+			});
+
+			
+
+			
+
+			$("input#passwd1").blur(function(){
+
+				if( $(this).val().trim() == "" ){
+
+					$(".error_passwd").show();
+
+					$(this).val("");
+
+					$("input:password[name='passwd1']").focus();
+
+				}
+
+				else{
+
+					$(".error_passwd").hide();
+
+					$("input#passwd2").focus();
+
+				}
+
+			});
+
+			
+
+			
+
+			$("input#passwd2").blur(function(){
+
+				if( $("input#passwd1").val() == $("input#passwd2").val() ){
+
+					$(".error_passwdck").html("패스워드가 일치합니다.").addClass("passwdtrue");
+
+					$(".error_passwdck").show();
+
+					$("input:text[name='name']").focus();
+
+					
+
+				}
+
+				else{
+
+					$(".error_passwdck").remove();
+
+					$(".error_passwdck").html("패스워드가 일치하지않습니다.").addClass("passwdfalse").show();
+
+					$("input:password[name='passwd1']").val("");
+
+					$("input:password[name='passwd2']").val("");
+
+					$("input:password[name='passwd1']").focus();
+
+				}
+
+			});
+
+			
+
+				
+
+			$("button#btnok").click(function(){
+
+				
+
+				var radioBool = $("input:radio[name=gender]").is(":checked");
+
+				
+
+				if(!radioBool){
+
+					alert("성별을 선택하세요 !!");
+
+					return;
+
+				}
+
+				
+
+				var form = document.examFrm;
+
+				form.submit();
+
+				
+
+			});
+
+	
+
+	});
+
+
+
+</script>
+
+
+
+</head>
+
+<body>
+
+	<div id="container">
+
+		<form name="examFrm" action="/result.html" method="post">
+
+			<fieldset>
+
+				<legend style="text-align: left; font-size: 14pt; font-weight: bold;">회원가입</legend>	
+
+				<ul>
+
+					<li>
+
+						<label id="userid">아이디</label>
+
+						<input type="text" name="userid" id="id" size="15" autofocus required />
+
+						<span class="error error_id">5글자이상, 첫글자는 대문자이고 영문자, 숫자만 가능</span>
+
+					</li>
+
+					<li>
+
+						<label>패스워드</label>
+
+						<input type="password" name="passwd1" id="passwd1" size="15" required/>
+
+						<span class="error error_passwd">패스워드를 입력하세요</span>
+
+					</li>
+
+					<li>
+
+						<label>패스워드확인</label>
+
+						<input type="password" name="passwd2" id="passwd2" size="15" required/>
+
+						<span class="error error_passwdck"></span>
+
+					</li>
+
+					<li>
+
+						<label>이름</label>
+
+						<input type="text" name="name" size="15" required/>
+
+					</li>
+
+					<li>
+
+						<label>성별</label>
+
+						<label for="gender1">남</label><input type="radio" id="gender1" name="gender" value="1"/>
+
+						<label for="gender2">여</label><input type="radio" id="gender2" name="gender" value="2" />
+
+					</li>
+
+					<li>
+
+						<label>이메일</label>
+
+						<input type="email" name="email" size="15" required/>
+
+					</li>
+
+					<li>	
+
+						<button type="button" id="btnok">회원가입</button>
+
+						<button type="reset" >취소</button>
+
+					</li>
+
+				</ul>
+
+			</fieldset>			
+
+		</form>
+
+	</div>
+
+</body>
+
+</html>

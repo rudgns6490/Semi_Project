@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>테이블 만들기 4[colgroup 태그]</title>
+
+<style type="text/css">
+	table  {
+		border: solid 1px #fcb558;
+		border-collapse: collapse; 
+		/* width: 400px; */ 
+	}
+	
+	th, td  {
+		border: solid 1px #fcb558;
+		border-collapse: collapse; 
+		padding: 10px 30px;
+	}
+	
+	td.str {text-align: center;} /* text-align 은 정렬의 기준은 가로를 기준으로 한다. 즉, 가로기준에서 왼쪽(left), 오른쪽(right), 가운데(center) 정렬이다. */ 
+	td.num {text-align: right;}
+	
+</style>
+
+</head>
+<body>
+
+<table>
+	<colgroup span="1" bgcolor="gold">
+<!-- colgroup 또는 줄여서 col 이라고 사용할 수 있음.
+     span="숫자" 이때 숫자는 묶어줄 열의 갯수를 말한다.
+     span에 처음으로 숫자를 주었는데 그 숫자가 1 이므로 첫번째 열을 그룹으로 묶겠다는 뜻이고  -->
+	
+    <colgroup span="2" bgcolor="#ffb3b3">
+<!-- span에 숫자를 2를 주면
+         그다음의 컬럼부터 2개 컬럼인 두번째 열과 세번째 열을 그룹으로 묶겠다는 뜻이다.  -->
+    
+    <caption>&lt;테이블1&gt;테이블에 대한 설명문구1</caption>
+	<thead>
+		<tr bgcolor="#c3faba">
+			<th>제품이름과 설명</th>
+			<th>개당 가격</th>
+			<th>박스당 개수</th>
+		</tr>		
+	</thead>
+	
+	<tbody>
+		<tr>
+			<td class="str">블라우스 - 붉은색 실크</td>
+			<td class="num">20,000원</td>
+			<td class="num">150</td>
+		</tr>
+		
+		<tr>
+			<td class="str">바지 - 검은색 원단</td>
+			<td class="num">4,000원</td>
+			<td class="num">300</td>
+		</tr>
+		
+		<tr>
+			<td class="str">점퍼</td>
+			<td class="num">3,000원</td>
+			<td class="num">500</td>
+		</tr>
+	</tbody>
+</table>
+
+</body>
+</html>
+
+

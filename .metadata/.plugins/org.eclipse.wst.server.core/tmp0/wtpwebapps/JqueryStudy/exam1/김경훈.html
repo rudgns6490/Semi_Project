@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>회원가입</title>
+
+
+
+<style>
+
+
+
+	fieldset>ul {
+
+		list-style: none;
+
+		padding: 0;
+
+	}
+
+	
+
+	fieldset>ul>li {
+
+		line-height: 40px;
+
+	}
+
+	
+
+	fieldset>ul>li>label:first-child {
+
+		display: inline-block;
+
+		width: 20%;
+
+		text-align: right;
+
+		/* border: solid 1px green; */
+
+	}
+
+	
+
+	fieldset>ul>li>input {
+
+		width: 20%;
+
+		height: 20px;
+
+		/* border: solid 1px blue; */
+
+	}
+
+	
+
+	div.gender {
+
+		display: inline-block;
+
+		width: 50%;
+
+		/* border: solid 1px gray; */
+
+	}
+
+	
+
+	div.gender>label {
+
+		margin-right: 2%;
+
+	}
+
+	
+
+	div.gender>input {
+
+		margin-right: 5%;
+
+	}
+
+	
+
+	fieldset>ul>li#buttons {
+
+		margin-left: 20%;
+
+	}
+
+
+
+    fieldset>ul>li:last-child>input {
+
+    	width: 10%;
+
+    	height: 30px;
+
+    	margin: 2% 4% 0 0;
+
+    	background: #ccc;
+
+    	color: #000;
+
+    	border: none;
+
+    }
+
+
+
+</style>
+
+
+
+<!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+
+<script type="text/javascript" src="/JqueryStudy/js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+
+
+
+	$(document).ready(function() {
+
+		
+
+		 $("span.error").css('display','none');
+
+		    
+
+		    $("input#userid").blur(function(){
+
+		    
+
+			    var regExp = /^[A-Z][A-Za-z0-9]{4,}$/;
+
+			    var bool = regExp.test($(this).val()); 
+
+			    
+
+			    if(!bool) {
+
+			    	$("span.userid_error").css('display','');
+
+			    	
+
+			    	$(":input").attr("disabled", true);
+
+			        
+
+			        $(this).attr("disabled", false);
+
+			        $(this).val("");
+
+			        $(this).focus();
+
+			    }
+
+			    else {
+
+			    	$("span.userid_error").css('display','none');
+
+			    	$(":input").attr("disabled", false);
+
+			    	$("input#passwd").focus();
+
+			    }
+
+		    });// end of $("input#userid").blur()--------	
+
+		    
+
+		    $("input#passwdCheck").blur(function(){
+
+		    	
+
+		    	if($("input#passwd").val() == null || $("input#passwd").val().trim() == ""){
+
+		    		alert("패스워드를 입력하세요");
+
+		    		$(":input").attr("disabled",false);
+
+		    		
+
+		    		$("input#passwd").val("");
+
+		    		$(this).val("");
+
+		    		
+
+		    		$("input#passwd").focus();
+
+		    	}
+
+		    	else{
+
+		    		if( $(this).val() != $("input#passwd").val() ) {
+
+			    		$("span.passwd_error").html("<span style='color: red'>패스워드가 일치하지 않습니다</span>");
+
+			    		$("span.passwd_error").css('display','');
+
+			    		
+
+			    		$("input#passwd").val("");
+
+			    		$(this).val("");
+
+			    		
+
+			    		$(":input").attr("disabled",true);
+
+			    		$("input#passwd").attr("disabled",false);
+
+			    		$(this).attr("disabled",false);
+
+			    		
+
+			    		$("input#passwd").focus();
+
+			    	}
+
+			    	else {
+
+			    		$(":input").attr("disabled",false);
+
+			    		$("span.passwd_error").html("<span style='color: green'>패스워드가 일치합니다</span>");
+
+			    		$("span.passwd_error").css('display','');
+
+			    		$("input#name").focus();
+
+			    	}
+
+		    	}
+
+
+
+		    });// end of $("input#passwdCheck").blur()------------		   
+
+		    
+
+		    $("input#name").blur(function(){
+
+				
+
+				if( $(this).val().trim()=="" ) {
+
+					$("span.name_error").html("<span style='color: red'>성명은 필수입력란 입니다</span>"); 
+
+					$("span.name_error").css('display','');
+
+					
+
+					$(":input").attr("disabled",true);
+
+		        	$(this).attr("disabled",false);
+
+		        	$(this).val("");
+
+		        	$(this).focus();
+
+				}
+
+				else {
+
+					$("span.name_error").empty();
+
+					$(":input").attr("disabled",false);
+
+					
+
+					$("input#email").focus();
+
+				}
+
+				
+
+			});// end of $("input#name").blur()----------------
+
+		    
+
+		    $("form").submit(function(){
+
+
+
+				var radioBool = $("input:radio[name=gender]").is(":checked"); 
+
+				
+
+				if(!radioBool) {
+
+					alert("성별을 선택하세요");
+
+					return false;  
+
+				}
+
+				
+
+			});// end of $("form").submit()---------------
+
+	});// end of $(document).ready()------------------
+
+
+
+</script>
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+	<div id="container">
+
+	
+
+		<form name="memberFrm" action="/JqueryStudy/exam/result.html" method="post">
+
+			<fieldset>
+
+				<legend>회원가입</legend>
+
+				
+
+				<ul>
+
+					<li>
+
+						<label for="userid">아이디</label>
+
+						<input type="text" name="userid" id="userid" value="" maxlength="20" required autofocus autocomplete="off" />
+
+						<span class="error userid_error" style="color: red">5글자이상, 첫글자는 대문자이고 영문자, 숫자만 가능</span>
+
+					</li>
+
+					<li>
+
+						<label for="passwd">패스워드</label>
+
+						<input type="password" name="passwd" id="passwd" value="" maxlength="20" required />
+
+						<span class="error password_error"></span>
+
+					</li>
+
+					<li>
+
+						<label>패스워드확인</label>
+
+						<input type="password" id="passwdCheck" value="" required />
+
+					</li>
+
+					<li>
+
+						<label for="name">이름</label>
+
+						<input type="text" name="name" id="name" value="" maxlength="20" required />
+
+						<span class="error name_error"></span>
+
+					</li>
+
+					<li>
+
+						<label>성별</label>
+
+						<div class="gender">
+
+							<label for="gender1">남</label><input type="radio" name="gender" id="gender1" value="남" />&nbsp;
+
+				        	<label for="gender2">여</label><input type="radio" name="gender" id="gender2" value="여" />&nbsp;
+
+						</div>
+
+						<span class="error gender_error"></span>
+
+					</li>
+
+					<li>
+
+						<label>이메일</label>
+
+						<input type="email" name="email" id="email" value="" maxlength="40" placeholder="예 abc@gmail.com" required />
+
+						<span class="error email_error"></span>
+
+					</li>
+
+					<li id="buttons">
+
+						<input type="submit" value="회원가입"/>
+
+						<input type="reset" value="취소"/>
+
+					</li>
+
+				
+
+				</ul>
+
+			
+
+			</fieldset>
+
+		</form>
+
+	</div>
+
+
+
+</body>
+
+</html>

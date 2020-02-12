@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>select 태그를 이용해 선택한 연예인의 이미지가 화면에 나타나도록 한다</title>
+<style type="text/css">
+	select {height: 30px;}
+	div {margin: 10px 0;}
+</style>
+<script type="text/javascript">
+	function changeImage(){
+		var sel = document.getElementById("sel");
+		var img = document.getElementById("photoImg");
+	
+		var index = sel.selectedIndex;
+		console.log("index : "+ index);
+		console.log("value : "+ sel.options[index].value);
+		
+		img.src = sel.options[index].value;
+	}
+</script>
+</head>
+<body>
+	<select id="sel" onchange="changeImage();">
+		<option value="images/kimth.jpg">김태희</option>
+		<option value="images/iyou.jpg">아이유</option>
+		<option value="images/parkby.jpg">박보영</option>
+	</select>
+	
+	<div>
+		<img id="photoImg">
+	</div>
+</body>
+</html>
+
+

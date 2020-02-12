@@ -1,0 +1,170 @@
+@charset "UTF-8";
+	
+	*:focus { outline:none; }
+	
+	::-moz-selection {
+	   background: black;
+	   color: white;
+	}
+	::selection {
+	   background: black;
+	   color: white;
+	}
+	
+	#cart-container{
+		border: 1px solid #f2f2f2;
+		width: 60%;
+		position: absolute;
+		top: 12%;
+		left: 20%;
+		margin-bottom: 200px;
+	}
+	
+	.cart-contents {
+		border: 1px solid #f2f2f2;
+	}
+	
+	.cart-header{
+		font-size: 13pt;
+		font-weight: bold;
+		width: 60%;
+		float: left;
+		margin: 30px;
+	}
+	.email-logOut{
+		text-align: right;
+		display: inline-block;
+		margin: 30px;
+		float: right;
+		font-size: 9pt;
+		text-transform: uppercase;
+		
+	}
+	
+	.email-logOut #loginEmail{
+		margin-right: 20px;
+	}
+	
+	.email-logOut #logOut {
+		text-decoration: underline;
+	}
+	
+	.cart-contents{
+		
+		float: left;
+		width: 65%;
+	}
+	.cart-images{
+		width: 27%;
+		float: left;
+	}
+	
+	
+	.item-name{
+		float: left;
+		text-align: left;
+		font-size: 8pt;
+		margin: 20px 0 0 20px;
+		width: 20%;
+	}
+	
+	.item-name .item-color{
+		float: left;
+		font-size: 8pt;
+		margin: 40px 0 0 0;
+		text-align: left;
+	}
+	
+	.item-price{
+		float: right;
+		text-align: right;
+		font-size: 8pt;
+		margin: 20px 20px 0 0;
+	}
+	.item-price-final{
+		font-size: 8pt;
+		float: right; 
+		text-align: right;
+		margin: 20px 20px 0 0;
+	}
+	
+	
+	button.plus_minus {
+		background-color: white;
+		border: none;
+	}
+	
+	.item-delete-btn{
+		border: none;
+		background-color: white;
+		color: black;
+		float: right;
+		text-align: right;
+		font-size: 8pt;
+		
+	}
+	
+	#item-delete-btn:hover{
+		text-decoration: underline;
+		cursor: pointer;
+	}
+	
+	.cart-footer {
+		float: left;
+	}
+	
+	.goPayment {
+		margin: 0 0 20px 20px;
+		width: 90%;
+		height: 30px;
+		color: white;
+		background-color: black;
+		border-style: none;
+		font-size: 7pt; 
+	}
+	aside{
+		
+		float: right;
+		width: 35%;
+		height: 100%;
+	}
+	
+	.cart-rightSide1{
+		border: solid 1px #f2f2f2;
+		float: left; 
+		width: 100%;
+	
+	}
+	
+	.cart-rightSide2{
+		
+		float: left;
+		margin: 20px;
+	}
+	
+	li {
+		list-style: none;
+		
+	}
+	
+	.cart-rightSide2-contents{
+		font-size: 8pt;
+		margin: 20px;
+		font-size: 9pt;
+		
+	}
+	a {
+		color: black;
+		/* font-weight: bold; */
+	}
+	a:hover {
+		text-decoration: none;
+		color: black;
+		cursor: pointer;
+	}
+	
+	p {
+		margin: 30px;
+		font-size: 8pt;
+	}
+	

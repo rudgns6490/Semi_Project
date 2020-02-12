@@ -1,0 +1,149 @@
+@charset "UTF-8";
+
+::-moz-selection {
+   background: black;
+   color: white;
+}
+::selection {
+   background: black;
+   color: white;
+}
+
+li {
+	line-height: 200%;
+}
+
+.container {	
+	width: 60%;
+	margin: 0 auto;	
+}
+
+.myAccountBanner {
+	width: 99.91%;
+}
+
+ul.logged {	
+	list-style-type: none;
+	display: flex;
+	flex-flow: row;
+	flex: 1 1 auto;	
+}
+
+
+.basicMenu {
+	vertical-align: middle;
+	text-align: center;
+	padding: 30px 50px 17px 5px;
+	font-size: 9pt;
+	cursor: pointer;
+}
+
+.logoutMenu {
+	vertical-align: middle;
+	text-align: right;
+	float: right !important;
+	padding: 30px 0 50px 0;
+	position: relative;
+	left: 45%;
+	font-size: 9pt;
+	text-decoration: underline;
+}
+
+.welcomeMsg {
+	padding: 25px 0px 25px 43px;
+}
+
+.hello {
+	padding-bottom: 10px;
+	font-size: 13pt;
+	font-weight: bold;
+}
+
+.explanation {
+	font-size: 9pt;
+}
+
+.col-xs-4 {
+	border: solid rgb(239, 239, 239) 1px;
+	border-top: hidden;
+	height: 330px;
+	margin-bottom: 100px;
+}
+
+.info {
+	text-overflow: ellipsis;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+.title {
+	list-style-type: none;
+	padding-inline-start: 25px;
+	font-size: 10pt;
+}
+
+.myinfo {
+	padding: 34px 0px 20px 25px;
+}
+
+.listinfo {
+	font-size: 9pt;
+}
+
+.datainfo {
+	font-weight: normal;
+	font-size: 9pt;
+}
+
+.orderinfo {
+	height: 50px;
+}
+
+.orderTr {
+	cursor: pointer; 
+}
+
+.orderImg {
+	width: 70px; 
+	height: 100px;
+	vertical-align: middle;
+	padding-bottom: 2px;
+}
+
+.orderContents {
+	width: 190px;
+	font-size: 8pt;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	line-height: 200%;
+	padding-right: 28px;
+}
+
+.showWishImage {
+	display: inline-block; 
+	padding: 0px 0px 0px 10px;
+	
+}
+
+/* 
+.wishlistinfo {
+	display: inline-block;
+	margin-right: 3px;
+	cursor: pointer;
+}
+ */
+.wishlistImg {
+	width: 110px;
+	height: 160px;
+}
+
+
+.moreBtn {
+	position: absolute;
+	top: 280px;
+	left: 40px;
+	font-size: 8pt;
+	text-decoration: underline;
+	cursor: pointer;
+}

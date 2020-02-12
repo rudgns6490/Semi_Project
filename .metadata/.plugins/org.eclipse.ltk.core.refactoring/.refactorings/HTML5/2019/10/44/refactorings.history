@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;WAS란_톰캣설치관련.txt&apos; to &apos;MyWeb&apos;&#x0D;&#x0A;- Original project: &apos;HTML5&apos;&#x0D;&#x0A;- Destination element: &apos;MyWeb&apos;&#x0D;&#x0A;- Original element: &apos;WAS란_톰캣설치관련.txt&apos;" description="Copy file" element1="WAS란_톰캣설치관련.txt" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1572329945693" target="/MyWeb" units="0" version="1.0"/>
+</session>

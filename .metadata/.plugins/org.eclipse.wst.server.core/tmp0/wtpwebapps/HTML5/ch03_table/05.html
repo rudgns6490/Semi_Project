@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>테이블 만들기 6[thead, tbody, tfoot]</title>
+
+<style type="text/css">
+	table  {
+		border: solid 1px #fcb558;
+		border-collapse: collapse; 
+		/* width: 400px; */ 
+	}
+	
+	th, td  {
+		border: solid 1px #fcb558;
+		border-collapse: collapse; 
+		padding: 10px 30px;
+	}
+	
+	td.str {text-align: center;} /* text-align 은 정렬의 기준은 가로를 기준으로 한다. 즉, 가로기준에서 왼쪽(left), 오른쪽(right), 가운데(center) 정렬이다. */ 
+	td.num {text-align: right;}
+	
+</style>
+
+</head>
+<body>
+
+<table>
+ <!-- 
+   thead 태그와 tfoot 태그는 테이블에서 오로지 1번만 사용한다.
+   thead 태그는 표의 타이틀용도로 쓰이고,
+   tfoot 태그는 표의 마지막에 요약데이터나 총계등을 보여줄때 사용한다.
+   tbody 태그는 표의 데이터를 표시하는 용도로 쓰인다. 
+ -->
+		<thead>
+			<tr bgcolor="#c3faba">
+				<th>제품이름과 설명</th>
+				<th>개당 가격</th>
+				<th>박스당 개수</th>
+			</tr>	
+		</thead>	
+	
+	    <tbody>
+			<tr>
+				<td class="str">블라우스 - 붉은색 실크</td>
+				<td class="num">20,000원</td>
+				<td class="num">150</td>
+			</tr>
+			
+			<tr>
+				<td class="str">바지 - 검은색 원단</td>
+				<td class="num">4,000원</td>
+				<td class="num">300</td>
+			</tr>
+		</tbody>
+		
+		<tfoot>
+			<tr>
+				<td colspan="2" class="str">총박스갯수</td>  <!-- colspan 은 열병합인데 colspan="2"은 2개열을 하나로 병합한다. -->
+				<td class="num">450</td>
+			</tr>
+		</tfoot>
+
+</table>
+
+</body>
+</html>
+
+

@@ -1,0 +1,1066 @@
+package myshop.model;
+
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
+
+import javax.naming.*;
+import javax.sql.DataSource;
+
+import product.model.ProductVO;
+import util.security.AES256;
+
+
+public class ProductDAO implements InterProductDAO {
+	
+	private DataSource ds;
+	// javax.sql.DataSource;
+	// Data Source 는 아파치톰캣이 제공하는 DBCP(DB Connection Pool 이다.)
+
+	private Connection conn;
+	private PreparedStatement pstmt;
+	private ResultSet rs;
+	
+	// 생성자
+	public ProductDAO() {
+		// 암호화/복호화 키 (양방향암호화) ==> 이메일,휴대폰의 암호화/복호화
+		
+		
+		try {
+		    Context initContext = new InitialContext();
+			Context envContext  = (Context)initContext.lookup("java:/comp/env");
+			ds = (DataSource)envContext.lookup("jdbc/semi");
+		//	conn = ds.getConnection(); 아래 메소드에서 불러올것이기 때문에 여기서는 생략하겠다.
+			
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	
+	public void close() {
+		
+		try {
+			if(rs != null) { rs.close(); rs = null; }
+			if(pstmt != null) {	pstmt.close();	pstmt = null; }
+			if(conn != null) {	conn.close();	conn = null; }
+		
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+	} // end of public void close()--------------------------------
+	 
+	
+	
+	// 장바구니 insert한 테이블 불러오기
+	@Override
+	public List<CartVO> getCartList(int member_num) throws SQLException {
+		
+		List<CartVO> cartList = null;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select * " + 
+						" from ej_cart " + 
+						" where fk_member_num = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, member_num);
+			
+			rs = pstmt.executeQuery();
+			
+			int cnt = 0;
+			while(rs.next()) {
+				cnt++;
+				if(cnt == 1) {
+					cartList = new ArrayList<CartVO>();
+				}
+				
+				CartVO cvo = new CartVO();
+				cvo.setOrder_num(rs.getString("Order_num"));
+				cvo.setFk_member_num(rs.getInt("fk_member_num"));
+				cvo.setFk_product_num(rs.getString("fk_product_num"));
+				cvo.setImgNum(rs.getString("product_img"));
+				cvo.setProduct_name(rs.getString("product_name"));
+				cvo.setColor(rs.getString("color"));
+				cvo.setOrder_price((rs.getInt("order_price"))); 
+				cvo.setOrder_cnt((rs.getInt("order_cnt")));
+				
+				cartList.add(cvo);
+
+			}
+			
+		}finally {
+			close();
+		}
+		
+		
+		return cartList;
+	}
+	
+	// 장바구니번호를 이용하여 선택한데이터만을 불러오기
+			@Override
+			public CartVO getOneCartList(int buypd, int memberNum) throws SQLException {
+				CartVO cvo = null;
+				
+				try {
+					conn = ds.getConnection();
+					
+					String sql = " select * " + 
+								" from ej_cart " + 
+								" where fk_member_num = ? " +
+								" and order_num = ? ";
+					
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setInt(1, memberNum);
+					pstmt.setInt(2, buypd);
+					
+					rs = pstmt.executeQuery();
+					
+					
+					while(rs.next()) {
+						cvo = new CartVO();
+						
+						cvo.setOrder_num(rs.getString("Order_num"));
+						cvo.setFk_member_num(rs.getInt("fk_member_num"));
+						cvo.setFk_product_num(rs.getString("fk_product_num"));
+						cvo.setImgNum(rs.getString("product_img"));
+						cvo.setProduct_name(rs.getString("product_name"));
+						cvo.setColor(rs.getString("color"));
+						cvo.setOrder_price((rs.getInt("order_price"))); 
+						cvo.setOrder_cnt((rs.getInt("order_cnt")));
+						
+					}
+					
+				}finally {
+					close();
+				}
+				
+				return cvo;
+			}
+
+	
+	
+	
+	// 장바구니 tr 삭제버튼 DB 삭제하기
+	@Override
+	public int cartDataDel(String order_num) throws SQLException {
+		
+		int n = 0;
+			try {
+				conn = ds.getConnection();
+				
+				String sql = " delete from ej_cart " + 
+							 " where order_num = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, order_num);
+				
+				n = pstmt.executeUpdate();
+				
+			}finally {
+				close();
+			}
+		return n;
+	}
+	
+	// 장바구니 비우기(멤버번호를 이용하여)
+	   @Override
+	   public int cartDataDelAll(int member_num) throws SQLException {
+	      int n = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " delete from ej_cart " + 
+	                   " where fk_member_num = ? ";
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         pstmt.setInt(1, member_num);
+	         
+	         n = pstmt.executeUpdate();
+	         
+	      }finally {
+	         close();
+	      }
+	      return n;
+	   }
+
+	   
+	   
+	// 장바구니 spinner 업데이트   
+		@Override
+		public int cartCntUdate(String spinner, int memberNum , int orderNum) throws SQLException {
+			
+			int n = 0;
+			
+			try {
+		         conn = ds.getConnection();
+		         
+		         String sql = " update ej_cart set order_cnt = ? " + 
+		         			  " where fk_member_num = ? and order_num = ? ";
+		         
+		         pstmt = conn.prepareStatement(sql);
+		         pstmt.setString(1, spinner);
+		         pstmt.setInt(2, memberNum);
+		         pstmt.setInt(3, orderNum); 
+		         
+		         n = pstmt.executeUpdate();
+		         
+		      }finally {
+		         close();
+		      }
+			
+			return n;
+		}
+
+		
+		
+	// 장바구니 영수증전표 채번해오기.
+	@Override
+	public String getBillgeStatement() throws SQLException {
+		
+		String billgeStatement = "";
+		
+		try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " select 'ej-'||to_char(sysdate, 'yyyymmdd')||'-'||seq_ej_product_detail.nextval AS billge_num " + 
+	         			  " from dual "; 
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         
+	         rs = pstmt.executeQuery();
+	         
+	         rs.next();
+	        
+	         billgeStatement = rs.getString("billge_num"); 
+	         
+	      } finally {
+	         close();
+	      }
+		
+		return billgeStatement;
+	}
+		
+		
+		
+		
+
+	// 결제시 영수증 테이블에 insert 하기
+	@Override
+	public int bilgeInsert(String billgeStatement, HashMap<String, Object> paraMap, HashMap<String,Object> searchMap, List<CartVO> cartList) throws SQLException {  
+		
+		int result = 0; 
+		int n1 = 0;  
+		int n2 = 0;
+		int n3 = 0;
+		System.out.println("시작");
+		try { 
+	         conn = ds.getConnection();
+	         
+			 conn.setAutoCommit(false); // 수동커밋 전환. 
+	         
+	         String memberNum = (String)paraMap.get("memberNum");
+	         String[] productNumArr = (String[])paraMap.get("productNumArr");  // 배열 sql
+	         String[] orderNumArr = (String[])paraMap.get("orderNumArr");
+			 String[] spinerF = (String[])searchMap.get("spinerF");
+			 String[] fkOrderNumArr = new String[cartList.size()];
+			 
+			 int f = 0;
+			 
+			 for (CartVO cartVO : cartList) {
+				 fkOrderNumArr[f++]=cartVO.getOrder_num();
+				}	 
+			 
+	         String sql = "";
+	         // 영수증 테이블에 insert 하기
+	         int i = 0;
+	         for(; i<productNumArr.length; i++) {
+	        	 
+	        	 	 sql = " insert into ej_billge(billge_num, fk_member_num, fk_product_num, billge_date, billgeStatement) " + 
+			               " values(seq_ej_product_detail.nextval, ?, ?, default, ?) "; 
+			         
+			         pstmt = conn.prepareStatement(sql);
+			         pstmt.setString(1, memberNum);
+			         pstmt.setString(2, productNumArr[i]);
+			         pstmt.setString(3, billgeStatement); 
+		          
+			         n1 = pstmt.executeUpdate();
+			         
+			         
+			         
+	         } // end of for---------------------------------------------------
+	         boolean flag = false;
+	         for (int j = 0; j < orderNumArr.length; j++) {
+				for (int j2 = 0; j2 < fkOrderNumArr.length; j2++) {
+					if (orderNumArr[j] == fkOrderNumArr[j2]) {
+						flag = true;
+					}
+				}
+			}
+	         int cnt =0;
+	         if(flag){
+	         System.out.println("1단계 성공");
+	         // 주문한 제품 장바구니에서 delete 하기.
+			            if(i == productNumArr.length) {
+			               
+			               for(int j=0; j<productNumArr.length; j++) {
+			                  
+			                  sql = " delete from ej_cart " + 
+			                        " where fk_member_num = ? and order_num = ? " ;
+			                  
+			                  pstmt = conn.prepareStatement(sql);
+			                  pstmt.setString(1, memberNum); 
+			                  pstmt.setString(2, orderNumArr[j]);
+			                  
+			                  n2 = pstmt.executeUpdate();
+			                  
+			                  System.out.println("n2 =>"+n2);
+			                  
+			                  if(n2 > 0) { 
+			                     cnt++; 
+			                  }
+			                  
+			               }// end of for---------------------------------------------
+			            }
+	         }
+	         else {
+	        	 cnt++;
+	         }
+	         System.out.println("2단계 성공");
+	         // 주문 완료시 주문조회 테이블에 insert 하기
+						         if(cnt > 0) {
+						               System.out.println("2단계 성공");
+						               int k =0;
+						               for(; k<productNumArr.length; k++) {
+						                  
+						               sql = " insert into ej_orderlist " + 
+						                     " (orderlist_num " + 
+						                     " , fk_member_num  " + 
+						                     " , fk_product_num  " + 
+						                     " , order_date  " + 
+						                     " , order_cnt   " + 
+						                     " , total_price  " + 
+						                     " , postnum " + 
+						                     " , address1  " + 
+						                     " , address2  " + 
+						                     " , billgeStatement  " + 
+						                     " ) " + 
+						                     " values(seq_ej_orderlist.nextval, ?, ?, default, ?, ?, ?, ?, ?, ?)" ;
+					
+						             pstmt = conn.prepareStatement(sql);
+						             pstmt.setString(1, memberNum);
+						             pstmt.setString(2, productNumArr[k]);
+						             pstmt.setString(3, spinerF[k]);
+						             pstmt.setString(4, (String) searchMap.get("paymentprice"));
+						             pstmt.setString(5, (String) searchMap.get("postnum1"));
+						             pstmt.setString(6, (String) searchMap.get("addr1"));
+						             pstmt.setString(7, (String) searchMap.get("addr2"));
+						             pstmt.setString(8, billgeStatement); 
+						             
+						             n3 = pstmt.executeUpdate(); 
+						                 
+						             if(n3 > 0 ) { 
+						                result = 1; 
+						                System.out.println(result);
+						             }
+						             
+						             else{
+						                result = 0;
+						                break;
+						             }
+						            }// end of for---------------------
+						          }// end of if---------------
+						        
+						         	
+	         if(result == 1) {
+	        	 conn.commit();
+				 conn.setAutoCommit(true); // 자동커밋으로 전환
+		        
+				 return 1;
+		     }
+	         
+	         else {
+	        	 conn.rollback();
+				 conn.setAutoCommit(true); // 자동커밋으로 전환
+			        	 
+				 return 0;
+			 }
+			 
+	      } catch (SQLException e) {
+	    	  System.out.println("SQL 문제");
+	    	  conn.rollback();
+			  conn.setAutoCommit(true);  // 자동커밋으로 전환
+			   
+			  return 0;
+			  
+	      } finally {
+	         close();
+	      }
+
+	}
+	
+	
+	
+	// 모든 주문 목록들을 조회함
+		@Override
+		public List<OrderListVO> getOrderList(String member_num) throws SQLException {
+			List<OrderListVO> oLlist = null;
+			
+			try {
+				
+				conn = ds.getConnection();
+				
+				 String sql = " select   orderlist_num " + 
+				 		"        , postnum         " + 
+				 		"        , address1        " + 
+				 		"        , address2 " + 
+				 		"        , to_char(order_date,'yyyy-mm-dd') AS order_date " + 
+				 		"        , order_cnt " + 
+				 		"        , total_price " + 
+				 		"        , billgeStatement " + 
+				 		"        , product_img " + 
+				 		"		 , color " + 
+				 		"        , product_name "+
+				 		" from ej_orderlist O " + 
+				 		" join ej_product P " + 
+				 		" on O.fk_product_num = p.product_num " + 
+				 		" join ej_product_img I " + 
+				 		" on p.product_num = i.product_num " + 
+				 		" where fk_member_num = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, member_num); 
+				
+				rs = pstmt.executeQuery();
+			
+				int cnt = 0;
+				while(rs.next()) {
+					
+					cnt++;
+					if(cnt==1) {
+						oLlist = new ArrayList<OrderListVO>();
+					}
+					OrderListVO oL = new OrderListVO();
+					
+					System.out.println(rs.getString("orderlist_num")); 
+					
+					oL.setOrderlist_num(rs.getString("orderlist_num"));
+					oL.setPostnum(rs.getString("postnum"));
+					oL.setAddress1((rs.getString("address1")));
+					oL.setAddress2(rs.getString("address2"));
+					oL.setOrder_date(rs.getString("order_date"));
+					oL.setOrder_cnt(rs.getInt("order_cnt"));
+					oL.setTotal_price(rs.getInt("total_price"));
+					oL.setBillgeStatement(rs.getString("billgeStatement"));
+					oL.setProduct_img(rs.getString("product_img"));
+					oL.setProduct_name(rs.getString("product_name"));
+					oL.setColor(rs.getString("color")); 
+					oLlist.add(oL); 
+				}
+				
+			}
+			finally {
+				close();
+			}
+			
+			return oLlist;
+		}
+	
+	
+		// 주문테이블에 사용할 전표 채번해오기
+				@Override
+				public HashMap<String, String> memberAllbillgeStatement(String member_num) throws SQLException {
+					
+					HashMap<String, String> memberAllbillge = null;
+					
+					
+					try {		
+						conn = ds.getConnection();
+						
+						String sql = " SELECT DISTINCT billgeStatement " + 
+								" FROM ej_orderlist " + 
+								" where fk_member_num = ?";
+						
+						pstmt = conn.prepareStatement(sql);
+						pstmt.setString(1, member_num);
+						
+						rs = pstmt.executeQuery();
+						int cnt = 0;
+						while(rs.next()) {
+							memberAllbillge = new HashMap<String, String>();
+							memberAllbillge.put("billgeStatement"+cnt, rs.getString("billgeStatement"));
+							cnt++;
+					}
+			
+
+					} finally {
+						close();
+					}
+				
+					return memberAllbillge;
+				}
+	
+	
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////민형씨꺼
+	
+				@Override
+				public DetailProductVO getProductOneByPnum(String product_num2) throws SQLException {
+
+					DetailProductVO pvo = null;
+					
+					try {
+						conn = ds.getConnection();
+						
+						String sql = " select a.product_num, a.product_name, a.product_class, a.price, a.color, b.product_img, a.product_cnt\n"+
+									 "    from ej_product a, ej_product_img b\n"+
+									 "    where A.product_num = b.product_num\n"+
+									 "    and A.product_num = ? ";
+						
+						pstmt = conn.prepareStatement(sql);
+						pstmt.setString(1, product_num2);
+						
+						rs = pstmt.executeQuery();
+						
+						if(rs.next()) {
+							 String product_num = rs.getString("product_num");    
+							 String product_name = rs.getString("product_name");               
+							 String product_class = rs.getString("product_class");  
+							 int price = rs.getInt("price");          
+							 String color = rs.getString("color");            
+							 String product_img = rs.getString("product_img");
+							 int product_cnt = rs.getInt("product_cnt");
+								 
+							 pvo = new DetailProductVO(product_num, product_name, product_class, price, color, product_img, product_cnt);
+						}
+						
+					} finally {
+						close();
+					}
+					
+					return pvo;
+					
+				}
+					
+				
+				// 제품번호를 가지고서 해당 제품의 추가된 이미지 정보를 조회해오기
+					@Override
+					public List<String> getImagesByPnum(String product_num) throws SQLException {
+						
+						List<String> imgList = null;
+						
+						try {
+							conn = ds.getConnection();
+							
+							 String sql = " select product_de_img\n "+
+									 	  " from ej_product_de_img\n "+
+									 	  " where product_num = ?" +
+									 	  " order by product_de_img asc";
+							
+							pstmt = conn.prepareStatement(sql);
+							pstmt.setString(1, product_num);
+							
+							rs = pstmt.executeQuery();
+							
+							int cnt = 0;
+							
+							while(rs.next()) {
+								cnt++;
+								if(cnt==1) {
+									imgList = new ArrayList<String>();
+								}
+								
+								String product_de_img = rs.getString("product_de_img"); // 이미지파일명 
+								
+								imgList.add(product_de_img); 
+							}
+							
+						} finally {
+							close();
+						}
+						
+						return imgList;
+					}
+
+
+					@Override
+					public int registerCartList(CartVO cartvo) throws SQLException {
+						
+						int result = 0;
+						
+						
+						try {
+							 conn = ds.getConnection();
+						String sql = "insert into ej_cart(order_num, fk_member_num, fk_product_num, order_price, order_cnt, product_name, color, product_img)\n"+
+									 "values(seq_ej_cart.nextval, ?, ?, ?, ?, ?, ?, ?)";
+						
+						pstmt = conn.prepareStatement(sql);
+						
+						pstmt.setInt(1, cartvo.getFk_member_num());
+						pstmt.setString(2, cartvo.getFk_product_num());
+						pstmt.setInt(3, cartvo.getOrder_price());
+						pstmt.setInt(4, cartvo.getOrder_cnt());
+						pstmt.setString(5, cartvo.getProduct_name());
+						pstmt.setString(6, cartvo.getColor());
+						pstmt.setString(7, cartvo.getImgNum());
+						
+						result = pstmt.executeUpdate();
+						} finally {
+							close();
+						}
+						return result;
+					}
+
+
+					@Override
+					public List<NoticeVO> getNoticeTitle() throws SQLException {
+						List<NoticeVO> NotiList = null;
+						
+						try {
+							conn = ds.getConnection();
+							
+							String sql = " select a.notice_num, a.fk_member_num, b.username, a.title, a.content\n"+
+										 " from ej_notice a, ej_member b\n"+
+										 " where 1=1\n"+
+										 " and a.fk_member_num = b.member_num "+
+										 " order by a.notice_num desc ";
+							
+							pstmt = conn.prepareStatement(sql);
+							
+							rs = pstmt.executeQuery();
+							
+							int cnt = 0;
+							while(rs.next()) {
+								cnt++;
+								if(cnt == 1) {
+									NotiList = new ArrayList<NoticeVO>();
+								}
+								
+								NoticeVO nvo = new NoticeVO();
+								nvo.setNotice_num(rs.getInt("notice_num"));
+								nvo.setFk_member_num(rs.getInt("fk_member_num"));
+								nvo.setUsername(rs.getString("username"));
+								nvo.setTitle(rs.getString("title"));
+								nvo.setContent(rs.getString("content"));
+								
+								NotiList.add(nvo);
+
+							}
+						} finally {
+							close();
+						}
+						
+						return NotiList;
+					}
+
+
+					@Override
+					public NoticeVO getNoticeContent(String notinum) throws SQLException {
+						NoticeVO nvo = null;
+						
+						try {
+							conn = ds.getConnection();
+							
+							String sql = "select a.notice_num, a.fk_member_num, b.username, a.title, a.content\n"+
+										 "from ej_notice a, ej_member b\n"+
+										 "where 1=1\n"+
+										 "and a.fk_member_num = b.member_num\n"+
+										 "and a.notice_num=?";
+							
+							pstmt = conn.prepareStatement(sql);
+							pstmt.setString(1, notinum);
+							
+							rs = pstmt.executeQuery();
+							
+							if(rs.next()) {
+								 int notice_num = rs.getInt("notice_num");    
+								 int fk_member_num = rs.getInt("fk_member_num");               
+								 String username = rs.getString("username");  
+								 String title = rs.getString("title");          
+								 String content = rs.getString("content");            
+				
+									 
+								 nvo = new NoticeVO(notice_num, fk_member_num, title, content, username);
+							}
+							
+						} finally {
+							close();
+						}
+						
+						return nvo;
+					}
+
+
+					@Override
+					public boolean getSpecNum(String membernum ,String prodnum) throws SQLException {
+						
+						boolean bool = false;
+						
+						try {
+							conn = ds.getConnection();
+							
+							String sql = "select order_num, fk_member_num \n"+
+									"from ej_cart\n"+
+									"where fk_member_num = ?\n"+
+									"and fk_product_num = ?";
+							
+							pstmt = conn.prepareStatement(sql);
+							pstmt.setString(1, membernum);
+							pstmt.setString(2, prodnum);
+							
+							rs = pstmt.executeQuery();
+							
+							bool = rs.next();		
+							
+						} finally {
+							close();
+						}
+						
+						return bool;	
+					
+					}
+
+
+					@Override
+					public int addCartCnt(String usernum, String prodNum, String prodCnt) throws SQLException {
+						int result = 0;
+						
+						try {
+							 conn = ds.getConnection();
+							 	 
+						     String sql = " update ej_cart set order_cnt = order_cnt + ? "+
+							              " where fk_member_num = ? "+
+							              " and fk_product_num = ?";
+							
+						     System.out.println("1.prodCnt: "+prodCnt +", 2.usernum: "+usernum+", 3.prodNum: "+prodNum);
+						     
+								 pstmt = conn.prepareStatement(sql);
+								 pstmt.setInt(1, Integer.parseInt(prodCnt));
+								 pstmt.setString(2, usernum);
+								 pstmt.setString(3, prodNum);
+								 
+								 result = pstmt.executeUpdate();
+							 
+							 
+						} finally {
+							close();
+						}
+						
+						return result;
+					}
+
+
+					@Override
+					public int CutAddCnt(String usernum) throws SQLException {
+
+						int prodcnt = 0;
+						
+						try {
+							conn = ds.getConnection();
+							
+							String sql = "select count(*) as prodcnt\n"+
+									     "from ej_cart\n"+
+									     "where fk_member_num = ?"; 
+							
+							pstmt = conn.prepareStatement(sql);
+							pstmt.setInt(1, Integer.parseInt(usernum));
+							
+							rs = pstmt.executeQuery();
+							
+							rs.next(); 
+							
+							prodcnt = rs.getInt("prodcnt");
+							
+						} finally {
+							close();
+						}
+						
+						return prodcnt;	
+					}
+
+
+					@Override
+					public CartVO BuyNowAdd(CartVO cartvo) throws SQLException {
+						
+						CartVO cvo = null;
+						
+						
+						try {
+							conn = ds.getConnection();
+							
+							String sql = "select 'buynow' AS order_num, ? AS fk_member_num, ? as fk_product_num,? as order_price," +
+									     " ? as order_cnt,? as product_name, ? as color, ? as product_img\n"+
+									     " from dual";
+							
+							pstmt = conn.prepareStatement(sql);
+							
+							pstmt.setInt(1, cartvo.getFk_member_num());
+							pstmt.setString(2, cartvo.getFk_product_num());
+							pstmt.setInt(3, cartvo.getOrder_price());
+							pstmt.setInt(4, cartvo.getOrder_cnt());
+							pstmt.setString(5, cartvo.getProduct_name());
+							pstmt.setString(6, cartvo.getColor());
+							pstmt.setString(7, cartvo.getImgNum());
+							
+							rs = pstmt.executeQuery();
+							
+							if(rs.next()) {
+								cvo = new CartVO();
+								
+								cvo.setOrder_num(rs.getString("order_num"));
+								cvo.setFk_member_num(rs.getInt("fk_member_num"));
+								cvo.setFk_product_num(rs.getString("fk_product_num"));
+								cvo.setImgNum(rs.getString("product_img"));
+								cvo.setProduct_name(rs.getString("product_name"));
+								cvo.setColor(rs.getString("color"));
+								cvo.setOrder_price((rs.getInt("order_price")));  // 
+								cvo.setOrder_cnt((rs.getInt("order_cnt")));
+								
+								
+							}
+							
+							
+						} finally {
+							close();
+						}
+						
+						
+						return cvo;
+					}
+						
+					
+
+
+					public int checkBuyNow(String usernum) throws SQLException {
+
+						int prodcnt = 0;
+						
+						try {
+							conn = ds.getConnection();
+							
+							String sql = "select * as ej_cart\n"+
+									     "from ej_cart\n"+
+									     "where fk_member_num = ?\n"+
+									     "and order_num='buynow'"; 
+							
+							pstmt = conn.prepareStatement(sql);
+							pstmt.setInt(1, Integer.parseInt(usernum));
+							
+							rs = pstmt.executeQuery();
+							
+							rs.next(); 
+							
+							prodcnt = rs.getInt("prodcnt");
+							
+						} finally {
+							close();
+						}
+						
+						return prodcnt;	
+					}
+				
+				
+
+		
+	
+		
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		// jsp_category 테이블에서 카테고리코드을 조회해오기  
+				@Override
+				public List<HashMap<String, String>> getCategoryList() throws SQLException {
+					
+					List<HashMap<String, String>> categoryList = null;
+					
+					try {
+						 conn = ds.getConnection();
+						 
+						 String sql = " select product_class\n "+
+								 "    , product_name\n "+
+								 " from ej_product\n ";
+						 		    
+						pstmt = conn.prepareStatement(sql);
+								
+						rs = pstmt.executeQuery();
+						
+						int cnt = 0;
+						while(rs.next()) {
+							cnt++;
+							
+							if(cnt==1) {
+								categoryList = new ArrayList<HashMap<String, String>>();
+							}
+							
+							HashMap<String, String> map = new HashMap<String, String>();
+							map.put("product_class", rs.getString("product_class"));
+							map.put("product_name", rs.getString("product_name"));
+							
+							categoryList.add(map);
+						}// end of while(rs.next())----------------------------------
+						
+					} finally {
+						close();
+					}	
+					
+					return categoryList;
+				}
+			
+		 
+
+			
+			// 제품종류별 갯수 조회하기
+			  @Override 
+			  public int totalProduct_class(String product_class) throws
+			  	SQLException { 
+			  int totalProduct_class_count = 0;
+			  
+			  try {	  
+				  conn = ds.getConnection();
+				  
+				  String sql = " select count(*) as CNT "
+						  	 + " from ej_product ";
+				  
+				  if(!"".equals(product_class)) {
+						sql += " where product_class = ? ";
+				  }	    
+				  
+				  pstmt = conn.prepareStatement(sql);
+				  
+				  if(!"".equals(product_class)) {
+					  pstmt.setString(1, product_class);
+				  }	
+				  
+				  rs = pstmt.executeQuery(); 
+				  
+				  rs.next();
+				  
+				  totalProduct_class_count = rs.getInt("CNT");		  
+			  	}
+			  
+			  finally {
+				  close(); 
+			  
+			  }
+			  	  
+			  return totalProduct_class_count;
+			  
+			  }
+			
+
+			  
+
+		    
+		    
+		    // 카테고리별 상품목록페이지바
+			@Override
+			public List<ProductVO> getProductList(String v_product_class,String sort, int currentShowPageNo, int sizePerPage) throws SQLException {
+				List<ProductVO> pvoList = null;
+			      
+			      try {
+			          conn = ds.getConnection();
+			          
+			          
+			          String sql = " select RNO ,  product_num , product_class , product_name , price , color , product_cnt , product_img " + 
+					          		" from " + 
+					          		" ( " + 
+					          		"    select rownum as RNO ,  product_num , product_class , product_name , price , color , product_cnt , product_img " + 
+					          		"    from\r\n" + 
+					          		"        (\r\n" + 
+					          		"            select rownum , E1.product_num , product_class , product_name , price , color , product_cnt , product_img " + 
+					          		"            from ej_product E1 join ej_product_img E2 " + 
+					          		"            on E1.product_num = E2.product_num " ;
+			         
+			          if(!"".equals(v_product_class)) {
+							sql += " where product_class = ? ";
+						//	System.out.println("동작1");
+						}
+
+					//	else {						// 카테고리가 없을때 = 모든상품
+
+							if("2".equals(sort)) {
+								sql += " order by product_num asc ";							
+							}
+				
+							else if("3".equals(sort)) {
+								sql += " order by price asc ";							
+							}
+								
+							else if("4".equals(sort)) {				
+								sql += " order by price desc ";			
+							}
+							
+					//	}
+			          sql += "    ) V " + 
+				          		" ) P " + 
+				          		" where RNO between ? and ? ";
+			          
+			          pstmt = conn.prepareStatement(sql);
+			          
+			          if(!"".equals(v_product_class)) {
+			        	 // System.out.println("동작1");
+			        	 // System.out.println(v_product_class);
+							pstmt.setString(1, v_product_class);
+							pstmt.setInt(2, (currentShowPageNo*sizePerPage)-(sizePerPage-1) );
+					        pstmt.setInt(3, currentShowPageNo*sizePerPage);
+						}
+			          else {
+			      //  	  System.out.println("동작2");
+			        	  pstmt.setInt(1, (currentShowPageNo*sizePerPage)-(sizePerPage-1));
+					      pstmt.setInt(2, currentShowPageNo*sizePerPage); 
+			          }
+			          
+			          rs = pstmt.executeQuery();
+			          
+			          int cnt = 0;
+			          while (rs.next()) {
+			             cnt++;
+			            if (cnt == 1) {
+			            	pvoList = new ArrayList<ProductVO>();
+			            }
+
+			            
+			             String product_num = rs.getString("product_num");         // 제품일련번호
+						 String product_class = rs.getString("product_class");     // 제품종류
+						 String product_name = rs.getString("product_name");       // 제품이름
+						 int price = rs.getInt("price"); 					       // 가격
+						 String product_img = rs.getString("product_img");         // 제품이미지					 
+						 String color = rs.getString("color");					   // 색상
+						 int product_cnt = rs.getInt("product_cnt");               // 제품 수량
+					 
+						 ProductVO pvo = new ProductVO(product_num, product_class, product_name, price, product_img, color, product_cnt);
+						 pvoList.add(pvo);
+			         }
+			          
+			      } finally {
+			         close();
+			      }
+				
+				return pvoList;
+			}	
+	
+		
+		
+		
+		
+		
+		
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  기현형님꺼	
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>E-CLASS 우리반 게시판</title>
+<style type="text/css">
+body {margin: 0;
+      padding: 30px 0 0 0;
+      font-family: Arial, "MS Trebuchet", sans-serif; 
+}
+div#container {
+	width: 80%;
+	margin: 0 auto;
+}
+fieldset {border: none; 
+          width: 60%;
+          margin-top: 50px;
+}
+fieldset legend {font-size: 24px;}
+ul {list-style: none;  padding: 0;}
+ul li>label {display: inline-block;
+   			 width: 100px;
+   			 color: #0000ff;
+   			 font-weight: bold;
+}
+ul li {margin: 0 0 10px 0;}
+     
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("fieldset#brdFrm").hide();
+	});
+	
+	function fnWriteForm() {
+		$("fieldset#brdFrm").show();
+	}
+	
+	function fnRegister() {
+		var msg = $("iframe#iframeMsg").contents().find('#areaMsg').val();
+		
+        if( $("input#title").val().trim() != "" &&
+        	msg.trim() != "") {
+        	alert("작성하신 글이 정상적으로 등록되었습니다.");	
+        }
+        else {
+        	alert("글작성 실패!! 글제목과 글내용을 입력하세요!!");	
+        }
+	}
+</script>
+
+</head>
+<body>
+<div id="container">
+	<div>
+		<button type="button" onClick="fnWriteForm()">게시판글쓰기시작</button>
+		<button type="button" onClick="javascript:location.href='loginInput.html'">로그인</button>
+	</div>
+	
+	<fieldset id="brdFrm">
+		<legend>글쓰기</legend>
+		<ul>
+			<li>
+				<label for="id">글제목</label> 
+				<input type="text" name="title" id="title" size="60" />
+			</li>
+			<li>
+				<label>글내용</label>
+				<iframe id="iframeMsg" name="iframeMsg" src="contents.html" width="70%" height="170px"></iframe>
+			</li>
+			<li style="padding: 20px 0 20px 100px;">
+				<button type="button" onClick="javascript:fnRegister()">작성완료</button>
+			</li>
+		</ul>
+	</fieldset>
+</div>
+</body>
+</html>

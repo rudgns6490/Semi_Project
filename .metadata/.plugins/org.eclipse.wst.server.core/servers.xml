@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<servers>
+  <server auto-publish-setting="2" auto-publish-time="1" configuration-id="/Servers/Tomcat v8.5 Server at localhost-config" deployDir="wtpwebapps" hostname="localhost" id="Tomcat v8.5 Server at localhost" name="Tomcat v8.5 Server at localhost" runtime-id="Apache Tomcat v8.5" server-type="org.eclipse.jst.server.tomcat.85" server-type-id="org.eclipse.jst.server.tomcat.85" start-timeout="45" stop-timeout="15" testEnvironment="true" timestamp="13">
+    <list key="modules" value0="JavaScriptStudy::org.eclipse.jst.jee.server:JavaScriptStudy::jst.web::3.0" value1="JqueryStudy::org.eclipse.jst.jee.server:JqueryStudy::jst.web::3.0" value2="HTML5::org.eclipse.jst.jee.server:HTML5::jst.web::3.0" value3="MyMVC::org.eclipse.jst.jee.server:MyMVC::jst.web::3.0" value4="MyWeb::org.eclipse.jst.jee.server:MyWeb::jst.web::3.0" value5="SemiProject::org.eclipse.jst.jee.server:SemiProject::jst.web::3.0" value6="SaintLaura::org.eclipse.jst.jee.server:SaintLaura::jst.web::3.0" value7="Semi::org.eclipse.jst.jee.server:Semi::jst.web::3.0" value8="Semi_Team1::org.eclipse.jst.jee.server:Semi_Team1::jst.web::3.0" value9="SemiCab::org.eclipse.jst.jee.server:SemiCab::jst.web::3.0"/>
+  </server>
+</servers>

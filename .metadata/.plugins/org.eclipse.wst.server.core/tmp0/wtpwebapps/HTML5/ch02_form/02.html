@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>form 에 대해서 알아봅니다</title>
+
+<style type="text/css">
+
+	body {
+		/* border: solid 1px blue; */
+		margin: 0;
+		padding: 30px 0 0 0;
+		font-family: Arial, "MS Trebuchet", sans-serif;
+	}
+
+	#container {
+		/* border: solid 1px gray; */
+		width: 80%;
+		margin: 0 auto;
+	}
+	
+	ul {
+		/* border: solid 1px yellow; */
+		list-style-type: none;
+		padding: 0;
+	}
+	
+	ul > li > label {
+		/* border: solid 1px blue;   */
+		display: inline-block; 
+		width: 100px;
+		color: navy;
+		font-weight: bold;
+		height: 20px;
+		margin: 2px 0 0 0;
+	} 
+	
+	label.gender , label.hobby {
+		display: inline;
+	}
+	
+	ul > li {
+		margin: 0 0 10px 0;
+	}
+	
+	input.myinput {
+		height: 20px;
+	}
+	
+	select {
+		width: 150px;
+	}
+	
+	select.myselect {
+		height: 25px;	
+	}
+	
+	input.btn {
+		width: 100px;
+		height: 40px;
+		background-color: #000;
+		color: #fff;
+		border: none;
+		font-size: 16pt;
+		margin: 20px 0 0 40px;
+	}
+	
+	legend {
+		font-size: 20pt;
+	}
+
+</style>
+
+</head>
+<body>
+
+	<div id="container">
+		<form name="registerFrm" action="register.do" method="post" enctype="multipart/form-data"> 
+	<!-- 
+		 form 태그에서 사용하는  method 는 2가지가 있는데 get 과 post 가 있다.
+		 get 은 전송하고자 하는 데이터를 웹브라우저 주소창에 실어서 보내는 방식이고,
+		 post 는 전송하고자 하는 데이터를 본문속에 감추어서 보내는 방식이다.
+		 그래서 get 은 보안성이 떨어지는 반면에 속도는 post 보다 빠르다.
+		 post는 보안성은 좋지만 속도는 get 보다는 느린편이다.
+		 그러므로 외부에 공개해서는 안되는 작업인 회원가입, 물품구매, 회원수정 등 DML(insert, update, delete)작업은 
+		 일반적으로 post 방식으로 하고, 
+		 외부에 공개하더라도 전혀 무관한 데이터 검색(예: 물품조회, 게시판글 검색)인 select 작업은
+		 일반적으로 get 방식으로 한다.
+		 method 를 기재하지 않으면 get 방식이다. 
+	--> 
+		
+	<!-- 
+		== !!! 중요 !!! ==
+		파일첨부가 있을 경우에는
+		form name="registerFrm" action="register.do" method="post" 와 같이해주면 
+		파일은 절대로 전송이 안되어진다.
+		form name="registerFrm" action="register.do" method="post" enctype="multipart/form-data" 로 
+		해야만 파일이 전송 되어진다. 
+		또한 파일을 첨부하려면 반드시 method="post" 이어야만 한다.!!!
+	-->
+			<fieldset>
+				<legend>회원가입정보</legend>
+				<ul>
+					<li>
+						<label for="userid">아이디</label>
+						<input type="text" name="userid" class="myinput" id="userid" size="20" maxlength="20" autofocus required autocomplete="off" />     
+					</li>
+					
+					<li>
+						<label for="passwd1">암호</label>
+						<input type="password" name="passwd" class="myinput" id="passwd1" size="20" maxlength="20" required />
+					</li>
+					
+					<li>
+						<label for="passwd2">암호확인</label>
+						<input type="password" id="passwd2" class="myinput" size="20" maxlength="20" required />
+					</li>
+					
+					<li>
+						<label for="name">성명</label>
+						<input type="text" name="name" class="myinput" id="name" size="20" maxlength="20" required autocomplete="on" />
+					</li>
+					
+					<li>
+						<label for="email">이메일</label>
+						<input type="email" name="email" class="myinput" id="email" placeholder="예: hongkd@gmail.com" required="required" />
+					</li>
+					
+					<li>
+						<label for="male" class="gender">남자</label>
+						<input type="radio" name="gender" id="male" value="1" checked />
+						<label for="femail" class="gender">여자</label>
+						<input type="radio" name="gender" id="femail" value="2" />
+					</li>
+					
+					<li>
+						<label>취미</label>
+						  <label for="hobby1" class="hobby">게임</label><input type="checkbox" name="hobby" id="hobby1" value="1" />&nbsp;&nbsp;
+						  <label for="hobby2" class="hobby">영화감상</label><input type="checkbox" name="hobby" id="hobby2" value="2" />&nbsp;&nbsp;
+						  <label for="hobby3" class="hobby">글쓰기</label><input type="checkbox" name="hobby" id="hobby3" value="3" />&nbsp;&nbsp;
+						  <label for="hobby4" class="hobby">음악감상</label><input type="checkbox" name="hobby" id="hobby4" value="4" />
+					</li>
+					
+					<li>
+						<label for="school">최종학력</label>
+						<select name="school" id="school" class="myselect">
+							<option value="1">고졸</option>
+							<option value="2">초대졸</option>
+							<option value="3">대졸</option>
+							<option value="4">대학원졸</option>
+						</select>
+					</li>
+					
+					<li>
+						<label for="food">선호음식</label>
+						<select name="food" id="food" size="3" multiple>
+							<option value="1">피자</option>
+							<option value="2">치킨</option>
+							<option value="3">파스타</option>
+							<option value="4">참치회</option>
+							<option value="5">보쌈</option>
+							<option value="6">샐러드</option>
+						</select>
+					</li>
+					
+					<li>
+						<label for="program">선호프로그램</label>
+						<select name="program" id="program" class="myselect">
+							<optgroup label="데이터베이스">
+								<option value="Oracle">Oracle</option>
+								<option value="MSSQL">MSSQL</option>
+								<option value="Sybase">Sybase</option>
+							</optgroup>
+						
+						    <optgroup label="개발언어">
+						    	<option value="Java">Java</option>
+						    	<option value="JSP">JSP</option>
+						    	<option value="Spring">Spring</option>
+						    	<option value="C/C++">C/C++</option>
+							</optgroup>
+						</select>
+					</li>
+					
+					<li>
+						<label for="browsername">웹브라우저</label>
+						<input list="webBrowser" name="browsername" id="browsername" />
+						<datalist id="webBrowser">
+							<option value="Chrome" />
+							<option value="Internet Explore" />
+							<option value="Firefox" />
+							<option value="Opera" />
+							<option value="Safari" />
+						</datalist>
+					</li>
+					
+					<li>
+						<label for="addFile">파일첨부</label>
+						<input type="file" name="addFile" id="addFile" />
+					</li>
+					
+					<li>
+						<label for="registerComment">가입인사말</label>
+						<textarea rows="5" cols="30" name="registerComment" id="registerComment" placeholder="하고싶은 말 쓰세요" ></textarea>
+					</li>
+					
+					<li>
+						<input type="submit" class="btn" value="확인" /> 
+						<input type="reset" class="btn" value="취소" />
+					</li>
+				</ul>
+			</fieldset>
+		
+		</form>
+	</div>
+
+</body>
+</html>
+
+
+

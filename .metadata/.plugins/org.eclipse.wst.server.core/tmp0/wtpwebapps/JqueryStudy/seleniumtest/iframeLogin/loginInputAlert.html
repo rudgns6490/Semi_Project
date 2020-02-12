@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style type="text/css">
+body {margin: 0;
+      padding: 30px 0 0 0;
+      font-family: Arial, "MS Trebuchet", sans-serif; 
+}
+div#container {
+	width: 80%;
+	margin: 0 auto;
+}
+fieldset {border: none; 
+          width: 60%;
+}
+fieldset legend {font-size: 24px;}
+ul {list-style: none;  padding: 0;}
+ul li>label {display: inline-block;
+   			 width: 100px;
+   			 color: #ff0000;
+   			 font-weight: bold;
+}
+ul li {margin: 0 0 10px 0;}
+     
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+	function fnLogin() {
+		var id = $("#id").val();
+		var password = $("#password").val();
+		
+		if( (id=="leess" && password=="qwer1234$") ) {
+			alert("로그인 성공!!");
+			
+		//	javascript:location.href="naver.html"; // iframe 틀속에서 naver.html 이 보여지게 된다.
+		//  javascript:parent.location.href="naver.html"; // iframe 틀을 벗어나 부모로 빠져나가서 naver.html 이 보여지게 된다.
+			javascript:parent.location.href="loginAlert.html";
+		} 
+		else {
+			alert("로그인 실패!!");
+		}
+	}
+</script>
+
+</head>
+<body>
+<div id="container">
+	<fieldset>
+		<legend>로그인</legend>
+		<ul>
+			<li>
+				<label for="id">ID</label> 
+				<input type="text" name="id" id="id" autocomplete="off" />
+			</li>
+			<li>
+				<label for="id">PASSWORD</label> 
+				<input type="password" name="password" id="password" /> 
+			</li>
+			<li>
+				<button type="button" onClick="fnLogin()">로그인</button>
+			</li>
+		</ul>
+	</fieldset>
+</div>
+</body>
+</html>

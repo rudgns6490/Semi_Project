@@ -1,0 +1,88 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+  
+<style type="text/css">
+	table#personInfoTbl {
+		border: 0px solid gray;
+		border-collapse: collapse;
+		width: 90%;
+		margin-top: 3%;
+	}
+	
+	table#personInfoTbl tr {
+		line-height: 200%;
+	}
+	
+	table#personInfoTbl td {
+		border: 0px solid gray;
+		border-collapse: collapse;
+		font-size: 14pt;
+	}
+	
+	table#personInfoTbl td.title {
+		text-align: justify;
+		font-size: 14pt;
+		font-weight: bold;
+	}
+	
+	div.head {
+		border: 1px solid gray;
+		margin: 20px 0;
+		padding: 15px 0;
+		background-color: #ffffe6;
+		font-size: 18pt;
+		text-align: center;
+		vertical-align: middle;
+	}
+	 
+</style>    
+
+<div style="width: 80%; margin: 0 auto;">
+	<div class="head">::: 회원상세정보 :::</div>
+		<table id="personInfoTbl">
+			<tr>
+			  <td class="title">▷ 회원번호</td>
+			  <td>${membervo.idx}</td>
+			</tr>
+			
+			<tr>
+			  <td class="title">▷ 성명</td>
+			  <td>${membervo.name}</td>
+			</tr>
+			
+			<tr>
+			  <td class="title">▷ 아이디</td>
+			  <td>${membervo.userid}</td>
+			</tr>
+			
+			<tr>
+			  <td class="title">▷ 이메일</td>
+			  <td>${membervo.email}</td>
+			</tr>
+			
+			<tr>
+			  <td class="title">▷ 연락처</td>
+			  <td>${membervo.allHp}</td>
+			</tr>
+			
+			<tr>
+			  <td class="title">▷ 우편번호</td>
+			  <td>${membervo.post1}-${membervo.post2}</td>
+			</tr>
+			
+			<tr>
+			  <td class="title">▷ 주소</td>
+			  <td>${membervo.addr1}<br/>${membervo.addr2}</td>
+			</tr>
+						
+			<tr>
+				<td colspan="2" align="center">
+				    <button type="button" style="margin-top: 30px; background-color: navy; color: white; width: 100px; height: 30px; border: none; font-size: 13pt;" onClick="javascript:self.close();">닫기</button>  
+				</td>
+			</tr>
+		</table>
+</div>
+
+

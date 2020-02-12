@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>exam</title>
+
+<style type="text/css">
+
+	ul{
+
+		list-style-type: none;
+
+	}
+
+	ul > li{
+
+		margin: 3px;
+
+	}
+
+	li > lable{
+
+		display : inline-block;
+
+		width:100px;
+
+		text-align: right;
+
+	}
+
+	.right{
+
+		margin-left : 130px;
+
+		
+
+	}
+
+	button {
+
+		margin: 10px;
+
+	}
+
+</style>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+	$(function () {
+
+		$(".ids").click(function () {
+
+			$("#Id").focus();
+
+		});
+
+		
+
+		// 아이디 체크
+
+		$("#Pw").click(function () {
+
+			var val = $("#Id").value;
+
+			console.log(val);
+
+			if (val == "") {
+
+				alert("5글자이상, 첫글자는 대문자이고 영문자, 숫자만 가능");
+
+				$("lable").unbind();
+
+				$("#Id").bind();
+
+				$("#Id").html("");
+
+				$("#Id").focus();
+
+			}
+
+			else{
+
+				$("lable").bind();
+
+			}
+
+		});
+
+		
+
+		
+
+		// 패스워드없을시
+
+		$("#pwc").click(function () {
+
+			if ($("#Pw").value == "") {
+
+				alert("패스워드를 입력하세요");
+
+				$(this).html("");
+
+				$("#Pw").focus();
+
+			}
+
+		});
+
+		
+
+		
+
+		// 패스워드 확인및 체크
+
+		$("#Name").click(function () {
+
+			if ($("#Pw").value == $("#pwc").value) {
+
+				$("#pwct").css({"font-weight":"bold",
+
+								"color":"green"});
+
+				$("#pwct").html("패스워드가 일치합니다")
+
+			}
+
+			else{
+
+				$("#pwct").css({"font-weight":"bold",
+
+					 			"color":"red"});
+
+				$("#pwct").html("패스워드가 일치하지 않습니다")
+
+			}
+
+		});
+
+		
+
+	});
+
+	
+
+	// 회원가입 버튼
+
+	function goSubmit() {
+
+		var frm = document.memberFrm;
+
+		frm.action = "result.html";
+
+		frm.method = "post";
+
+		frm.submit();
+
+	}
+
+</script>
+
+
+
+</head>
+
+<body>
+
+	<div>
+
+		<form name="memberFrm">
+
+			<fieldset>
+
+				<legend>회원가입</legend>
+
+					<ul>
+
+						<li><lable for="Id" class="ids">아이디</lable>
+
+							<input type="text" name="Id" id="Id" required="required" autofocus="autofocus"/>
+
+						</li>
+
+						<li><lable for="Pw">패스워드</lable>
+
+							<input type="password" name="Pw" id="Pw" /><span id="pwct"></span>
+
+						</li>
+
+						<li><lable for="pwc">패스워드확인</lable>
+
+							<input type="password" name="pwc" id="pwc" />
+
+						</li>
+
+						<li><lable for="Name">이름</lable>
+
+							<input type="text" name="Name" id="Name" />
+
+						</li>
+
+						<li><lable>성별</lable>
+
+							<span>남</span><input type="radio" name="Gender" id="Gender0" value="0"/> 
+
+							<span>여</span><input type="radio" name="Gender" id="Gender1" value="1"/>
+
+						</li>
+
+						<li><lable for="Email">이메일</lable>
+
+							<input type="text" name="Email" id="Email" /></li>
+
+					</ul>
+
+						<button type="button" onclick="goSubmit()" class="right">회원가입</button>
+
+						<button type="reset">취소</button>
+
+			</fieldset>	
+
+		</form>
+
+	</div>
+
+</body>
+
+</html>

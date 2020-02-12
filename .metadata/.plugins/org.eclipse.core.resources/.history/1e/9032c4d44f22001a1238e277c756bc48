@@ -1,0 +1,753 @@
+package purchase.model;
+
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
+import member.model.EncryptMyKey;
+import util.security.AES256;
+
+public class PurchaseDAO implements InterPurchaseDAO {
+
+	private DataSource ds;
+	private Connection conn;
+	private PreparedStatement pstmt;
+	private ResultSet rs;
+	
+	private AES256 aes;
+
+	public PurchaseDAO() {
+		
+		String key = EncryptMyKey.KEY;
+		try {
+			Context initContext = new InitialContext();
+			Context envContext = (Context) initContext.lookup("java:/comp/env");
+			ds = (DataSource) envContext.lookup("jdbc/semidog");
+			aes = new AES256(key);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	};
+
+	public void close() {
+
+		try {
+			if (rs != null) {
+				rs.close();
+				rs = null;
+			}
+			if (pstmt != null) {
+				pstmt.close();
+				pstmt = null;
+			}
+			if (conn != null) {
+				conn.close();
+				conn = null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public int purchaseInsert(HashMap<String, String> paraMap) throws SQLException {
+		int result = 0;
+		try {
+			conn = ds.getConnection();
+			String sql = " insert into tbl_dog_product(product_code, product_name, product_price, product_explanation, fk_brand_code, "
+					+ " product_sample, product_ingredient, product_texture, product_capacity, product_age, product_quantity ) "
+					+ " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("PrdNum"));
+			pstmt.setString(2, paraMap.get("Ha_title"));
+			pstmt.setString(3, paraMap.get("Ha_price"));
+			pstmt.setString(4, paraMap.get("mainImg"));
+			pstmt.setString(5, paraMap.get("Ha_brand"));
+			pstmt.setString(6, paraMap.get("sample"));
+			pstmt.setString(7, paraMap.get("Ha_meat"));
+			pstmt.setString(8, paraMap.get("texture"));
+			pstmt.setString(9, paraMap.get("capacity"));
+			pstmt.setString(10, paraMap.get("age"));
+			pstmt.setString(11, paraMap.get("quantity"));
+
+			result = pstmt.executeUpdate();
+		} finally {
+			close();
+		}
+		return result;
+	}
+
+	@Override
+	public int getPrdNum() throws SQLException {
+		int PrdNum = 0;
+
+		try {
+			conn = ds.getConnection();
+
+			String sql = " select seq_dog_product.nextval AS fk_product_code from dual ";
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			rs.next();
+
+			PrdNum = rs.getInt(1);
+
+		} finally {
+			close();
+		}
+
+		return PrdNum;
+	}
+
+	@Override
+	public int purchaseImg(int prdNum, String attachFileName) throws SQLException {
+		int result = 0;
+
+		try {
+			conn = ds.getConnection();
+
+			String sql = " insert into tbl_dog_prodphoto(prodphoto_seq, fk_product_code, photoname, status) "
+					+ " values(seq_dog_prodphoto.nextval, ?, ?, default) ";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, prdNum);
+			pstmt.setString(2, attachFileName);
+
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<HashMap<String, String>> prdList(String sort1, String sort2, String sizePerPage, String currentShowPageNo) throws SQLException {
+		List<HashMap<String, String>> prdList = null;
+
+		try {
+			conn = ds.getConnection();
+			int sort = Integer.parseInt(sort1);		// 샘플신청(0), 브랜드별 ( 1(전체보기),2,3,4,5 ) 연령별 (6(전체보기), 7, 8, 9, 10 )
+			int sorttwo = Integer.parseInt(sort2);	// 신상품 인기상품 낮은가격 높은가격 ( 1,2,3,4)
+			int sizePage = Integer.parseInt(sizePerPage);
+			int currentShowPage = Integer.parseInt(currentShowPageNo);
+			
+			String sql2="";
+			
+			switch (sort) {
+				case 0:
+					sql2 += " and a.product_sample=1 ";
+					break;
+				case 1:
+					sql2 += "  ";			
+					break;
+				case 2:
+					sql2 += " and a.fk_brand_code=1 ";
+					break;
+				case 3:
+					sql2 += " and a.fk_brand_code=2 ";
+					break;
+				case 4:
+					sql2 += " and a.fk_brand_code=3 ";
+					break;
+				case 5:
+					sql2 += " and a.fk_brand_code=4 ";
+					break;
+				case 6:
+					sql2 += "  ";
+					break;
+				case 7:
+					sql2 += " and a.product_age = 1 ";
+					break;
+				case 8:
+					sql2 += " and a.product_age = 2 ";
+					break;
+				case 9:
+					sql2 += " and a.product_age = 3 ";
+					break;
+				case 10:
+					sql2 += " and a.product_age = 4 ";
+					break;
+			}
+			
+			String sql3="";
+			
+			switch (sorttwo) {
+				case 0:
+					sql3 += " order by product_code desc ";
+					break;
+	
+				case 1:
+					sql3 += " order by grade desc ";				
+					break;
+				case 2:
+					sql3 += " order by product_price asc ";
+					break;
+				case 3:
+					sql3 += " order by product_price desc ";
+					break;
+			}
+		
+			System.out.println("sql2: "+sql2);
+			
+			String sql = " select RNO , product_code, product_name, product_explanation, product_price from ( ";
+			sql += " select row_number() over( "+sql3+" ) as RNO , product_code, product_name, product_explanation, product_price from ";
+			sql += " ( select a.product_code, a.product_name, a.product_explanation, a.product_price, b.grade from ";
+			sql += " ( select * from tbl_dog_product ) a ";
+			sql += " left join ";
+			sql += " ( select fk_product_code, avg(grade) as grade from tbl_dog_review group by fk_product_code) b ";
+			sql += " on a.product_code = b.fk_product_code ";
+			sql += " where a.status=1 ";
+			
+			sql += sql2;
+			
+			sql += " )) where RNO between ? and ? ";
+			
+			System.out.println(sql);		 
+					 
+			pstmt = conn.prepareStatement(sql); 		  
+			pstmt.setInt(1, (currentShowPage*sizePage)-(sizePage-1));
+			pstmt.setInt(2, currentShowPage*sizePage);
+			  
+			  
+			   
+			
+			/*
+			String sql = " select * from ";				
+					
+			if(sorttwo==0) {
+				sql += " ( select row_number() over (order by product_code desc) AS RNO, ";
+			}
+			else if(sorttwo==1) {
+				sql+= " ( select row_number() over (order by product_code asc) AS RNO, ";
+			} // 인기상품 미구현
+			else if(sorttwo==2) {
+				sql+= " ( select row_number() over (order by product_price asc) AS RNO, ";
+			}
+			else if(sorttwo==3) {
+				sql+= " ( select row_number() over (order by product_price desc) AS RNO, ";
+			}
+			
+					sql += " product_code, product_name, product_explanation, product_price, contentTotal, fk_brand_code, product_age "
+					+ " from tbl_dog_product cross join ( select count(*) as contentTotal from ( select row_number() over (order by product_code desc) AS RNO, " + 
+					"           															     product_code, product_name, product_explanation, product_price, " + 
+					"            																 product_sample, fk_brand_code, product_age from tbl_dog_product ";
+			
+					if(sort==0) {
+						sql+=" where product_sample = 1"
+								+ " and status = 1 ) "
+								+ " where product_sample = 1"							
+								+ " and RNO between ? and ? ) "
+								+ " )v where RNO between ? and ? ";
+					}					
+					else if(sort==1||sort==6) {
+						sql+=" where status = 1) where RNO between ? and ? ) "
+								+ " )v where RNO between ? and ? ";
+					}
+					else if(sort==2) {
+						sql+="  where fk_brand_code = 1"
+								+ " and status = 1)  "
+								+ "where fk_brand_code = 1 "
+								+ " and RNO between ? and ? ) "
+								+ " )v where RNO between ? and ? ";
+					}
+					else if(sort==3) {
+						sql+="  where fk_brand_code = 2"
+								+ " and status = 1)  "
+								+ " where fk_brand_code = 2"
+								+ " and RNO between ? and ? ) "
+								+ " )v where RNO between ? and ? ";
+					}
+					else if(sort==4) {
+						sql+="  where fk_brand_code = 3"
+								+ " and status = 1)  "
+								+ " where fk_brand_code = 3"
+								+ " and RNO between ? and ? ) "
+								+ " )v where RNO between ? and ? ";
+					}
+					else if(sort==5) {
+						sql+="  where fk_brand_code = 4"
+								+ " and status = 1)  "
+								+ " where fk_brand_code = 4"
+								+ " and RNO between ? and ? ) "
+								+ " )v where RNO between ? and ? ";
+					} 
+					else if(sort==7) {
+						sql+="  where product_age = 1"
+								+ " and status = 1) "
+								+ " where product_age = 1"
+								+ " and RNO between ? and ? ) "
+								+ " )v where RNO between ? and ? ";
+					}
+					else if(sort==8) {
+						sql+="  where product_age = 2"
+								+ " and status = 1) "
+								+ " where product_age = 2"
+								+ " and RNO between ? and ? ) "
+								+ " )v where RNO between ? and ? ";
+					}
+					else if(sort==9) {
+						sql+="  where product_age = 3"
+								+ " and status = 1) "
+								+ " where product_age = 3"
+								+ " and RNO between ? and ? ) "
+								+ " )v where RNO between ? and ? ";
+					}
+					else if(sort==10) {
+						sql+="  where product_age = 4"
+								+ " and status = 1) "
+								+ " where product_age = 4"
+								+ " and RNO between ? and ? ) "
+								+ " )v where RNO between ? and ? ";
+					}
+			
+		
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, (currentShowPage*sizePage)-(sizePage-1));
+			pstmt.setInt(2, currentShowPage*sizePage);
+			pstmt.setInt(3, (currentShowPage*sizePage)-(sizePage-1));
+			pstmt.setInt(4, currentShowPage*sizePage);
+			*/
+			
+			rs = pstmt.executeQuery();
+			int cnt = 0;
+			while (rs.next()) {
+				cnt++;
+				if (cnt == 1) {
+					prdList = new ArrayList<HashMap<String, String>>();
+				}
+
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("code", rs.getString("product_code"));
+				map.put("name", rs.getString("product_name"));
+				map.put("img", rs.getString("product_explanation"));
+				map.put("price", rs.getString("product_price"));
+				// map.put("total", rs.getString(6));
+				prdList.add(map);
+			}
+
+		} finally {
+			close();
+		}
+
+		return prdList;
+	}
+
+	// 상품내용
+	@Override
+	public List<HashMap<String, String>> purchaseContent(String prdcode) throws SQLException {
+		List<HashMap<String, String>> purchaseContent = null;
+
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select * from tbl_dog_product a left join tbl_dog_prodphoto b "
+					+ " on a.product_code = b.fk_product_code "
+					+ " where a.product_code = ? "
+					+ " and a.status = 1 "
+					+ " order by a.product_code ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, prdcode);
+			rs =pstmt.executeQuery();
+			int cnt=0;
+			while(rs.next()) {
+				cnt++;
+				if(cnt==1) {
+					purchaseContent = new ArrayList<HashMap<String,String>>();
+				}
+				HashMap<String,String> paraMap = new HashMap<String,String>();
+				paraMap.put("PRODUCT_NAME", rs.getString("PRODUCT_NAME"));
+				paraMap.put("PRODUCT_EXPLANATION", rs.getString("PRODUCT_EXPLANATION"));
+				paraMap.put("PRODUCT_PRICE", rs.getString("PRODUCT_PRICE"));
+				String base = rs.getString("PHOTONAME");
+				if( base == null ) {
+					base = "baseImg.png";
+				}
+				paraMap.put("PHOTONAME", base);				
+				purchaseContent.add(paraMap);
+			}
+			
+		} finally {
+			close();
+		}
+		return purchaseContent;
+	}
+
+	@Override
+	public int addCart(String email, String pnum, String oqty) throws SQLException {
+		int result = 0;
+		
+		try {
+			 conn = ds.getConnection();
+		
+			 String sql = " select BASKET_SEQ "
+			 		    + " from tbl_dog_basket "
+			 		    + " where status = 1 and"
+			 		    + " fk_email = ? and"
+			 		    + " fk_product_code = ? ";
+			 			
+			 pstmt = conn.prepareStatement(sql);
+			 pstmt.setString(1, aes.encrypt(email));
+			 pstmt.setString(2, pnum);
+			 
+			 rs = pstmt.executeQuery();
+			
+			 if(rs.next()) {
+				 // 어떤 제품을 추가로 장바구니에 넣고자 하는 경우
+				 
+				 int BASKET_SEQ = rs.getInt("BASKET_SEQ");
+				 
+				 sql = " update tbl_dog_basket set QUANTITY = QUANTITY + ? "
+				 	 + " where BASKET_SEQ = ? ";
+				 
+				 pstmt = conn.prepareStatement(sql);
+				 pstmt.setInt(1, Integer.parseInt(oqty));
+				 pstmt.setInt(2, BASKET_SEQ);
+				 
+				 result = pstmt.executeUpdate();
+			 }
+			 else {
+				// 장바구니에 존재하지 않는 새로운 제품을 넣고자 하는 경우
+				 
+				 sql = " insert into tbl_dog_basket(BASKET_SEQ, fk_email, fk_product_code, quantity, status) "
+				 	 + " values(seq_dog_basket.nextval, ?, ?, ?, default) ";
+				 
+				 pstmt = conn.prepareStatement(sql);
+				 pstmt.setString(1, aes.encrypt(email));
+				 pstmt.setInt(2, Integer.parseInt(pnum));
+				 pstmt.setInt(3, Integer.parseInt(oqty));
+				 // 여기서 옵션이 여러개야 그럼 A옵션 3개 , 
+				 // B옵션이 3개여야 하니까 인설트가 두번들어감
+				 result = pstmt.executeUpdate();
+			 }
+			 
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<String> purchaseContentImg(String prdcode) throws SQLException {
+		List<String> imgarr = null;
+		String img = null;
+		try {
+			 conn = ds.getConnection();
+			 
+			 String sql = " select * "
+			 		    + " from tbl_dog_prodphoto "
+			 		    + " where status = 1 and"
+			 		    + " fk_product_code = ? ";
+			 			
+			 pstmt = conn.prepareStatement(sql);
+			 pstmt.setString(1, prdcode);
+			 
+			 rs = pstmt.executeQuery();
+			 int cnt = 0; 
+			 while(rs.next()) {
+				 cnt++;
+				 if(cnt==1) {
+					 imgarr = new ArrayList<String>();					 
+				 }
+				 img = rs.getString("PHOTONAME");
+				 
+				 imgarr.add(img);
+			 }
+		} finally {
+			close();
+		}
+		return imgarr;
+	}
+
+	@Override
+	public int totalNum(String sort1, String sort2) throws SQLException {
+		int totalNum = 0;
+
+		try {
+			conn = ds.getConnection();
+			int sort = Integer.parseInt(sort1);
+			int sorttwo = Integer.parseInt(sort2);					
+			
+			String sql2="";
+			
+			switch (sort) {
+				case 0:
+					sql2 += " and a.product_sample=1 ";
+					break;
+				case 1:
+					sql2 += "  ";			
+					break;
+				case 2:
+					sql2 += " and a.fk_brand_code=1 ";
+					break;
+				case 3:
+					sql2 += " and a.fk_brand_code=2 ";
+					break;
+				case 4:
+					sql2 += " and a.fk_brand_code=3 ";
+					break;
+				case 5:
+					sql2 += " and a.fk_brand_code=4 ";
+					break;
+				case 6:
+					sql2 += "  ";
+					break;
+				case 7:
+					sql2 += " and a.product_age = 1 ";
+					break;
+				case 8:
+					sql2 += " and a.product_age = 2 ";
+					break;
+				case 9:
+					sql2 += " and a.product_age = 3 ";
+					break;
+				case 10:
+					sql2 += " and a.product_age = 4 ";
+					break;
+			}
+			
+			String sql3 ="";
+			
+			switch (sorttwo) {
+				case 0:
+					sql3 += " order by 	product_code desc ";
+					break;
+	
+				case 1:
+					sql3 += " order by grade desc ";				
+					break;
+				case 2:
+					sql3 += " order by product_price asc ";
+					break;
+				case 3:
+					sql3 += " order by product_price desc ";
+					break;
+			}
+		
+			System.out.println("sql2: "+sql2);
+			
+			String sql = " select count(*) from ( ";
+			sql += " select row_number() over( "+sql3+" ) as RNO , product_code, product_name, product_explanation, product_price from ";
+			sql += " ( select a.product_code, a.product_name, a.product_explanation, a.product_price, b.grade from ";
+			sql += " ( select * from tbl_dog_product ) a ";
+			sql += " left join ";
+			sql += " ( select fk_product_code, avg(grade) as grade from tbl_dog_review group by fk_product_code) b ";
+			sql += " on a.product_code = b.fk_product_code ";
+			sql += " where a.status=1 ";
+			
+			sql += sql2;
+			
+			sql += " ))  ";
+			
+			System.out.println(sql);		 
+					 
+			pstmt = conn.prepareStatement(sql); 		  
+			rs = pstmt.executeQuery();
+			
+			
+//			String sql = " select * from "
+//					+ " ( select row_number() over (order by product_code desc) AS RNO, "
+//					+ " product_code, product_name, product_explanation, product_price, contentTotal, fk_brand_code, product_age "
+//					+ " from tbl_dog_product cross join ( select count(*) as contentTotal from ( select row_number() over (order by product_code desc) AS RNO, " + 
+//					"           															     product_code, product_name, product_explanation, product_price, " + 
+//					"            																 product_sample, fk_brand_code, product_age from tbl_dog_product ";
+//			
+//					if(sort==0) {
+//						sql+=" where product_sample = 0 "
+//								+ " and status =1) "
+//								+ " where product_sample = 0 "
+//								+ " ) "
+//								+ " )v  ";
+//					}					
+//					else if(sort==1||sort==6) {
+//						sql+=" where status = 1)  ) "
+//								+ " )v  ";
+//					}
+//					else if(sort==2) {
+//						sql+="  where fk_brand_code = 1 "
+//								+ " and status =1 )  "
+//								+ "where fk_brand_code = 1 "
+//								+ "  ) "
+//								+ " )v ";
+//					}
+//					else if(sort==3) {
+//						sql+="  where fk_brand_code = 2"
+//								+ " and status =1 )  "
+//								+ " where fk_brand_code = 2"
+//								+ "  ) "
+//								+ " )v  ";
+//					}
+//					else if(sort==4) {
+//						sql+="  where fk_brand_code = 3"
+//								+ " and status =1 )  "
+//								+ " where fk_brand_code = 3"
+//								+ "  ) "
+//								+ " )v  ";
+//					}
+//					else if(sort==5) {
+//						sql+="  where fk_brand_code = 4"
+//								+ " and status =1 )  "
+//								+ " where fk_brand_code = 4"
+//								+ "  ) "
+//								+ " )v  ";
+//					} 
+//					else if(sort==7) {
+//						sql+="  where product_age = 1"
+//								+ " and status =1 ) "
+//								+ " where product_age = 1"
+//								+ "  ) "
+//								+ " )v  ";
+//					}
+//					else if(sort==8) {
+//						sql+="  where product_age = 2"
+//								+ " and status =1 ) "
+//								+ " where product_age = 2"
+//								+ "  ) "
+//								+ " )v  ";
+//					}
+//					else if(sort==9) {
+//						sql+="  where product_age = 3"
+//								+ " and status =1 ) "
+//								+ " where product_age = 3"
+//								+ " ) "
+//								+ " )v  ";
+//					}
+//					else if(sort==10) {
+//						sql+="  where product_age = 4"
+//								+ " and status =1 ) "
+//								+ " where product_age = 4"
+//								+ "  ) "
+//								+ " )v  ";
+//					}
+//					
+//					if(sorttwo==0) {
+//						sql+=" order by product_code desc";
+//					}
+//					else if(sorttwo==1) {
+//						sql+=" order by product_code asc";
+//					} // 인기상품 미구현
+//					else if(sorttwo==2) {
+//						sql+=" order by product_price asc";
+//					}
+//					else if(sorttwo==3) {
+//						sql+=" order by product_price desc";
+//					}
+		
+			if (rs.next()) {				
+				totalNum = rs.getInt(1);		
+			}
+		} finally {
+			close();
+		}
+		return totalNum;
+	}
+
+	@Override
+	public int addWish(String email, String pnum) throws SQLException {
+		int result = 0;		
+		try {
+			 conn = ds.getConnection();		
+			 String sql = " select INTEREST_SEQ "
+			 		    + " from tbl_dog_interest "
+			 		    + " where status = 1 and"
+			 		    + " fk_email = ? and"
+			 		    + " fk_product_code = ? ";			 			
+			 pstmt = conn.prepareStatement(sql);
+			 pstmt.setString(1, aes.encrypt(email));
+			 pstmt.setString(2, pnum);
+			 
+			 rs = pstmt.executeQuery();
+			 boolean bool = false;
+			 
+			 if(rs.next()) bool = true;
+			 else bool = false;
+			 
+			 if(bool == true) {
+				 // 존재할때 삭제
+				 System.out.println("앞");
+				 sql = " update tbl_dog_interest set status = 0 where fk_product_code = ? and fk_email = ? ";
+				 pstmt = conn.prepareStatement(sql);
+				 pstmt.setString(1, pnum);
+				 pstmt.setString(2, aes.encrypt(email));				 
+				 pstmt.executeUpdate();					 
+				 result = 0;
+			 }
+			 else {
+				// 위시리스트 추가 			 
+				 sql = " insert into TBL_DOG_INTEREST(interest_seq, fk_email, fk_product_code, registerday) "
+				 	 + " values(seq_dog_interest.nextval, ?, ?, default) ";
+				 
+				 pstmt = conn.prepareStatement(sql);
+				 pstmt.setString(1, aes.encrypt(email));
+				 pstmt.setInt(2, Integer.parseInt(pnum));				
+				 
+				 result = pstmt.executeUpdate();
+			 }		
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close();
+		}		
+		return result;
+	}
+
+	// 제품번호로 제품 조회
+	@Override
+	public HashMap<String, String> QNAContent(String pnum) throws SQLException {
+		HashMap<String, String> QNAContent = null;
+		
+		try {
+			conn = ds.getConnection();
+			String sql = " select * "
+					+ " "
+					+ " from tbl_dog_product"
+					+ " where product_code = ? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pnum);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				QNAContent = new HashMap<String, String>();
+				QNAContent.put("title", rs.getString(2));
+				QNAContent.put("price", rs.getString(4));
+				QNAContent.put("thumb", rs.getString(6));					
+			}
+			
+		} finally {
+			close();
+		}
+		return QNAContent;
+	}
+
+} // CLASS

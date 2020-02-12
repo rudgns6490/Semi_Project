@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>이미지 스크롤하기 [ 이벤트핸들러에 함수이름 부여하기, 반복적으로 오른쪽으로 스크롤되고 다시 왼쪽으로 스크롤 되게 하기 ]</title>
+
+
+<style type="text/css">
+	#fish1 {position: relative;} 
+</style>
+
+<script type="text/javascript" src="/JqueryStudy/js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$("img#fish1").click(function scrollLoop(){
+			
+			$(this).animate({left:600
+				            ,top:500
+				            ,width:300
+				            ,height:240}
+			              , 'slow'
+			              , function(){ // 콜백함수
+			            	  $(this).fadeTo(1000, 0.0);
+			            	  $(this).fadeTo(1000, 1.0);
+			            	  $(this).animate({left:0
+			            		              ,top:0
+			            		              ,width:150
+			            		              ,height:120}
+			            	                 ,'slow'
+			            	                 ,scrollLoop);
+			            	                 // 콜백함수
+			              });
+			
+		}); // end of $("img#fish1").click()---------------
+		
+		/*
+		   선택자.animate(properties
+				      ,speed
+				      ,callback함수);
+		    -- properties : 선택자(엘리먼트)가 에니메이션이 끝나고 갖게 될 속성을 의미한다.
+		    -- speed : 에니메이션이 완료되어지는 시간으로 단위는 밀리초 이다.
+		              'slow'   == 600 밀리초
+		              'normal' == 400 밀리초
+		              'fast'   == 200 밀리초
+		              
+		    -- callback함수 : 에니메이션이 끝나고 나서 자동적으로 실행되어지는 함수이다.(콜백함수)
+		*/
+		
+	});
+</script>
+</head>
+<body>
+	<img id="fish1" src="images/fish.jpg" />
+</body>
+</html>
+
+
+
+
+
+
+
+
+

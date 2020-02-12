@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Insert title here</title>
+
+
+
+<style type="text/css">
+
+
+
+	li {
+
+		list-style-type: none;
+
+		
+
+	}
+
+	
+
+	label {
+
+		display : inline-block;
+
+		width : 150px;
+
+		text-align: right;
+
+	}
+
+	
+
+	button {
+
+		position: relative;
+
+		left : 20%;
+
+	}
+
+	
+
+	#btn {
+
+		margin-right: 20px;
+
+	}
+
+
+
+</style>
+
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+<script type="text/javascript">
+
+
+
+	$(function() {
+
+		
+
+		$(".errorMsg").css("display", "none");
+
+		
+
+		$("#focusId").click(function() {
+
+			
+
+			$("#userid").focus();
+
+			
+
+		});
+
+		
+
+		// userid
+
+		$("#userid").blur(function() {
+
+			
+
+			var regExp = /^[A-Z][A-Za-z0-9]{4,}$/;
+
+			
+
+			var bool = false; 
+
+			
+
+			bool = regExp.test($(this).val());
+
+			
+
+			if(!bool) {
+
+				
+
+				$("#errorId").css("display", "");
+
+				
+
+				$(":input").attr("disabled", true);
+
+				
+
+				$(this).attr("disabled", false);
+
+				$(this).val("");
+
+				$(this).focus();
+
+				
+
+			}
+
+			else {
+
+				
+
+				$(":input").attr("disabled", false);
+
+				$("#errorId").css("display", "none");
+
+			}
+
+			
+
+		});
+
+		
+
+		
+
+		// passwd
+
+		$("#passwd2").blur(function() {
+
+			
+
+			if($("#passwd1").val() == "") {
+
+				
+
+				$("#SucId").css("display", "none");
+
+				$("#errorPwd1").css("display", "");
+
+				$("#pwd").css("display", "none");
+
+				$(this).val("");
+
+				$("#passwd1").focus();
+
+				
+
+			}
+
+			else {
+
+				
+
+				if( $(this).val() != $("#passwd1").val() ) {
+
+					
+
+					var html = "<span id = 'errorPwd2' class = 'errorMsg'  style = 'color : red; font-weight : bold;'>패스워드가 일치하지 않습니다.</span>"
+
+					
+
+					$("#pwd").html(html);
+
+					$("#pwd").css("display", "");
+
+					$("#SucId").css("display", "none");
+
+					$("#errorPwd1").css("display", "none");
+
+					
+
+					$("#passwd1").val("");
+
+					$(this).val("");
+
+					$("#passwd1").focus();
+
+					
+
+				}
+
+				else {
+
+					
+
+					$("#SucId").css("display", "");
+
+					$("#pwd").empty();
+
+					$("#pwd").css("display", "");
+
+					$("#errorPwd1").css("display", "none");
+
+				}
+
+				
+
+				
+
+			}
+
+			
+
+		});
+
+				
+
+		$("#name").blur(function() {
+
+			
+
+			if($(this).val() == ""){
+
+				
+
+				$(":input").attr("disabled", true);
+
+				$(this).attr("disabled", false);
+
+				
+
+			}
+
+			else {
+
+				
+
+				$(":input").attr("disabled", false);
+
+				
+
+			}
+
+			
+
+			
+
+		});
+
+		
+
+		$("#email").blur(function() {
+
+			
+
+			if($(this).val() == ""){
+
+				
+
+				$(":input").attr("disabled", true);
+
+				$(this).attr("disabled", false);
+
+				
+
+			}
+
+			else {
+
+				
+
+				$(":input").attr("disabled", false);
+
+				
+
+			}
+
+			
+
+			
+
+		});
+
+		
+
+		
+
+		
+
+		$("#btn").click(function() {
+
+			
+
+			var genderBool = $("input:radio[name = gender]").is(":checked");
+
+			
+
+			if(!genderBool) {
+
+				
+
+				alert("성별을 선택하세요.");
+
+				return false;
+
+				
+
+			}
+
+			
+
+			var frm = document.examFrm;
+
+			
+
+			frm.submit();
+
+			
+
+			
+
+		});
+
+		
+
+		
+
+	});
+
+	
+
+	
+
+
+
+</script>
+
+
+
+</head>
+
+<body>
+
+	<div>
+
+		<form name = "examFrm" action = "result.html" method = "post">
+
+			<ul>
+
+				<li>
+
+					<label id = "focusId">아이디</label>
+
+					<input type="text" id = "userid" name = "userid" required />
+
+					<span id = "errorId" class = "errorMsg" >5글자 이상, 첫 글자는 대문자 이고 영문자, 숫자만 가능</span>
+
+				</li>
+
+				
+
+				<li>
+
+					<label>패스워드</label>
+
+					<input type="password" id = "passwd1" name = "passwd" required />
+
+					<span id = "SucId" class = "errorMsg" style = "color : green; font-weight : bold;">패스워드가 일치합니다</span>
+
+				</li>
+
+				
+
+				<li>
+
+					<label>패스워드 확인</label>
+
+					<input type="password" id = "passwd2" required />
+
+					<span id = "pwd"></span>
+
+					<span id = "errorPwd1" class = "errorMsg">패스워드를 입력하세요.</span>
+
+					
+
+				</li>
+
+				
+
+				<li>
+
+					<label>이름</label>
+
+					<input type="text" id = "name" name = "name" required />
+
+				</li>
+
+				
+
+				<li>
+
+					<label>성별</label>
+
+					<span>남</span><input type="radio" name = "gender" value = "male">
+
+					<span>여</span><input type="radio" name = "gender" value = "female" >
+
+				</li>
+
+				
+
+				<li>
+
+					<label>이메일</label>
+
+					<input type="email" id = "email" name = "email" required/>
+
+				</li>
+
+				
+
+			</ul>
+
+			
+
+			<button type = "button" id = "btn">회원가입</button>
+
+			<button type = "reset">취소</button>
+
+		
+
+		</form>
+
+	
+
+	</div>
+
+	
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>exam</title>
+
+
+
+<style type="text/css">
+
+	header#login {
+
+		width: 100%;
+
+		height: 130px;
+
+	}
+
+
+
+	header#login > form > table#loginTbl {
+
+		float: right;
+
+		height: 100px;
+
+	}
+
+
+
+	header#login div#logo{
+
+		float: left;
+
+		width: 100px;
+
+		height: 100px;
+
+	}
+
+
+
+	div#contents {
+
+	}
+
+
+
+	aside {
+
+		height: 70px;
+
+	}
+
+
+
+	aside > nav > ul {
+
+		list-style: none;
+
+	}
+
+
+
+	aside > nav > ul > li {
+
+		display: inline-block;
+
+		margin: 0 80px 0 0;
+
+		font-size: 20px;
+
+	}
+
+
+
+	aside > nav > ul > li > a {
+
+		text-decoration: none; 
+
+		/* color: blue; */
+
+	}
+
+	
+
+	section {
+
+		width: 100%;
+
+		height: 400px;
+
+		background-color: gray;
+
+	}
+
+
+
+	footer {
+
+		width: 100%;
+
+		height: 50px;
+
+		text-align: center;	
+
+		background-color: #ccc;
+
+	}
+
+
+
+</style>
+
+</head>
+
+<body>
+
+	<div id="container">
+
+		<header id="login">
+
+			<form name="loginFrm" action="login.do" method="post">
+
+				<table id="loginTbl">
+
+					<tr>
+
+						<td>아이디</td>
+
+						<td><input type="text" name="userid" id="userid" autocomplete="off" style="text-align: right;"></input></td>
+
+					</tr>
+
+					<tr>
+
+						<td>비밀번호</td>
+
+						<td><input type="password" name="passwd" id="passwd" style="text-align: right;"></input></td>
+
+					</tr>
+
+					<tr align="left">
+
+						<td colspan="2">
+
+							<input type="submit" value="로그인" />
+
+							<input type="reset" value="취소" />
+
+						</td>
+
+					</tr>
+
+				</table>
+
+			</form>
+
+			
+
+			<div id="logo">
+
+			 <img src="khlogo.jpg" id="imgLogo" />
+
+			</div>
+
+		</header>
+
+		
+
+		<div id="contents">		
+
+		<aside>
+
+			<nav>
+
+				<ul>
+
+					<li><a href="#">메인</a></li>
+
+					<li><a href="#">공지사항</a></li>
+
+					<li><a href="#">자유게시판</a></li>
+
+					<li><a href="#">갤러리</a></li>
+
+					<li><a href="#">회원관리</a></li>
+
+					<li><a href="#">채팅하기</a></li>
+
+				</ul>
+
+			</nav>
+
+		</aside>
+
+			
+
+		<section>
+
+			
+
+		</section>	
+
+		</div>
+
+		
+
+		<div id="myfooter">
+
+		<footer>
+
+		  	<span id="copyright">Copyright &copy; 1998-2019 KH Information Educational Institute All Right Reserved</span>
+
+		</footer>
+
+		</div>
+
+	</div>	
+
+
+
+</body>
+
+</html>

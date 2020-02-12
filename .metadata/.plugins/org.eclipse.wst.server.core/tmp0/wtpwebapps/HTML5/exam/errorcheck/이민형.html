@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HTML 테스트</title>
+<style type="text/css">
+		#container{
+			/* border: solid 1px gray;  */
+			width: 100%;
+			/* margin: 0 auto; */
+			/* padding-top: 50px; */
+		}
+	
+
+	 
+	li{
+	 	list-style-type: none;
+	 }
+	 
+	 
+	label{
+			/* border:solid 1px blue; */  
+			display:inline-block;
+			width:100px;
+			color: navy;
+			font-weight: bold;
+			height : 20px;
+			/* margin: 10px 0 0 0; */
+			list-style-type: none;
+			
+		  }
+		   
+	header> div >ul {
+		float: right;
+	} 
+	
+	  img#imgLogo{
+		width:  100px; 
+	}	   
+	
+	nav > ul > li {
+	/* border: 1px solid green; */  
+	
+	display: inline-block;
+	width: 100px;
+	margin: 0 50px 0 0;
+	}
+	
+	a{
+	text-decoration: none;
+	}
+	
+	.section { 
+	    background-color: gray;
+	    display: inline-block;
+	    height: 400px;
+	    width: 100%;
+	}
+	
+	
+	footer {
+	/* border: solid 1px green; */ 
+	
+	clear: both;
+	width: 100%;
+	background-color: #ccc;
+	padding: 50px 0;
+	text-align: center;
+	}
+	
+
+</style>
+
+
+</head>
+<body>
+		
+
+
+	<div id="container">
+		<header id="loginlogo">
+			<div id="logo">
+			   <img src="khlogo.jpg" id="imgLogo" />
+	
+			<ul>
+					<li>
+						<label for="userid">아이디</label>
+						<Input type="text" name="userid" class="myinput" id="userid" size="20"/>
+					</il>
+				
+				 	<li>
+						<label for="passwd1">암호</label>
+						<Input type="password" name="passwd" class="myinput" id="passwd1" size="20"/>
+					</li>
+					
+					
+					<li>
+						<Input type="submit" class="btn" id="loging" value="로그인" />
+						<Input type="submit" class="btn" value="취소" />
+					</li>	
+			</ul>
+		</div>
+	</header>
+		
+		
+		
+		<nav>
+				<ul>
+					<li><a href="#">메인</a></li>
+					<li><a href="#">공지사항</a></li>
+					<li><a href="#">자유게시판</a></li>
+					<li><a href="#">겔러리</a></li>
+					<li><a href="#">회원관리</a></li>
+					<li><a href="#">채팅하기</a></li>
+				</ul>
+			</nav>
+	
+	</div>
+	
+	<section class="section" ></section>
+	
+	
+	<footer>
+			 <p>
+				  	Copyright &copy; 1998-2019 KH Information Educational Institute All Right Reserved.
+			 </p>
+		</footer>
+</body>
+
+
+
+</html>

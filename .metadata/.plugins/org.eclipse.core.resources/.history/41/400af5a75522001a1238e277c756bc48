@@ -1,0 +1,206 @@
+package purchase.controller;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import common.controller.AbstractController;
+import member.model.MemberVO;
+import purchase.model.InterPurchaseDAO;
+import purchase.model.PurchaseDAO;
+import review.model.InterReviewDAO;
+import review.model.ReviewDAO;
+
+public class PurchaseContentAction extends AbstractController {
+
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String prdcode = request.getParameter("prdcode");
+		HttpSession session = request.getSession();		
+		ArrayList<String> recentShow = (ArrayList<String>) session.getAttribute("recentShow");					
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		if (loginuser != null) {
+			boolean flag = false;			
+			for (String i :recentShow) {
+				if(i.equalsIgnoreCase(prdcode)) {
+					flag = true;
+				}
+			}			
+			if(!flag) recentShow.add(prdcode);			
+			session.setAttribute("recentShow", recentShow);
+		}
+	
+		InterPurchaseDAO pdao = new PurchaseDAO();
+		List<HashMap<String,String>> purchaseContent = pdao.purchaseContent(prdcode);
+		String name = purchaseContent.get(0).get("PRODUCT_NAME");
+		String thumb = purchaseContent.get(0).get("PRODUCT_EXPLANATION");
+		String price = purchaseContent.get(0).get("PRODUCT_PRICE");
+		MemberVO memvo = (MemberVO) session.getAttribute("loginuser");
+		
+		if(memvo!=null) {
+			request.setAttribute("email", memvo.getEmail());				
+		}
+		
+		request.setAttribute("memvo", memvo);
+		request.setAttribute("code", prdcode);
+		request.setAttribute("thumb", thumb);
+		request.setAttribute("name", name);
+		request.setAttribute("price", price);
+		request.setAttribute("content", purchaseContent);
+		
+		List<String> Img = pdao.purchaseContentImg(prdcode);
+			 					
+		// 리뷰 페이지바
+		DecimalFormat dec = new DecimalFormat("###,###");		
+		String reviewSort1 = request.getParameter("reviewSort1");		
+		if(reviewSort1 == null) {
+			reviewSort1 = "1";
+		}				
+		// 페이지바
+		String sizePerPage = "3";
+		String currentShowPageNo = request.getParameter("currentShowPageNo");
+		if(currentShowPageNo == null) {
+			currentShowPageNo = "1";
+		}
+		if(sizePerPage == null||!("3".equals(sizePerPage))) {
+			sizePerPage = "3";
+		}
+		
+		InterReviewDAO rdao = new ReviewDAO();
+		
+		// 전체 리뷰 총량
+		int totalNum = rdao.totalReviewNum(prdcode);
+				
+		List<HashMap<String,String>> paraMap = rdao.selectReview(prdcode, reviewSort1, sizePerPage, currentShowPageNo);		
+		
+		int sizePage = Integer.parseInt(sizePerPage);
+		String pageBar = "";
+		int totalPage = 0;
+		totalPage =(int) Math.ceil( (double)totalNum/sizePage );
+		// 토탈 페이지 가져와야함 
+		// 공식
+		int pageNo = 1;
+		
+		int blockSize = 10; // 블럭당 페이지 개수
+		
+		int loop = 1; // 최대증설 1블럭
+		
+		//System.out.println(totalPage);
+		
+		pageNo = ( (Integer.parseInt(currentShowPageNo) - 1 )/blockSize )*blockSize+1;
+
+		if( pageNo != 1 )
+			pageBar += "&nbsp;<a href='purchaseContent.dog?prdcode="+prdcode+"&reviewSort1="+reviewSort1+"&currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"#section3'>[이전]</a>&nbsp;";
+							 
+		while(!(loop>blockSize||pageNo>totalPage)) {
+			if(pageNo==Integer.parseInt(currentShowPageNo))
+				pageBar += "&nbsp;<span style='color: red; border: solid 1px gray; padding: 2px 4px;'>"+pageNo+"</span>&nbsp;";
+			else
+				pageBar += "&nbsp;<a href='purchaseContent.dog?prdcode="+prdcode+"&reviewSort1="+reviewSort1+"&currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"#section3'>"+pageNo+"</a>&nbsp;";
+			
+			pageNo++;
+			loop++;
+		
+		}// while
+				
+		if( !(pageNo>totalPage) )
+			pageBar += "&nbsp;<a href='purchaseContent.dog?prdcode="+prdcode+"&reviewSort1="+reviewSort1+"&currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"#section3'>[다음]</a>&nbsp;";
+		
+		// 게시글 컨텐츠 갯수, 제목, 가격, 이미지파일 			
+		String contents = "";
+		int contentTotal = rdao.contentTotal(prdcode, sizePerPage, currentShowPageNo);
+		if( paraMap != null ) {
+			for(int i=0; i<contentTotal; i++) {				
+				String grade = "";						
+				if ("1".equalsIgnoreCase(paraMap.get(i).get("grade"))) {
+					grade = "★☆☆☆☆ 별로에요";
+				}
+				else if ("2".equalsIgnoreCase(paraMap.get(i).get("grade"))) {
+					grade = "★★☆☆☆ 그냥 그래요";
+				}
+				else if ("3".equalsIgnoreCase(paraMap.get(i).get("grade"))) {
+					grade = "★★★☆☆ 보통이에요";
+				}
+				else if ("4".equalsIgnoreCase(paraMap.get(i).get("grade"))) {			
+					grade = "★★★★☆ 맘에 들어요";
+				}
+				else if ("5".equalsIgnoreCase(paraMap.get(i).get("grade"))) {				
+					grade = "★★★★★ 아주 좋아요";
+				}
+				String photo = "";
+				if (paraMap.get(i).get("photoname") == null) {
+					photo = "baseImg.png";
+				}
+				
+				else {
+					photo = paraMap.get(i).get("photoname");
+				}
+				
+					contents += "<hr>"
+								+"<div style='overflow: hidden; display: flex;'>"
+								+"<div style='width: 15%;'>"
+								+"<img style='width: 100%; height: 9vw;' src='/Semi_Team1/images/"+photo+"'>"
+								+"</div>"
+								+"<div class='Bin_review8'>"
+								+"<div style='color: #a4a4a4; font-family: 'Nanum Gothic', '나눔고딕', '돋움', Dotum, sans-serif; font-size:12px; margin-bottom: 2%;'>"+grade+"</div>"
+								+"<div style='color:black; font-family: 'Nanum Gothic', '나눔고딕', '돋움', Dotum, sans-serif; font-size:12px;'>"+paraMap.get(i).get("content")+"</div>"			
+								+"</div>"
+								+"<div class='Bin_review9'>"
+								+"<div style='font-family: 'Nanum Gothic', '나눔고딕', '돋움', Dotum, sans-serif; color: #a8a8a8; font-size: 12px;'>작성자</div>"
+								+"<div style='font-weight:bold; font-family: 'Nanum Gothic', '나눔고딕', '돋움', Dotum, sans-serif; font-size: 12px;'>"+paraMap.get(i).get("username")+"</div>"
+								+"<hr>"
+								+"<div style='font-family: 'Nanum Gothic', '나눔고딕', '돋움', Dotum, sans-serif; color: #a8a8a8; font-size: 12px;'>작성일</div>"
+								+"<div style='font-weight:bold; font-family: 'Nanum Gothic', '나눔고딕', '돋움', Dotum, sans-serif; font-size: 12px;'>"+paraMap.get(i).get("registerday")+"</div>"
+								+"</div>"
+								+"</div>";
+			} // for		
+		}
+		//평점 계산totalNum, paraMap
+		List<String> grade = rdao.grade(prdcode);
+		int average = 0;
+		for (int i=0; i<totalNum; i++) {
+			average += Integer.parseInt(grade.get(i));
+		}
+		double lastGrade = (double)average/(double)totalNum;				
+		
+		// QNA 리스트
+		String qnaTd = "";
+		List<HashMap<String,String>> qna = rdao.getQNA(prdcode);
+		if(qna !=null) {
+			for ( HashMap<String,String> qa : qna ) {
+				qnaTd += "<tr>"
+						+"<td>"+qa.get("num")+"</td>"
+						+"<td class='qnaTitle'>"+qa.get("title")+"</td>"
+						+"<td>"+qa.get("name")+"</td>"
+						+"<td>"+qa.get("date")+"</td>"			
+						+"</tr>";
+			}
+		}
+		else if(qna == null) {
+			qnaTd += "<tr>"
+					+"<td style=\"text-align: center;\" colspan=\"4\" >등록된 문의가 없습니다.</td>"						
+					+"</tr>";
+		}
+		request.setAttribute("qnaTd", qnaTd);
+		
+		// QNA 갯수
+		int qnaTotal = rdao.getQNATotal(prdcode);
+		request.setAttribute("qnaTotal", qnaTotal);
+		
+		request.setAttribute("lastGrade", Math.round(lastGrade*10)/10.0);		
+		request.setAttribute("contents", contents);
+		request.setAttribute("pageBar", pageBar);
+		request.setAttribute("reviewSort1", reviewSort1);
+		request.setAttribute("totalNum", totalNum);
+		
+		
+		super.setViewPage("/WEB-INF/purchase/purchaseContent.jsp");
+	}
+
+}

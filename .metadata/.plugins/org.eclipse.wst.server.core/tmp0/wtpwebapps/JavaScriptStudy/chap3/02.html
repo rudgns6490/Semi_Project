@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>split() 와 join() 에 대해서 알아봅니다.</title>
+
+<style type="text/css">
+	ul {
+		list-style-type: none;
+	}
+</style>
+
+<script type="text/javascript">
+
+	function goArray() {
+		
+		var nameArr = ["최효민","지서영","박유진","김현지","이민형"];
+		
+		for(var i=0; i<nameArr.length; i++) {
+			console.log( (i+1)+"."+nameArr[i] );
+		}
+		
+		console.log("~~~~~~~~~~~~~~~~~~~~~~");
+		
+		var foodArr = new Array("딸기","수박","참외","바나나","사과");
+		
+		for(var i=0; i<foodArr.length; i++) {
+			console.log( (i+1)+"."+foodArr[i] );
+		}
+		
+		console.log("~~~~~~~~~~~~~~~~~~~~~~");
+		
+		var sportsArr = new Array();
+		sportsArr.push("야구");
+		sportsArr.push("축구");
+		sportsArr.push("농구");
+		sportsArr.push("배구");
+		sportsArr.push("수영");
+		
+		for(var i=0; i<sportsArr.length; i++) {
+			console.log( (i+1)+"."+sportsArr[i] );
+		}
+		
+	}// end of function goArray()------------
+
+	function goSplit() {
+		
+		var names = "임용준,      김현준  ,심예은,박수빈,김면중 ";
+		var nameArr = names.split(",");  // 문자열을 배열로 변환시켜준다.
+		
+		for(var i=0; i<nameArr.length; i++) {
+			console.log( (i+1)+"."+nameArr[i] );
+		}
+		
+		console.log("~~~~~~~~~~~~~~~~~~~~~~");
+		
+		for(var i=0; i<nameArr.length; i++) {
+			console.log( (i+1)+"."+nameArr[i].trim() );
+		}
+		
+		console.log("~~~~~~~~~~~~~~~~~~~~~~");
+		
+		var money1 = "1,000";
+		var money2 = "21,000";
+		var money3 = "4,321,000";
+		
+		var sum = money1 + money2 + money3;
+		
+		console.log("sum : " + sum);
+		// 1,00021,0004,321,000
+		
+		var strmoney1 = "";
+		money1 = money1.split(",");
+		
+		for(var i=0; i<money1.length; i++) {
+			strmoney1 += money1[i];
+		}
+		
+		console.log(strmoney1); // 1000
+		
+		var strmoney2 = "";
+		money2 = money2.split(",");
+		
+		for(var i=0; i<money2.length; i++) {
+			strmoney2 += money2[i];
+		}
+		
+		console.log(strmoney2); // 21000
+		
+		var strmoney3 = "";
+		money3 = money3.split(",");
+		
+		for(var i=0; i<money3.length; i++) {
+			strmoney3 += money3[i];
+		}
+		
+		console.log(strmoney3); // 4321000
+		
+		sum = parseInt(strmoney1) + parseInt(strmoney2) + parseInt(strmoney3); 
+		
+		console.log("sum : " + sum);
+		// 4343000
+		
+		console.log("sum 의 데이터타입 : " + typeof sum);
+		// sum 의 데이터타입 : number
+		
+		sum = sum.toLocaleString('en');
+		// 숫자를 세자리마다 콤마를 찍어서 문자열 타입으로 반환시켜주는 것 
+		
+		console.log("sum 의 데이터타입 : " + typeof sum);
+		// sum 의 데이터타입 : string
+		
+		console.log("sum : " + sum);		
+		// 4,343,000
+		
+	}// end of function goSpilt()------------
+	
+	function goJoin() {
+		
+		var nameArr = ["홍길동","이순신","윤봉길","유관순","엄정화"];
+		// 배열 
+		
+		var names = nameArr.join("/"); 
+		// 배열을 하나의 문자열로 합쳐서 리턴시켜준다.
+		
+		console.log(names);
+		// 홍길동/이순신/윤봉길/유관순/엄정화
+		
+		console.log("~~~~~~~~~~~~~~~~~~~~~~");
+		
+		names = nameArr.join(); 
+		// 배열을 하나의 문자열로 합쳐서 리턴시켜준다.
+		
+		console.log(names);
+		// 홍길동,이순신,윤봉길,유관순,엄정화
+		
+		console.log("~~~~~~~~~~~~~~~~~~~~~~");
+		
+		names = nameArr.join(""); 
+		// 배열을 하나의 문자열로 합쳐서 리턴시켜준다.
+		
+		console.log(names);
+		// 홍길동이순신윤봉길유관순엄정화
+		
+	}// end of function goJoin()------------
+	
+	
+	function goQuiz1() {
+		
+		var divSnack = document.getElementById("snack");
+		
+		console.log("divSnack.innerHTML => " + divSnack.innerHTML);
+		
+		console.log("divSnack.innerText => " + divSnack.innerText);
+		
+		var snackArr = divSnack.innerText.split(",");
+		
+		var html = "<ol style='color: blue;'>";
+		
+		for(var i=0; i<snackArr.length; i++) {
+			html += "<li>"+snackArr[i].trim()+"</li>";
+		}// end of for-------------
+		
+		html += "</ol>";
+		
+		document.getElementById("result").innerHTML = html;
+		
+	}// end of function goQuiz1()----------------
+	
+	
+	function goQuiz2() {
+		document.getElementById("result").innerHTML = "";
+	}// end of function goQuiz2()----------------
+	
+	
+	function calcSum() {
+		
+		var sum = 0;
+		
+		for(var i=0; i<3; i++) {
+			var money = document.getElementById("money"+i).innerText; 
+		//	console.log(money);
+		
+		    var strMoney = ""; 
+			money = money.split(",");
+			for(var j=0; j<money.length; j++) {
+				strMoney += money[j];
+			}// end of for---------
+			
+		//	console.log( parseInt(strMoney) );
+			
+			sum += parseInt(strMoney);
+			
+		}// end of for------------------
+		
+		sum = sum.toLocaleString('en');
+		// 숫자를 세자리마다 콤마를 찍어서 문자열 타입으로 반환시켜주는 것 
+		
+		document.getElementById("sum").innerHTML = sum;
+		
+	}// end of function calcSum()------------------
+	
+	
+	function calcSum2() {
+		
+	   var priceArr = document.getElementsByClassName("price"); 
+	   
+	   var sum = 0;
+	   for(var i=0; i<priceArr.length; i++) {
+		 // console.log( priceArr[i].innerText );
+		 // console.log( priceArr[i].innerText.split(",").join("") ); 
+		   /*
+		      ["1","200","000"]
+		   */
+		   
+		   sum += parseInt( priceArr[i].innerText.split(",").join("") );
+	   }// end of for----------------------
+	   
+	    sum = sum.toLocaleString('en');
+		// 숫자를 세자리마다 콤마를 찍어서 문자열 타입으로 반환시켜주는 것 
+		
+	    document.getElementById("sum2").innerHTML = sum;
+		
+	}// end of function calcSum2()----------------
+	
+	
+</script>
+
+</head>
+<body>
+
+	<div style="margin: 10px 0; padding-left: 20%;">
+		<button type="button" onclick="goArray();">배열(콘솔에출력)</button>
+		<button type="button" onclick="goSplit();">split()(콘솔에출력)</button>
+		<button type="button" onclick="goJoin();">join()(콘솔에출력)</button>
+		<button type="button" onclick="goQuiz1();">퀴즈1(출력)</button>
+		<button type="button" onclick="goQuiz2();">퀴즈2(제거)</button>
+	</div>
+
+	<div id="snack">
+		<span style="color: red;">새우깡,감자깡,고구마깡,빼빼로,쵸코파이,후레쉬베리</span> 
+	</div>
+	
+	<div id="result"></div>
+	
+	<div>
+		<ul>
+			<li>모니터 : <span id="money0">250,000</span>원</li>
+			<li>휴대폰 : <span id="money1">1,200,000</span>원</li>
+			<li>카메라 : <span id="money2">300,000</span>원</li>
+		</ul>
+		<button type="button" onclick="calcSum();">총액계산하기</button>
+		<br/>
+		총액 : <span id="sum">0</span>원
+	</div>
+	
+	<div>
+		<ul>
+			<li>모니터2 : <span class="price">250,000</span>원</li>
+			<li>휴대폰2 : <span class="price">1,200,000</span>원</li>
+			<li>카메라2 : <span class="price">300,000</span>원</li>
+		</ul>
+		<button type="button" onclick="calcSum2();">총액계산하기2</button>
+		<br/>
+		총액 : <span id="sum2">0</span>원
+	</div>
+	
+
+</body>
+</html>
+
+

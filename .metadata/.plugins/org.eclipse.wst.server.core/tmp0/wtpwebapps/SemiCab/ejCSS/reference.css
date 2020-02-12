@@ -1,0 +1,310 @@
+@CHARSET "UTF-8";
+
+/* 기본 양식 틀 */
+
+ 	ul,ol,li,h1,h2,h3,h4,p,img{
+ 		margin: 0;
+ 		padding: 0;
+ 	}
+ 
+	 body {
+	 	min-width: 1480px;
+	 	width: 100%;
+    	margin: 0 auto;
+	 }
+	 
+	 div {
+	 	display: block;
+	 }
+	 
+	 p {
+	    display: block;
+	    
+	    margin-block-start: 1em;
+	    margin-block-end: 1em;
+	    margin-inline-start: 0px;
+	    margin-inline-end: 0px;
+	    color: 
+	 }
+	 
+	 a {
+	 	text-decoration: none;
+	 	color: black;
+	 }
+	 a:hover{
+	 	cursor:pointer;
+	 }
+	 
+	 ul{
+	 	list-style-type: none;
+	 }
+	 img{
+	 	border: none;
+   		vertical-align: top;
+	 }
+	 
+	 #container{
+	 	margin:0 auto;
+	 }
+	 
+	 /* 헤더  */
+	 /* ----------------------------------------- */
+	 #header{
+	 	background: transparent;
+    	border-bottom: 1px solid transparent;
+    	position: fixed;
+	    top: 0;
+	    right: 0;
+	    z-index: 98;
+	    width: 100%;
+	    min-width: 1480px;
+	    transition: background .3s ease .03s;
+	 }
+	 
+	 .fixedmenu{
+	 	background: rgba(255,255,255,0.9) !important;
+	 }
+	 #header > .max-width{
+ 	    width: 100%;
+	    max-width: 2000px;
+	    margin: auto;
+	 }
+	 #header > .max-width > .inner{
+		position: relative;
+	    width: 100%;
+	    line-height: 90px;
+	    text-align: center;
+    }
+    #header > .max-width > .inner > h1{
+    	text-align: center;
+    	height: 90px !important;
+    }
+    #header > .max-width > .inner > h1 > a{
+    	display: inline-block;
+    	height : 30px;
+   		vertical-align: middle;
+    }
+    
+	 .area_left{
+		position: absolute;
+	    top: 0;
+	    left: 80px;
+	}
+	 .area_left > li.shop-menu{
+	 	position: relative;
+	    float: left;
+	    margin: 0 15px;
+	 }
+	 .area_left > li.shop-menu > a{
+	 
+	 	position: relative;
+	    display: block;
+	    font-size: 13px;
+	    color: #111;
+	    font-weight: 700;
+	    letter-spacing: 1px;
+	    text-decoration: none;
+	    transition: color .3s ;
+	 }
+	 .area_left > li:hover > a:after {
+	 	max-width: 100%;
+	 }
+	 
+	 
+	 .area_left > li.shop-menu > a:after {
+	 	position: absolute;
+	    top: 30px;
+	    left: 0;
+	    content: "";
+	    width: 100%;
+	    max-width: 0;
+	    height: 2px;
+	    background: #ed4c38;
+	    transition: max-width .25s ease-in-out;
+	 }
+	 
+	 .area_left > li.shop-menu > .sub-menu{
+	 	display: none;
+	    position: absolute;
+	    top: 70px;
+	    left: -15px;
+	    min-width: 100px;
+	    padding: 15px 20px;
+	    background: #fff;
+	    border: 1px solid #eee;
+	 }
+	 .area_left > li.s_hover1:hover > .sub1{
+	 	display: block;
+	 }
+	 .area_left > li.s_hover2:hover > .sub2{
+	 	display: block;
+	 }
+	 
+	 .area_left > li.shop-menu > .sub-menu > li{
+	     padding: 3px 0;
+	 }
+	 .area_left > li.shop-menu > .sub-menu > li > a{
+		display: block;
+	    padding: 3px 0;
+	    font-size: 12px;
+	    color: #888;
+	    line-height: normal;
+	    text-decoration: none;
+	    text-align: left;
+	 }
+	 .area_left > li.shop-menu > .sub-menu > li > a:hover{
+	 	color: #ed4c38;
+	 }
+	 .area_left > li.shop-cate{
+	 	float: left;
+	 }
+	 .area_left > li.shop-cate > #category{
+	 	position: relative;
+	    z-index: 60;
+	 }
+	 .area_left > li.shop-cate > #category > .position {
+	 	
+	 }
+	 .area_left > li.shop-cate > #category > .position > ul{
+	 	width: 100%;
+	 }
+	 
+	 
+	 /* ---------- 헤더 우측 ------------- */
+	 
+	 
+	 .area_right{
+ 	    position: absolute;
+	    top: 0;
+	    right: 40px;
+	 }
+	 .area_right > li {
+	 	float: left;
+    	padding: 0 15px;
+	 }
+	 .area_right > .rightSubMenu > .m_hover{
+	 	display : block;
+	 	font-size : 13px;
+	 	position: relative;
+	 	width: 100%;
+	    display: block;
+	    color: #111;
+	    text-decoration: none;
+	    transition: color .3s ;
+	 }
+	 .area_right > .rightSubMenu > .m_hover:hover{
+	 	color: #ed4c38;
+	 }
+	 
+	 	 /* 푸터  */
+	 /* ----------------------------------------- */
+	#Footer > .footer-inner {
+	
+		font-size: 12px;
+	    color: #666;
+	    line-height: 22px;
+	    border-top: 1px solid #e3e3e3;
+	}
+	
+	#Footer > .footer-inner > .section {
+	
+		width: 1400px;
+		height: 160px;
+    	margin: 0 auto;
+    	padding: 40px 0;
+    	border-bottom: 1px solid #e3e3e3;
+	}
+	
+	#Footer > .footer-inner > .section > li{
+	
+		float: left;
+   		width: 350px;
+   		list-style: none;
+	}
+	
+	#Footer > .footer-inner > .section > li > h4{
+	
+		font-size: 14px;
+	    color: #111;
+	    font-weight: bold;
+	    font-family:NanumGothicWeb;
+	    letter-spacing: 1px;
+	    padding-bottom: 25px;
+	}
+	
+	#Footer > .footer-inner > .section > li > p{
+		margin: 0;
+	}
+	
+	.section > li > ul{
+		padding: 0;
+	}
+	
+	.section > li > ul > li > a{
+		color: #676767;
+	    text-decoration: none;
+	    font-family:NanumGothicWeb;
+	    outline: none;
+	}
+	
+	#Footer > .footer-inner > .section2 {
+		width: 1400px;
+	    margin: 0 auto;
+	    padding: 40px 0;
+	    display: table;
+	}
+	
+	.section2 > .bottom-Logo{
+		display: inline-block;
+		vertical-align: middle;
+    	padding-right: 50px;
+	}
+	.logo_png{
+		border: none;
+    	vertical-align: top;
+    	margin: 0;
+    	padding: 0;
+	}
+	
+	.section2 > .address{ 
+		display: table-cell;
+	    vertical-align: middle;
+	    border-left: 1px solid #e3e3e3;
+	    padding-left: 50px;
+	}
+	
+	#Footer > .footer-inner > .section3{
+	
+		color: #111;
+	    height: 60px;
+	    line-height: 60px;
+	    background: #f4f4f4;
+	}
+	.section3 > div {
+		width: 1400px;
+	    margin: 0 auto;
+	}
+	
+	.section3 > div > .bottomMenu{
+		float: left;
+	}
+	
+	.section3 > div > .bottomMenu > li{
+		float: left;
+	    padding-right: 15px;
+	}
+	.section3 > div > .copy_right{
+		float: right;
+	}
+	.copy_right > .copy{
+		margin: 0;
+		padding: 0;
+	}
+	.copy_right > .copy:after{
+		display: inline-block;
+	    margin: 0 0 0 10px;
+	    content: 'Design by EMOJEOMO';
+	    color: #111;
+	    font-size: 11px;
+	    opacity: 0.5;
+    }

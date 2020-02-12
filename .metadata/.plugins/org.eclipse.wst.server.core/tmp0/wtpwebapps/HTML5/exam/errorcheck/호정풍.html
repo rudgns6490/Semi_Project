@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title> 문제 1번  </title>
+
+<!-- 스타일 시트작업내용  -->
+<style type="text/css">
+
+
+	
+	
+/*  -------        메인화면  -----  */
+	#first_div {
+		border: 2px black solid; 
+	}
+
+
+
+
+
+
+/*  -------        첫번째 화면 작업   header  -----  */
+
+
+
+
+
+	/* 로그인 리스트 점 제거하기 및 inline으로 변경   */
+	header#first_header ul#login_List li {
+		list-style: none;
+		display: inline;
+	}
+	
+	
+	
+
+	
+	
+	/* 로그인창 크기 변경 */
+	header#first_header ul#login_List li label {
+		display: inline-block; 
+		width: 60px;
+	}
+	
+	
+	
+	
+	
+	
+
+/*  -------       두번째 화면 작업    nav  -----  */
+
+	/* 네비게이션 inline 으로 변경하기  */
+	ul#Nav li {
+		list-style: none;
+		display: inline;
+		font-size: 30px; 
+		padding-right:  50px; 
+	}
+	
+	
+	
+	
+	
+	
+
+/*  -------       세번째 화면 작업    section  -----  */
+
+	/* 화면설정 */
+	section#first_se {
+		background: gray;
+		height: 400px; 
+	}
+
+
+
+
+/*  -------       네번째 화면 작업    footer  -----  */
+
+	/* 화면설정 */
+	footer#first_footer {
+		text-align: center;
+		height: 50px; 
+		background-color: #ccc;
+	}
+	
+	
+	footer#first_footer p {
+		margin: 0; 
+		padding-top: 10px;
+	}
+
+
+
+
+
+
+/*  -------       공통 화면 작업    -----  */
+
+
+	
+	/* 하이퍼링크의 작업  */
+	a {
+		margin-right: 60px; 
+		font-size: 20px; 
+		text-decoration: none;
+		color: blue;
+	}
+	
+	
+	
+	/* 로고 화면과 로그인창 위치변경 */
+	.aa  {
+		float: left; 
+	}
+	
+	.bb {
+		float: right;
+	}
+	
+	.cc {
+		clear:both; 
+	}
+	
+</style>
+
+
+
+
+
+</head>
+<body>
+	<div id="first_div">
+		
+		<!-- 첫번쨰 화면  // first_header  -->
+		<header id="first_header">
+			<img class="aa" alt="KHlogo" src="khlogo.jpg" width="100px" height="100px">	
+			
+			<!-- 로그인 리스트 -->
+			<ul id="login_List" class="bb">
+				<li>
+					<label>아이디</label>
+					<input type="text" id="userid" name="userid" size="20" maxlength="20" class="myinput" autofocus required autocomplete="off" /> <br/>
+				</li>
+			
+			
+				<li>
+					<label for="password1">암호</label>
+					<input type="password" id="password1" name="passwd" size="20" maxlength="20" class="myinput" autofocus required autocomplete="off"  /><br/>
+				</li>
+				
+				
+				<li>
+					<input type="button" value="확인" class="btn"/>
+					<input type="reset" value="취소" class="btn"/>
+				</li>	
+				
+			</ul>
+		</header>
+		
+		
+		
+		
+		<!-- 두번쨰 화면  // nav -->
+			<nav>
+				<ul id="Nav" class="cc" >
+					<li><a href="#">메인</a></li>
+					<li><a href="#">공지사항</a></li>
+					<li><a href="#">자유게시판</a></li>
+					<li><a href="#">갤러리</a></li>
+					<li><a href="#">회원관리</a></li>
+					<li><a href="#">채팅하기</a></li>
+				</ul>
+			</nav>
+			
+			
+			
+			
+		<!-- 세번쨰화면  // section -->	
+		<section id="first_se"></section>
+		
+		
+		
+		
+		
+		
+		<!-- 네번쨰화면  // footer -->	
+		<footer id="first_footer">
+			<p>Copyright&copy; 1998-2019 KH Information Educational Institute All Right Reserved</p>
+		</footer>
+		
+		
+	
+	</div>
+
+</body>
+</html>​
